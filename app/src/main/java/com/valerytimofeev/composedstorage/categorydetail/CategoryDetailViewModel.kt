@@ -1,14 +1,19 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
 import android.util.Log
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.rememberSwipeableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.utils.DialogInputData
 import com.valerytimofeev.composedstorage.utils.DialogOutputData
+import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
 
-class CategoryDetailViewModel: ViewModel() {
+class CategoryDetailViewModel : ViewModel() {
 
     val storageList = mutableStateListOf<StorageItem>()
 
@@ -46,12 +51,31 @@ class CategoryDetailViewModel: ViewModel() {
         clickedStorage.value = DialogInputData(name, size, sizeType)
     }
 
-    fun loadClickedStorage(): DialogOutputData {
-        return DialogOutputData(
-            name = listOf(clickedStorage.value.name),
-            size = listOf(clickedStorage.value.size),
-            sizeType = listOf(clickedStorage.value.sizeType),
-        )
+
+    //Horizontal Picker
+    val width = 175.dp
+    val swipeLimiter = 100.dp
+    val pickerText = listOf("Кг", "Шт", "Литр")
+    val pickerIndex = mutableStateOf(1)
+
+    fun indexIncrease() {
+        if (pickerIndex.value < pickerText.lastIndex) pickerIndex.value++ else pickerIndex.value = 0
     }
+
+    fun indexDecrease() {
+        if (pickerIndex.value > 0) pickerIndex.value-- else pickerIndex.value = pickerText.lastIndex
+    }
+    fun getMidIndex(): Int {
+        return pickerIndex.value
+    }
+
+    fun getLeftIndex(): Int {
+        return if (pickerIndex.value > 0) pickerIndex.value - 1 else pickerText.lastIndex
+    }
+
+    fun getRightIndex(): Int {
+        return if (pickerIndex.value < pickerText.lastIndex) pickerIndex.value + 1 else 0
+    }
+
 
 }

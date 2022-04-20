@@ -1,14 +1,18 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
-import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
@@ -16,14 +20,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.layout.VerticalAlignmentLine
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 import com.valerytimofeev.composedstorage.utils.DialogInputData
+import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
+import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
-
+@ExperimentalMaterialApi
 @Composable
 fun CategoryDetailScreen(
     text: String
@@ -71,10 +90,12 @@ fun TopMenu(
     }
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun ItemsList(
     viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
+    //open change dialog
     if (viewModel.openChangeDialog.value) {
         ChangeDialog()
     }
@@ -96,10 +117,29 @@ fun ItemEntry(
     size: List<String>,
     sizeType: List<String>,
     itemIndex: Int,
-    modifier: Modifier = Modifier,
     viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
+    ItemContent(
+        name = name[itemIndex],
+        size = size[itemIndex],
+        sizeType = sizeType[itemIndex],
+        modifier = Modifier.clickable {
+            //save item data to viewmodel
+            viewModel.saveClickedStorage(name[itemIndex], size[itemIndex], sizeType[itemIndex])
+            viewModel.openChangeDialog.value = true
+        }
+    )
+    Spacer(modifier = Modifier.height(12.dp))
+}
 
+
+@Composable
+fun ItemContent(
+    modifier: Modifier = Modifier,
+    name: String,
+    size: String,
+    sizeType: String
+) {
     Box(
         modifier = modifier
             .shadow(elevation = 4.dp, RoundedCornerShape(4.dp))
@@ -108,10 +148,6 @@ fun ItemEntry(
             .fillMaxWidth()
             .height(60.dp)
             .padding(4.dp)
-            .clickable {
-                viewModel.saveClickedStorage(name[itemIndex], size[itemIndex], sizeType[itemIndex])
-                viewModel.openChangeDialog.value = true
-            }
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -121,56 +157,321 @@ fun ItemEntry(
                 .padding(horizontal = 20.dp)
         ) {
             Text(
-                text = name[itemIndex],
+                text = name,
                 textAlign = TextAlign.Center
             )
             Row(horizontalArrangement = Arrangement.End) {
                 Text(
-                    text = size[itemIndex],
+                    text = size,
                     textAlign = TextAlign.Center
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
-                    text = sizeType[itemIndex],
+                    text = sizeType,
                     textAlign = TextAlign.Center
                 )
             }
         }
     }
-    Spacer(modifier = Modifier.height(12.dp))
 }
 
+@ExperimentalMaterialApi
 @Composable
 fun ChangeDialog(
     viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
-    AlertDialog(
-        onDismissRequest = { viewModel.openChangeDialog.value = false },
+    NoPaddingAlertDialog(
         title = {
-            ItemEntry(
-                name = viewModel.loadClickedStorage().name,
-                size = viewModel.loadClickedStorage().size,
-                sizeType = viewModel.loadClickedStorage().sizeType,
-                itemIndex = 0
+            ItemContent(
+                name = viewModel.clickedStorage.value.name,
+                size = viewModel.clickedStorage.value.size,
+                sizeType = viewModel.clickedStorage.value.sizeType
             )
         },
-        text = { Text(text = "Text") },
-        confirmButton = {
-            Button(
-                onClick = {
-                    viewModel.openChangeDialog.value = false
-                }) {
-                Text("This is the Confirm Button")
+        text = {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                //focus textfield on both text and icon click
+                val focusRequester = FocusRequester()
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    //horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        //.fillMaxWidth()
+                        .clickable {
+                            focusRequester.requestFocus()
+                        }
+                ) {
+                    BasicTextField(
+                        value = viewModel.clickedStorage.value.name,
+                        onValueChange = {},
+                        textStyle = TextStyle(fontSize = 20.sp),
+                        modifier = Modifier.focusRequester(focusRequester = focusRequester)
+                    )
+                    Icon(
+                        Icons.Filled.Edit,
+                        contentDescription = "Decrease icon",
+                        modifier = Modifier
+                            .size(35.dp)
+                            .padding(vertical = 8.dp)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically
+
+                ) {
+                    Icon(
+                        Icons.Filled.KeyboardArrowDown,
+                        contentDescription = "Decrease icon",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(vertical = 8.dp)
+                            .clickable {
+
+                            }
+                    )
+                    OutlinedTextField(
+                        modifier = Modifier
+                            .height(60.dp)
+                            .width(120.dp),
+                        //.padding(horizontal = 8.dp),
+                        value = viewModel.clickedStorage.value.size,
+                        onValueChange = { },
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        textStyle = TextStyle(
+                            textAlign = TextAlign.Center,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                    Icon(
+                        Icons.Filled.KeyboardArrowUp,
+                        contentDescription = "Increase icon",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(vertical = 8.dp)
+                            .clickable {
+
+                            }
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+                //Text(text = viewModel.clickedStorage.value.sizeType)
+                SizeTypePicker()
+                Spacer(modifier = Modifier.height(24.dp))
             }
+
+
+        },
+        onDismissRequest = { viewModel.openChangeDialog.value = false },
+        confirmButton = {
+            DialogButton(text = "Add", leftIcon = false, modifier = Modifier.fillMaxWidth())
         },
         dismissButton = {
-            Button(
-                onClick = {
-                    viewModel.openChangeDialog.value = false
-                }) {
-                Text("This is the Confirm Button")
-            }
-        },
+            DialogButton(text = "Delete", leftIcon = true, modifier = Modifier.fillMaxWidth(0.5f))
+        }
+    )
+}
 
+@Composable
+fun DialogButton(
+    text: String,
+    leftIcon: Boolean,
+    modifier: Modifier = Modifier
+) {
+    Box(
+        modifier = modifier
+            //.fillMaxWidth()
+            .background(color = Mint)
+        //.shadow(elevation = .dp)
+
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(64.dp),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+
+            ) {
+            Icon(
+                if (leftIcon) {
+                    Icons.Filled.Delete
+                } else {
+                    Icons.Filled.Add
+                },
+                contentDescription = "Button",
+            )
+            Text(text = text)
+        }
+    }
+}
+
+//AlertDialog without unnecessary paddings
+@Composable
+fun NoPaddingAlertDialog(
+    onDismissRequest: () -> Unit,
+    modifier: Modifier = Modifier,
+    title: @Composable (() -> Unit)? = null,
+    text: @Composable (() -> Unit)? = null,
+    confirmButton: @Composable () -> Unit,
+    dismissButton: @Composable () -> Unit,
+    shape: Shape = MaterialTheme.shapes.medium,
+    backgroundColor: Color = MaterialTheme.colors.surface,
+    contentColor: Color = contentColorFor(backgroundColor),
+    properties: DialogProperties = DialogProperties()
+) {
+    Dialog(
+        onDismissRequest = onDismissRequest,
+        properties = properties
+    ) {
+        Surface(
+            modifier = modifier,
+            shape = shape,
+            color = backgroundColor,
+            contentColor = contentColor
+        ) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+            ) {
+                title?.let {
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+                        val textStyle = MaterialTheme.typography.subtitle1
+                        ProvideTextStyle(textStyle, it)
+                    }
+                }
+                text?.let {
+                    CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {
+                        val textStyle = MaterialTheme.typography.subtitle1
+                        ProvideTextStyle(textStyle, it)
+                    }
+                }
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                ) {
+                    Row(
+                        horizontalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        dismissButton()
+                        Spacer(modifier = Modifier.width(1.dp))
+                        confirmButton()
+                    }
+                }
+            }
+        }
+    }
+}
+
+//Horizontal wheel picker.
+@ExperimentalMaterialApi
+@Composable
+fun SizeTypePicker(
+    viewModel: CategoryDetailViewModel = hiltViewModel()
+) {
+    //Experimental API
+    val swipeableState = rememberSwipeableState(initialValue = HorizontalPickerState.DEFAULT)
+    val sizeInPx = with(LocalDensity.current) {
+        (viewModel.width - viewModel.swipeLimiter).toPx()
+    }
+    val anchors = mapOf(
+        -sizeInPx to HorizontalPickerState.NEGATIVE,
+        0f to HorizontalPickerState.DEFAULT,
+        sizeInPx to HorizontalPickerState.POSITIVE
+    )
+    val scope = rememberCoroutineScope()
+
+    //Return to center position and change value after swipe
+    when (swipeableState.currentValue) {
+        HorizontalPickerState.NEGATIVE -> {
+            LaunchedEffect(Unit) {
+                viewModel.indexIncrease()
+                scope.launch {
+                    swipeableState.snapTo(HorizontalPickerState.DEFAULT)
+                }
+            }
+        }
+        HorizontalPickerState.POSITIVE -> {
+            LaunchedEffect(Unit) {
+                viewModel.indexDecrease()
+                scope.launch {
+                    swipeableState.snapTo(HorizontalPickerState.DEFAULT)
+                }
+            }
+        }
+        else -> { }
+    }
+
+    Box(
+        modifier = Modifier
+            .requiredHeight(75.dp)
+            .requiredWidth(width = viewModel.width)
+            //Experimental API
+            .swipeable(
+                state = swipeableState,
+                anchors = anchors,
+                thresholds = { _, _ -> FractionalThreshold(0.5f) },
+                orientation = Orientation.Horizontal
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(modifier = Modifier
+            .height(55.dp)
+            .width(75.dp)
+            //.clip(shape = RoundedCornerShape(12.dp))
+            //.background(color = Mint)
+            .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(4.dp))
         )
+        SwipeableTexts(swipeableState = swipeableState)
+    }
+}
+
+@ExperimentalMaterialApi
+@Composable
+fun SwipeableTexts(
+    swipeableState: SwipeableState<HorizontalPickerState>,
+    viewModel: CategoryDetailViewModel = hiltViewModel()
+) {
+    Text(text = viewModel.pickerText[viewModel.getLeftIndex()],
+        fontSize = 14.sp,
+        color = Color.Gray,
+        modifier = Modifier
+            .offset(x = (-75).dp)
+            .offset {
+                IntOffset(swipeableState.offset.value.roundToInt(), 0)
+            }
+    )
+    Text(
+        text = viewModel.pickerText[viewModel.getMidIndex()],
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier
+            .offset {
+                IntOffset(swipeableState.offset.value.roundToInt(), 0)
+            }
+
+    )
+    Text(
+        text = viewModel.pickerText[viewModel.getRightIndex()],
+        fontSize = 14.sp,
+        color = Color.Gray,
+        modifier = Modifier
+            .offset(x = 75.dp)
+            .offset {
+                IntOffset(swipeableState.offset.value.roundToInt(), 0)
+            }
+
+    )
 }

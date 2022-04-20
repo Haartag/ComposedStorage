@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -29,6 +30,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 
 @AndroidEntryPoint
+@ExperimentalMaterialApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,14 +57,8 @@ class MainActivity : ComponentActivity() {
                         CategoryDetailScreen(
                             text = categoryName ?: ""
                         )
-
-
                     }
-
-
                 }
-
-
             }
         }
     }
