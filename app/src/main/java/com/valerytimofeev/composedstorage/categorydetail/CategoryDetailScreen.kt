@@ -1,5 +1,6 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -16,6 +17,7 @@ import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -36,22 +38,26 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 import com.valerytimofeev.composedstorage.utils.DialogInputData
 import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 @ExperimentalMaterialApi
 @Composable
 fun CategoryDetailScreen(
-    text: String
+    categoryName: String,
+    viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
+    viewModel.loadItemListForCategory(category = categoryName)
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        TopMenu(text = text, modifier = Modifier.height(48.dp))
+        TopMenu(categoryName = categoryName, modifier = Modifier.height(48.dp))
         ItemsList()
     }
 
@@ -59,7 +65,7 @@ fun CategoryDetailScreen(
 
 @Composable
 fun TopMenu(
-    text: String,
+    categoryName: String,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -74,7 +80,7 @@ fun TopMenu(
                 .wrapContentHeight()
                 .padding(horizontal = 16.dp)
         ) {
-            Text(text = text, fontSize = 24.sp)
+            Text(text = categoryName, fontSize = 24.sp)
             Icon(
                 Icons.Filled.AddCircle,
                 contentDescription = "Icon",
@@ -99,13 +105,12 @@ fun ItemsList(
     if (viewModel.openChangeDialog.value) {
         ChangeDialog()
     }
+
     LazyColumn(contentPadding = PaddingValues(12.dp)) {
         items(count = viewModel.getStorageListSize()) {
             ItemEntry(
                 itemIndex = it,
-                name = viewModel.getStorageNames(),
-                size = viewModel.getStorageSizes(),
-                sizeType = viewModel.getStorageSizeType(),
+                storageList = viewModel.storageList
             )
         }
     }
@@ -113,19 +118,18 @@ fun ItemsList(
 
 @Composable
 fun ItemEntry(
-    name: List<String>,
-    size: List<String>,
-    sizeType: List<String>,
+    storageList: List<StorageItem>,
     itemIndex: Int,
     viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
     ItemContent(
-        name = name[itemIndex],
-        size = size[itemIndex],
-        sizeType = sizeType[itemIndex],
+        name = storageList[itemIndex].name,
+        //size = (storageList[itemIndex].size).toString(),
+        size = viewModel.roundSize(storageList[itemIndex].size),
+        sizeType = storageList[itemIndex].sizeType,
         modifier = Modifier.clickable {
-            //save item data to viewmodel
-            viewModel.saveClickedStorage(name[itemIndex], size[itemIndex], sizeType[itemIndex])
+            //save item data to viewmodel for dialog
+            viewModel.saveClickedStorage(itemIndex = itemIndex)
             viewModel.openChangeDialog.value = true
         }
     )
@@ -183,9 +187,9 @@ fun ChangeDialog(
     NoPaddingAlertDialog(
         title = {
             ItemContent(
-                name = viewModel.clickedStorage.value.name,
-                size = viewModel.clickedStorage.value.size,
-                sizeType = viewModel.clickedStorage.value.sizeType
+                name = viewModel.clickedStorage.name,
+                size = viewModel.roundSize(viewModel.clickedStorage.size),
+                sizeType = viewModel.clickedStorage.sizeType
             )
         },
         text = {
@@ -200,16 +204,20 @@ fun ChangeDialog(
 
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
-                    //horizontalArrangement = Arrangement.SpaceBetween,
                     modifier = Modifier
-                        //.fillMaxWidth()
                         .clickable {
                             focusRequester.requestFocus()
                         }
                 ) {
+                    var nameText by remember {
+                        mutableStateOf(viewModel.clickedStorage.name)
+                    }
                     BasicTextField(
-                        value = viewModel.clickedStorage.value.name,
-                        onValueChange = {},
+                        value = nameText,
+                        onValueChange = {
+                            nameText = it
+                            viewModel.clickedStorage.name = it
+                        },
                         textStyle = TextStyle(fontSize = 20.sp),
                         modifier = Modifier.focusRequester(focusRequester = focusRequester)
                     )
@@ -229,6 +237,10 @@ fun ChangeDialog(
                     verticalAlignment = Alignment.CenterVertically
 
                 ) {
+
+                    var sizeText by remember {
+                        mutableStateOf(viewModel.clickedStorage.size)
+                    }
                     Icon(
                         Icons.Filled.KeyboardArrowDown,
                         contentDescription = "Decrease icon",
@@ -236,16 +248,18 @@ fun ChangeDialog(
                             .size(50.dp)
                             .padding(vertical = 8.dp)
                             .clickable {
-
+                                sizeText = viewModel.changeWeight(false)
                             }
                     )
                     OutlinedTextField(
                         modifier = Modifier
                             .height(60.dp)
                             .width(120.dp),
-                        //.padding(horizontal = 8.dp),
-                        value = viewModel.clickedStorage.value.size,
-                        onValueChange = { },
+                        value = viewModel.roundSize(sizeText),
+                        onValueChange = {
+                            sizeText = viewModel.roundSize(it.toFloat()).toFloat()
+                            viewModel.clickedStorage.size = it.toFloat()
+                        },
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         textStyle = TextStyle(
                             textAlign = TextAlign.Center,
@@ -260,25 +274,40 @@ fun ChangeDialog(
                             .size(50.dp)
                             .padding(vertical = 8.dp)
                             .clickable {
-
+                                sizeText = viewModel.changeWeight(true)
                             }
                     )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
-                //Text(text = viewModel.clickedStorage.value.sizeType)
                 SizeTypePicker()
                 Spacer(modifier = Modifier.height(24.dp))
             }
 
 
         },
-        onDismissRequest = { viewModel.openChangeDialog.value = false },
+        onDismissRequest = {
+            viewModel.openChangeDialog.value = false
+                           },
         confirmButton = {
-            DialogButton(text = "Add", leftIcon = false, modifier = Modifier.fillMaxWidth())
+            DialogButton(
+                text = "Add",
+                leftIcon = false,
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    viewModel.changeItem()
+                    viewModel.openChangeDialog.value = false
+                })
         },
         dismissButton = {
-            DialogButton(text = "Delete", leftIcon = true, modifier = Modifier.fillMaxWidth(0.5f))
+            DialogButton(
+                text = "Delete",
+                leftIcon = true,
+                modifier = Modifier.fillMaxWidth(0.5f),
+                onClick = {
+                    viewModel.deleteItem()
+                    viewModel.openChangeDialog.value = false
+                })
         }
     )
 }
@@ -287,14 +316,16 @@ fun ChangeDialog(
 fun DialogButton(
     text: String,
     leftIcon: Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             //.fillMaxWidth()
             .background(color = Mint)
-        //.shadow(elevation = .dp)
-
+            .clickable {
+                onClick()
+            }
     ) {
         Row(
             modifier = Modifier
@@ -411,7 +442,7 @@ fun SizeTypePicker(
                 }
             }
         }
-        else -> { }
+        else -> {}
     }
 
     Box(
@@ -427,12 +458,13 @@ fun SizeTypePicker(
             ),
         contentAlignment = Alignment.Center
     ) {
-        Box(modifier = Modifier
-            .height(55.dp)
-            .width(75.dp)
-            //.clip(shape = RoundedCornerShape(12.dp))
-            //.background(color = Mint)
-            .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(4.dp))
+        Box(
+            modifier = Modifier
+                .height(55.dp)
+                .width(75.dp)
+                //.clip(shape = RoundedCornerShape(12.dp))
+                //.background(color = Mint)
+                .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(4.dp))
         )
         SwipeableTexts(swipeableState = swipeableState)
     }

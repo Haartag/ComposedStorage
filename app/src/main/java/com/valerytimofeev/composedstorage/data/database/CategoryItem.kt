@@ -8,5 +8,7 @@ import androidx.room.PrimaryKey
 data class CategoryItem(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo val category: String,
-    @ColumnInfo val categoryType: String
+    @ColumnInfo val categoryType: String,
+    @ColumnInfo val colorScheme: Int,
+
 )

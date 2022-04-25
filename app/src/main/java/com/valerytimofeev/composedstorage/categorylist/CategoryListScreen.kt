@@ -41,8 +41,10 @@ fun CategoryListScreen(
                 .fillMaxSize()
         ) {
             Title(modifier = Modifier.height(48.dp))
-            CategoryChooser(modifier = Modifier.height(48.dp), color = viewModel.getCategoryTypeColor())
-            CategoryList(navController = navController, color = viewModel.getCategoryTypeColor())
+            //if (viewModel.categoryTypeList.isNotEmpty()) {
+                CategoryChooser(modifier = Modifier.height(48.dp), color = viewModel.getCategoryTypeColor())
+                CategoryList(navController = navController, color = viewModel.getCategoryTypeColor())
+            //}
         }
 
     }
@@ -185,8 +187,7 @@ fun CategoryEntry(
     categoryName: String,
     navController: NavController,
     modifier: Modifier = Modifier,
-    color: Color,
-    viewModel: CategoryListViewModel = hiltViewModel()
+    color: Color
 ) {
     Box(
         contentAlignment = Alignment.BottomCenter,

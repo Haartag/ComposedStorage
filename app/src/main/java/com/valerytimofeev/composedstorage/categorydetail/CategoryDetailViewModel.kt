@@ -5,50 +5,81 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberSwipeableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.utils.DialogInputData
 import com.valerytimofeev.composedstorage.utils.DialogOutputData
 import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
+import java.math.MathContext
+import java.math.RoundingMode
+import javax.inject.Inject
+import kotlin.math.roundToInt
 
-class CategoryDetailViewModel : ViewModel() {
+@HiltViewModel
+class CategoryDetailViewModel @Inject constructor(
+    private val repository: DatabaseRepository
+) : ViewModel() {
+
+    private val currentCategory = mutableStateOf("")
 
     val storageList = mutableStateListOf<StorageItem>()
 
     val openChangeDialog = mutableStateOf(false)
 
-    init {
-        storageList += StorageItem(1, "Свинина", "Мясо", "кг.", 2.35f)
-        storageList += StorageItem(2, "Курица", "Мясо", "кг.", 2.0f)
-        storageList += StorageItem(3, "Баранина", "Мясо", "кг.", 0.8f)
-        storageList += StorageItem(4, "Говядина", "Мясо", "кг.", 0.5f)
-        storageList += StorageItem(5, "Фарш куриный", "Мясо", "кг.", 0.4f)
-        storageList += StorageItem(6, "Фарш свиной", "Мясо", "кг.", 3.2f)
-        storageList += StorageItem(7, "Тестовое мясо", "Мясо", "кг.", 16.65f)
-    }
-
     fun getStorageListSize(): Int {
         return storageList.size
     }
 
-    fun getStorageNames(): List<String> {
-        return storageList.map { it.name }
+    fun roundSize(number: Float): String {
+        val format = "%.2f"
+        return String.format(format, number)
     }
 
-    fun getStorageSizes(): List<String> {
-        return storageList.map { it.size.toString() }
+    var clickedStorage = StorageItem(1, "", "", "", 0f)
+    var clickedIndex = -1
+
+    fun saveClickedStorage(itemIndex: Int) {
+        clickedStorage = storageList[itemIndex].copy()
+        clickedIndex = itemIndex
+        resetPickerIndex()
     }
 
-    fun getStorageSizeType(): List<String> {
-        return storageList.map { it.sizeType }
+    //Database to ViewModel
+    fun loadItemListForCategory(category: String) {
+        currentCategory.value = category
+        if (storageList.isEmpty()) {
+            viewModelScope.launch {
+                repository.getItemsByCategory(category = currentCategory.value).forEach {
+                    storageList.add(it)
+                }
+            }
+        }
     }
 
-    val clickedStorage = mutableStateOf(DialogInputData("", "", ""))
+    fun changeWeight(increase: Boolean): Float {
+        if (increase) clickedStorage.size += 0.05f else clickedStorage.size -= 0.05f
+        return clickedStorage.size
+    }
 
-    fun saveClickedStorage(name: String, size: String, sizeType: String) {
-        clickedStorage.value = DialogInputData(name, size, sizeType)
+    fun changeItem() {
+        viewModelScope.launch {
+            repository.updateItem(item = clickedStorage)
+        }
+        storageList[clickedIndex] = clickedStorage
+    }
+
+    fun deleteItem() {
+        viewModelScope.launch {
+            storageList.remove(clickedStorage)
+            repository.deleteItem(item = clickedStorage)
+        }
     }
 
 
@@ -56,15 +87,36 @@ class CategoryDetailViewModel : ViewModel() {
     val width = 175.dp
     val swipeLimiter = 100.dp
     val pickerText = listOf("Кг", "Шт", "Литр")
-    val pickerIndex = mutableStateOf(1)
+    val pickerIndex = mutableStateOf(setPickerIndex(clickedStorage.sizeType))
+
+    private fun setPickerIndex(sizeType: String): Int {
+        return when (sizeType) {
+            "кг." -> 0
+            "шт." -> 1
+            "л." -> 2
+            else -> 0
+        }
+    }
+
+    private fun getSizeType(): String {
+        return when (pickerIndex.value) {
+            0 -> "кг."
+            1 -> "шт."
+            2 -> "л."
+            else -> "кг."
+        }
+    }
 
     fun indexIncrease() {
         if (pickerIndex.value < pickerText.lastIndex) pickerIndex.value++ else pickerIndex.value = 0
+        clickedStorage.sizeType = getSizeType()
     }
 
     fun indexDecrease() {
         if (pickerIndex.value > 0) pickerIndex.value-- else pickerIndex.value = pickerText.lastIndex
+        clickedStorage.sizeType = getSizeType()
     }
+
     fun getMidIndex(): Int {
         return pickerIndex.value
     }
@@ -75,6 +127,10 @@ class CategoryDetailViewModel : ViewModel() {
 
     fun getRightIndex(): Int {
         return if (pickerIndex.value < pickerText.lastIndex) pickerIndex.value + 1 else 0
+    }
+
+    private fun resetPickerIndex() {
+        pickerIndex.value = setPickerIndex(clickedStorage.sizeType)
     }
 
 

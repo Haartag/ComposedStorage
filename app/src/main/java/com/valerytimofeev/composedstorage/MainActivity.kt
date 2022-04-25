@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                             it.arguments?.getString("categoryName")
                         }
                         CategoryDetailScreen(
-                            text = categoryName ?: ""
+                            categoryName = categoryName ?: ""
                         )
                     }
                 }

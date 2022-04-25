@@ -7,8 +7,8 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "StorageDB")
 data class StorageItem(
     @PrimaryKey(autoGenerate = true) val id: Int,
-    @ColumnInfo val name: String,
+    @ColumnInfo var name: String,
     @ColumnInfo val category: String,
-    @ColumnInfo val sizeType: String,
-    @ColumnInfo val size: Float
+    @ColumnInfo var sizeType: String,
+    @ColumnInfo var size: Float
 )

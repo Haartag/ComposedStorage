@@ -6,29 +6,43 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.database.CategoryItem
-import com.valerytimofeev.composedstorage.ui.theme.Theme1Color
-import com.valerytimofeev.composedstorage.ui.theme.Theme2Color
-import com.valerytimofeev.composedstorage.ui.theme.Theme3Color
+import com.valerytimofeev.composedstorage.data.database.StorageDatabase
+import com.valerytimofeev.composedstorage.ui.theme.*
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class CategoryListViewModel : ViewModel() {
+@HiltViewModel
+class CategoryListViewModel @Inject constructor(
+    private val repository: DatabaseRepository
+) : ViewModel() {
 
     val categoryList = mutableStateListOf<CategoryItem>()
-    val position = mutableStateOf(0)
+    private val position = mutableStateOf(0)
 
     init {
-        categoryList += CategoryItem(1, "Мясо", "Заморозка")
-        categoryList += CategoryItem(2, "Рыба", "Заморозка")
-        categoryList += CategoryItem(3, "Тесто", "Заморозка")
-        categoryList += CategoryItem(4, "Варенье", "Консервы")
-        categoryList += CategoryItem(5, "Для уборки", "Химия")
+        loadCategoryTypeList()
     }
 
-    val categoryTypeList = categoryList.map { it.categoryType }.toSet().toList()
+
+    private val categoryTypeList = mutableStateOf(listOf(""))
+
+    private fun loadCategoryTypeList() {
+        viewModelScope.launch {
+            repository.getCategories().forEach {
+                categoryList.add(it)
+            }
+            categoryTypeList.value = categoryList.map { it.categoryType }.toSet().toList()
+        }
+    }
+
 
     fun getChosenCategoryTypeName(): String {
-        return categoryTypeList[position.value]
+        return categoryTypeList.value[position.value]
     }
 
     fun getCategoryListSortedByType(): List<String> {
@@ -36,6 +50,7 @@ class CategoryListViewModel : ViewModel() {
             .map { it.category }
     }
 
+    //return count of rows for lazy column
     fun getCategoryListSize(): Int {
         val sizeOfSortedCategoryList = getCategoryListSortedByType().size
         return if (sizeOfSortedCategoryList % 2 == 0) {
@@ -47,8 +62,8 @@ class CategoryListViewModel : ViewModel() {
 
     fun changeCategoryType(change: Int) {
         position.value = when {
-            position.value + change < 0 -> categoryTypeList.lastIndex
-            position.value + change > categoryTypeList.lastIndex -> 0
+            position.value + change < 0 -> categoryTypeList.value.lastIndex
+            position.value + change > categoryTypeList.value.lastIndex -> 0
             else -> position.value + change
         }
     }
@@ -58,6 +73,8 @@ class CategoryListViewModel : ViewModel() {
             0 -> Theme1Color
             1 -> Theme2Color
             2 -> Theme3Color
+            3 -> Theme4Color
+            4 -> Theme5Color
             else -> Color.LightGray
         }
     }

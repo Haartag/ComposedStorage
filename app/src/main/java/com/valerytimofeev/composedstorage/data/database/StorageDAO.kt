@@ -24,6 +24,7 @@ interface StorageDAO {
     suspend fun delete(item: CategoryItem)
 
     //Storage Queries
+
     @Query("SELECT COUNT(*) FROM StorageDB")
     suspend fun storageSize(): Int
 
