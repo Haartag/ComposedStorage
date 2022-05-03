@@ -1,49 +1,55 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
-import android.util.Log
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.rememberSwipeableState
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.snapshots.SnapshotStateList
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.database.StorageItem
-import com.valerytimofeev.composedstorage.utils.DialogInputData
-import com.valerytimofeev.composedstorage.utils.DialogOutputData
-import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
+import com.valerytimofeev.composedstorage.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.math.MathContext
+import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
-import kotlin.math.roundToInt
 
 @HiltViewModel
 class CategoryDetailViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
 
+    //List
     private val currentCategory = mutableStateOf("")
-
     val storageList = mutableStateListOf<StorageItem>()
 
+    //Dialog
     val openChangeDialog = mutableStateOf(false)
+    val isChangeDialog = mutableStateOf(false)
+    var clickedStorage = StorageItem(1, "", "", "", 0)
+    var clickedIndex = -1
+    val isErrorInSize = mutableStateOf(false)
+
+    //Divider for Int / BigDecimal conversion
+    private val divider = BigDecimal(100)
 
     fun getStorageListSize(): Int {
         return storageList.size
     }
 
-    fun roundSize(number: Float): String {
-        val format = "%.2f"
-        return String.format(format, number)
+    //Work with dialog
+
+    fun sizeToDecimalSize(number: Int): String {
+        return (number.toBigDecimal().divide(divider)).toString()
     }
 
-    var clickedStorage = StorageItem(1, "", "", "", 0f)
-    var clickedIndex = -1
+    fun getDecimalSize(): String {
+        return clickedStorage.size.toBigDecimal().divide(divider).toString()
+    }
+
+    fun saveIntegerSize(sizeInString: String) {
+        clickedStorage.size = sizeInString.toBigDecimal().multiply(divider).toInt()
+    }
 
     fun saveClickedStorage(itemIndex: Int) {
         clickedStorage = storageList[itemIndex].copy()
@@ -51,7 +57,61 @@ class CategoryDetailViewModel @Inject constructor(
         resetPickerIndex()
     }
 
-    //Database to ViewModel
+    //check if not more than 2 digits after dot
+    fun checkManualInput(input: String): Boolean {
+        return if (input.isNotEmpty()) {
+            input.takeLastWhile { it.isDigit() }.length <= 2
+        } else {
+            true
+        }
+    }
+
+    fun manualChangeWeight(input: String): String {
+        val formattedInput = input.replace(',', '.')
+        val resultString = try {
+            isErrorInSize.value = false
+            if (formattedInput.lastOrNull() == '.' || formattedInput.isEmpty() || !formattedInput[0].isDigit()) throw Exception(
+                "input error"
+            )
+            if (formattedInput.contains('.')) {
+                formattedInput.toBigDecimal()
+                    .setScale(
+                        formattedInput.takeLastWhile { it.isDigit() }.length,
+                        RoundingMode.DOWN
+                    )
+                    .toString()
+            } else {
+                formattedInput
+            }
+        } catch (e: Exception) {
+            isErrorInSize.value = true
+            formattedInput
+        }
+        return resultString
+    }
+
+    fun buttonChangeWeight(increase: Boolean): String {
+        val step = Constants.weightTypeToWeightChange.getValue(clickedStorage.sizeType)
+        val remainder = clickedStorage.size % step
+
+        if (remainder != 0) {
+            if (increase) {
+                clickedStorage.size += step - remainder
+            } else {
+                clickedStorage.size -= remainder
+            }
+        } else {
+            if (increase) clickedStorage.size += step else clickedStorage.size -= step
+        }
+        if (clickedStorage.size < 0) {
+            clickedStorage.size = 0
+            return "0"
+        }
+        return clickedStorage.size.toBigDecimal().divide(divider).toString()
+    }
+
+    //Work with database
+
     fun loadItemListForCategory(category: String) {
         currentCategory.value = category
         if (storageList.isEmpty()) {
@@ -61,11 +121,6 @@ class CategoryDetailViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    fun changeWeight(increase: Boolean): Float {
-        if (increase) clickedStorage.size += 0.05f else clickedStorage.size -= 0.05f
-        return clickedStorage.size
     }
 
     fun changeItem() {
@@ -83,7 +138,8 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
 
-    //Horizontal Picker
+    //Horizontal Picker TODO some refactor
+
     val width = 175.dp
     val swipeLimiter = 100.dp
     val pickerText = listOf("Кг", "Шт", "Литр")

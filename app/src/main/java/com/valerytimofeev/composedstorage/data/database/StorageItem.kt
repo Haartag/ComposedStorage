@@ -10,5 +10,5 @@ data class StorageItem(
     @ColumnInfo var name: String,
     @ColumnInfo val category: String,
     @ColumnInfo var sizeType: String,
-    @ColumnInfo var size: Float
+    @ColumnInfo var size: Int
 )

@@ -13,11 +13,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
-import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -26,10 +24,10 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
-import androidx.compose.ui.layout.VerticalAlignmentLine
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.IntOffset
@@ -40,10 +38,8 @@ import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.ui.theme.Mint
-import com.valerytimofeev.composedstorage.utils.DialogInputData
 import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import kotlin.math.roundToInt
 
 @ExperimentalMaterialApi
@@ -66,7 +62,8 @@ fun CategoryDetailScreen(
 @Composable
 fun TopMenu(
     categoryName: String,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
     Box(
         modifier = modifier
@@ -89,7 +86,7 @@ fun TopMenu(
                     .fillMaxHeight()
                     .aspectRatio(1f)
                     .clickable {
-
+                        viewModel.openChangeDialog.value = true
                     }
             )
         }
@@ -103,9 +100,52 @@ fun ItemsList(
 ) {
     //open change dialog
     if (viewModel.openChangeDialog.value) {
-        ChangeDialog()
+        //Change item ChangeDialog
+        if (viewModel.isChangeDialog.value) {
+            ChangeDialog(
+                header = {
+                    ItemContent(
+                        name = viewModel.clickedStorage.name,
+                        size = viewModel.getDecimalSize(),
+                        sizeType = viewModel.clickedStorage.sizeType
+                    )
+                },
+                leftButtonText = "Delete",
+                onLeftClick = {
+                    viewModel.deleteItem()
+                    viewModel.openChangeDialog.value = false
+                    viewModel.isChangeDialog.value = false
+                },
+                rightButtonText = "Add",
+                onRightClick = {
+                    if (!viewModel.isErrorInSize.value) {
+                        viewModel.changeItem()
+                        viewModel.openChangeDialog.value = false
+                        viewModel.isChangeDialog.value = false
+                    }
+                }
+            )
+        } else {
+            //Add new item ChangeDialog
+            ChangeDialog(
+                header = {},
+                leftButtonText = "Add",
+                onLeftClick = {
+                    viewModel.deleteItem()
+                    viewModel.openChangeDialog.value = false
+                    viewModel.isChangeDialog.value = false
+                },
+                rightButtonText = "Cancel",
+                onRightClick = {
+                    viewModel.changeItem()
+                    viewModel.openChangeDialog.value = false
+                    viewModel.isChangeDialog.value = false
+                }
+            )
+        }
     }
 
+    //Main list
     LazyColumn(contentPadding = PaddingValues(12.dp)) {
         items(count = viewModel.getStorageListSize()) {
             ItemEntry(
@@ -124,13 +164,13 @@ fun ItemEntry(
 ) {
     ItemContent(
         name = storageList[itemIndex].name,
-        //size = (storageList[itemIndex].size).toString(),
-        size = viewModel.roundSize(storageList[itemIndex].size),
+        size = viewModel.sizeToDecimalSize(storageList[itemIndex].size),
         sizeType = storageList[itemIndex].sizeType,
         modifier = Modifier.clickable {
             //save item data to viewmodel for dialog
             viewModel.saveClickedStorage(itemIndex = itemIndex)
             viewModel.openChangeDialog.value = true
+            viewModel.isChangeDialog.value = true
         }
     )
     Spacer(modifier = Modifier.height(12.dp))
@@ -182,15 +222,16 @@ fun ItemContent(
 @ExperimentalMaterialApi
 @Composable
 fun ChangeDialog(
-    viewModel: CategoryDetailViewModel = hiltViewModel()
-) {
+    viewModel: CategoryDetailViewModel = hiltViewModel(),
+    header: @Composable () -> Unit,
+    leftButtonText: String,
+    onLeftClick: () -> Unit,
+    rightButtonText: String,
+    onRightClick: () -> Unit,
+    ) {
     NoPaddingAlertDialog(
         title = {
-            ItemContent(
-                name = viewModel.clickedStorage.name,
-                size = viewModel.roundSize(viewModel.clickedStorage.size),
-                sizeType = viewModel.clickedStorage.sizeType
-            )
+            header()
         },
         text = {
             Column(
@@ -239,8 +280,9 @@ fun ChangeDialog(
                 ) {
 
                     var sizeText by remember {
-                        mutableStateOf(viewModel.clickedStorage.size)
+                        mutableStateOf(viewModel.getDecimalSize())
                     }
+
                     Icon(
                         Icons.Filled.KeyboardArrowDown,
                         contentDescription = "Decrease icon",
@@ -248,19 +290,40 @@ fun ChangeDialog(
                             .size(50.dp)
                             .padding(vertical = 8.dp)
                             .clickable {
-                                sizeText = viewModel.changeWeight(false)
+                                if (!viewModel.isErrorInSize.value) {
+                                    sizeText = viewModel.buttonChangeWeight(false)
+                                }
                             }
                     )
                     OutlinedTextField(
                         modifier = Modifier
                             .height(60.dp)
                             .width(120.dp),
-                        value = viewModel.roundSize(sizeText),
+                        //when data is wrong paint outline in red
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = if (viewModel.isErrorInSize.value) {
+                                Color.Red
+                            } else {
+                                Color.Gray
+                            }
+                        ),
+                        value = sizeText,
                         onValueChange = {
-                            sizeText = viewModel.roundSize(it.toFloat()).toFloat()
-                            viewModel.clickedStorage.size = it.toFloat()
+                            /** TODO need some rework:
+                             * locale decimal separator support
+                             * extra symbols in OnValueChange bug on some android versions
+                             **/
+                            if (viewModel.checkManualInput(it)) {
+                                sizeText = viewModel.manualChangeWeight(it)
+                            }
+                            if (!viewModel.isErrorInSize.value) {
+                                viewModel.saveIntegerSize(it)
+                            }
                         },
-                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number,
+                            imeAction = ImeAction.Done
+                        ),
                         textStyle = TextStyle(
                             textAlign = TextAlign.Center,
                             fontSize = 18.sp,
@@ -274,7 +337,9 @@ fun ChangeDialog(
                             .size(50.dp)
                             .padding(vertical = 8.dp)
                             .clickable {
-                                sizeText = viewModel.changeWeight(true)
+                                if (!viewModel.isErrorInSize.value) {
+                                    sizeText = viewModel.buttonChangeWeight(true)
+                                }
                             }
                     )
                 }
@@ -288,26 +353,23 @@ fun ChangeDialog(
         },
         onDismissRequest = {
             viewModel.openChangeDialog.value = false
-                           },
+            viewModel.isChangeDialog.value = false
+        },
         confirmButton = {
             DialogButton(
-                text = "Add",
+                text = rightButtonText,
                 leftIcon = false,
                 modifier = Modifier.fillMaxWidth(),
-                onClick = {
-                    viewModel.changeItem()
-                    viewModel.openChangeDialog.value = false
-                })
+                onClick = onRightClick
+            )
         },
         dismissButton = {
             DialogButton(
-                text = "Delete",
+                text = leftButtonText,
                 leftIcon = true,
                 modifier = Modifier.fillMaxWidth(0.5f),
-                onClick = {
-                    viewModel.deleteItem()
-                    viewModel.openChangeDialog.value = false
-                })
+                onClick = onLeftClick
+            )
         }
     )
 }
