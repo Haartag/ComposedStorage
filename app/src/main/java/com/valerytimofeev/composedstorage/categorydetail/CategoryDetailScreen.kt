@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -54,7 +55,7 @@ fun CategoryDetailScreen(
             .fillMaxSize()
     ) {
         TopMenu(categoryName = categoryName, modifier = Modifier.height(48.dp))
-        ItemsList()
+        ItemsList(categoryName = categoryName)
     }
 
 }
@@ -96,6 +97,7 @@ fun TopMenu(
 @ExperimentalMaterialApi
 @Composable
 fun ItemsList(
+    categoryName: String,
     viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
     //open change dialog
@@ -128,18 +130,22 @@ fun ItemsList(
         } else {
             //Add new item ChangeDialog
             ChangeDialog(
-                header = {},
-                leftButtonText = "Add",
-                onLeftClick = {
-                    viewModel.deleteItem()
-                    viewModel.openChangeDialog.value = false
-                    viewModel.isChangeDialog.value = false
+                header = {
+                    AddItemContent(
+                        name = categoryName
+                    )
                 },
-                rightButtonText = "Cancel",
+                leftButtonText = "Cancel",
+                onLeftClick = {
+//                    viewModel.deleteItem()
+//                    viewModel.openChangeDialog.value = false
+//                    viewModel.isChangeDialog.value = false
+                },
+                rightButtonText = "Add",
                 onRightClick = {
-                    viewModel.changeItem()
-                    viewModel.openChangeDialog.value = false
-                    viewModel.isChangeDialog.value = false
+//                    viewModel.changeItem()
+//                    viewModel.openChangeDialog.value = false
+//                    viewModel.isChangeDialog.value = false
                 }
             )
         }
@@ -176,7 +182,6 @@ fun ItemEntry(
     Spacer(modifier = Modifier.height(12.dp))
 }
 
-
 @Composable
 fun ItemContent(
     modifier: Modifier = Modifier,
@@ -184,14 +189,8 @@ fun ItemContent(
     size: String,
     sizeType: String
 ) {
-    Box(
+    ItemBox(
         modifier = modifier
-            .shadow(elevation = 4.dp, RoundedCornerShape(4.dp))
-            .clip(RoundedCornerShape(4.dp))
-            .background(color = Mint)
-            .fillMaxWidth()
-            .height(60.dp)
-            .padding(4.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -219,6 +218,40 @@ fun ItemContent(
     }
 }
 
+@Composable
+fun AddItemContent(
+    name: String
+) {
+    ItemBox {
+        Text(
+            text = name,
+            textAlign = TextAlign.Center,
+            fontSize = 22.sp,
+            modifier = Modifier
+                .fillMaxSize()
+                .wrapContentHeight()
+        )
+    }
+}
+
+@Composable
+fun ItemBox(
+    modifier: Modifier = Modifier,
+    content: @Composable () -> Unit
+) {
+    Box(
+        modifier = modifier
+            .shadow(elevation = 4.dp, RoundedCornerShape(4.dp))
+            .clip(RoundedCornerShape(4.dp))
+            .background(color = Mint)
+            .fillMaxWidth()
+            .height(60.dp)
+            .padding(4.dp)
+    ) {
+        content()
+    }
+}
+
 @ExperimentalMaterialApi
 @Composable
 fun ChangeDialog(
@@ -228,7 +261,7 @@ fun ChangeDialog(
     onLeftClick: () -> Unit,
     rightButtonText: String,
     onRightClick: () -> Unit,
-    ) {
+) {
     NoPaddingAlertDialog(
         title = {
             header()
