@@ -26,7 +26,7 @@ class CategoryDetailViewModel @Inject constructor(
     //Dialog
     val openChangeDialog = mutableStateOf(false)
     val isChangeDialog = mutableStateOf(false)
-    var clickedStorage = StorageItem(1, "", "", "", 0)
+    var clickedStorage = StorageItem(0, "", "", "", 0)
     var clickedIndex = -1
     val isErrorInSize = mutableStateOf(false)
 
@@ -38,6 +38,11 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     //Work with dialog
+
+    //prepare ClickedStorage for add new item
+    fun addToClickedStorage(category: String) {
+        clickedStorage = StorageItem(0, "", category, "кг.", 0)
+    }
 
     fun sizeToDecimalSize(number: Int): String {
         return (number.toBigDecimal().divide(divider)).toString()
@@ -121,6 +126,13 @@ class CategoryDetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun addItem() {
+        viewModelScope.launch {
+            repository.insertNewItem(storageItem = clickedStorage)
+        }
+        storageList.add(clickedStorage)
     }
 
     fun changeItem() {

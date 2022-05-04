@@ -8,7 +8,7 @@ import androidx.room.PrimaryKey
 data class StorageItem(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo var name: String,
-    @ColumnInfo val category: String,
+    @ColumnInfo var category: String,
     @ColumnInfo var sizeType: String,
     @ColumnInfo var size: Int
 )

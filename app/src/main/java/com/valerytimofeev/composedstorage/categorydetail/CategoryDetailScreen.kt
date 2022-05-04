@@ -1,6 +1,5 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -9,12 +8,11 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,13 +22,14 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -57,7 +56,6 @@ fun CategoryDetailScreen(
         TopMenu(categoryName = categoryName, modifier = Modifier.height(48.dp))
         ItemsList(categoryName = categoryName)
     }
-
 }
 
 @Composable
@@ -113,12 +111,14 @@ fun ItemsList(
                     )
                 },
                 leftButtonText = "Delete",
+                leftIcon = Icons.Filled.Delete,
                 onLeftClick = {
                     viewModel.deleteItem()
                     viewModel.openChangeDialog.value = false
                     viewModel.isChangeDialog.value = false
                 },
-                rightButtonText = "Add",
+                rightButtonText = "Edit",
+                rightIcon = Icons.Filled.Add,
                 onRightClick = {
                     if (!viewModel.isErrorInSize.value) {
                         viewModel.changeItem()
@@ -129,6 +129,7 @@ fun ItemsList(
             )
         } else {
             //Add new item ChangeDialog
+            viewModel.addToClickedStorage(category = categoryName)
             ChangeDialog(
                 header = {
                     AddItemContent(
@@ -136,16 +137,17 @@ fun ItemsList(
                     )
                 },
                 leftButtonText = "Cancel",
+                leftIcon = Icons.Filled.Close,
                 onLeftClick = {
-//                    viewModel.deleteItem()
-//                    viewModel.openChangeDialog.value = false
-//                    viewModel.isChangeDialog.value = false
+                    viewModel.openChangeDialog.value = false
+                    viewModel.isChangeDialog.value = false
                 },
                 rightButtonText = "Add",
+                rightIcon = Icons.Filled.Add,
                 onRightClick = {
-//                    viewModel.changeItem()
-//                    viewModel.openChangeDialog.value = false
-//                    viewModel.isChangeDialog.value = false
+                    viewModel.addItem()
+                    viewModel.openChangeDialog.value = false
+                    viewModel.isChangeDialog.value = false
                 }
             )
         }
@@ -256,6 +258,8 @@ fun ItemBox(
 @Composable
 fun ChangeDialog(
     viewModel: CategoryDetailViewModel = hiltViewModel(),
+    rightIcon: ImageVector,
+    leftIcon: ImageVector,
     header: @Composable () -> Unit,
     leftButtonText: String,
     onLeftClick: () -> Unit,
@@ -315,6 +319,7 @@ fun ChangeDialog(
                     var sizeText by remember {
                         mutableStateOf(viewModel.getDecimalSize())
                     }
+                    val focusManager = LocalFocusManager.current
 
                     Icon(
                         Icons.Filled.KeyboardArrowDown,
@@ -357,6 +362,8 @@ fun ChangeDialog(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done
                         ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }),
                         textStyle = TextStyle(
                             textAlign = TextAlign.Center,
                             fontSize = 18.sp,
@@ -391,7 +398,7 @@ fun ChangeDialog(
         confirmButton = {
             DialogButton(
                 text = rightButtonText,
-                leftIcon = false,
+                icon = rightIcon,
                 modifier = Modifier.fillMaxWidth(),
                 onClick = onRightClick
             )
@@ -399,7 +406,7 @@ fun ChangeDialog(
         dismissButton = {
             DialogButton(
                 text = leftButtonText,
-                leftIcon = true,
+                icon = leftIcon,
                 modifier = Modifier.fillMaxWidth(0.5f),
                 onClick = onLeftClick
             )
@@ -410,13 +417,12 @@ fun ChangeDialog(
 @Composable
 fun DialogButton(
     text: String,
-    leftIcon: Boolean,
+    icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
-            //.fillMaxWidth()
             .background(color = Mint)
             .clickable {
                 onClick()
@@ -428,14 +434,9 @@ fun DialogButton(
                 .height(64.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-
             ) {
             Icon(
-                if (leftIcon) {
-                    Icons.Filled.Delete
-                } else {
-                    Icons.Filled.Add
-                },
+                imageVector = icon,
                 contentDescription = "Button",
             )
             Text(text = text)
