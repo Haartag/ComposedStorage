@@ -1,18 +1,14 @@
 package com.valerytimofeev.composedstorage.categorylist
 
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.database.CategoryItem
-import com.valerytimofeev.composedstorage.data.database.StorageDatabase
 import com.valerytimofeev.composedstorage.ui.theme.*
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -20,7 +16,6 @@ import javax.inject.Inject
 class CategoryListViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
-
     val categoryList = mutableStateListOf<CategoryItem>()
     private val position = mutableStateOf(0)
 
@@ -28,8 +23,7 @@ class CategoryListViewModel @Inject constructor(
         loadCategoryTypeList()
     }
 
-
-    private val categoryTypeList = mutableStateOf(listOf(""))
+    val categoryTypeList = mutableStateOf(listOf(""))
 
     private fun loadCategoryTypeList() {
         viewModelScope.launch {
@@ -39,7 +33,6 @@ class CategoryListViewModel @Inject constructor(
             categoryTypeList.value = categoryList.map { it.categoryType }.toSet().toList()
         }
     }
-
 
     fun getChosenCategoryTypeName(): String {
         return categoryTypeList.value[position.value]

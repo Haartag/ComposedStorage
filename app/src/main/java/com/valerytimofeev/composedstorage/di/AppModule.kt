@@ -29,6 +29,10 @@ object AppModule {
             appContext,
             StorageDatabase::class.java,
             "StorageDB"
-        ).createFromAsset("database/storage.db").build()
+        )
+            .createFromAsset("database/storage.db")
+            //for test only
+            //.fallbackToDestructiveMigration()
+            .build()
     }
 }

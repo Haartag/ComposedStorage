@@ -5,12 +5,10 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.core.DataStore
@@ -21,10 +19,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.valerytimofeev.composedstorage.about.AboutScreen
+import com.valerytimofeev.composedstorage.addnewcategory.AddNewCategoryScreen
+import com.valerytimofeev.composedstorage.addnewtab.AddNewTabScreen
 import com.valerytimofeev.composedstorage.categorydetail.CategoryDetailScreen
 import com.valerytimofeev.composedstorage.categorylist.CategoryListScreen
+import com.valerytimofeev.composedstorage.drawer.Drawer
 import com.valerytimofeev.composedstorage.ui.theme.ComposedStorageTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "categories")
 
@@ -38,27 +41,72 @@ class MainActivity : ComponentActivity() {
             ComposedStorageTheme {
                 //Navigation
                 val navController = rememberNavController()
-                NavHost(
-                    navController = navController,
-                    startDestination = "category_list_screen"
-                ) {
-                    composable("category_list_screen") {
-                        CategoryListScreen(navController = navController)
-                    }
-                    composable("category_detail_screen/{categoryName}", arguments = listOf(
-                        navArgument("categoryName") {
-                            type = NavType.StringType
-                        }
-                    )
-                    ) {
-                        val categoryName = remember {
-                            it.arguments?.getString("categoryName")
-                        }
-                        CategoryDetailScreen(
-                            categoryName = categoryName ?: ""
-                        )
+
+
+                //Drawer
+                val drawerState = rememberDrawerState(DrawerValue.Closed)
+                val scope = rememberCoroutineScope()
+                val openDrawer = {
+                    scope.launch {
+                        drawerState.open()
                     }
                 }
+                ModalDrawer(
+                    drawerState = drawerState,
+                    gesturesEnabled = drawerState.isOpen,
+                    drawerContent = {
+                        Drawer(
+                            onDestinationClicked = {
+                                scope.launch {
+                                    drawerState.close()
+                                }
+                                navController.navigate(it)
+                            }
+                        )
+                    }
+                ) {
+                    NavHost(
+                        navController = navController,
+                        startDestination = "category_list_screen"
+                    ) {
+                        composable("category_list_screen") {
+                            CategoryListScreen(
+                                navController = navController,
+                                openDrawer = { openDrawer() })
+                        }
+                        composable("category_detail_screen/{categoryName}", arguments = listOf(
+                            navArgument("categoryName") {
+                                type = NavType.StringType
+                            }
+                        )
+                        ) {
+                            val categoryName = remember {
+                                it.arguments?.getString("categoryName")
+                            }
+                            CategoryDetailScreen(
+                                categoryName = categoryName ?: ""
+                            )
+                        }
+                        //Drawer menu
+                        composable("add_new_tab_screen") {
+                            AddNewTabScreen(
+                                navController = navController
+                            )
+                        }
+                        composable("add_new_category_screen") {
+                            AddNewCategoryScreen(
+                                navController = navController
+                            )
+                        }
+                        composable("about_screen") {
+                            AboutScreen(
+                                navController = navController
+                            )
+                        }
+                    }
+                }
+
+
             }
         }
     }
