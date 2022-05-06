@@ -84,6 +84,7 @@ class MainActivity : ComponentActivity() {
                                 it.arguments?.getString("categoryName")
                             }
                             CategoryDetailScreen(
+                                navController = navController,
                                 categoryName = categoryName ?: ""
                             )
                         }

@@ -2,6 +2,7 @@ package com.valerytimofeev.composedstorage.drawer
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
@@ -10,6 +11,7 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 
@@ -88,12 +90,13 @@ fun DrawerItem(
     Box(
         contentAlignment = Alignment.CenterStart,
         modifier = Modifier
-        .fillMaxWidth()
-        .height(52.dp)
-        .clickable {
-            itemClick()
-        }
-    ){
+            .fillMaxWidth()
+            .height(52.dp)
+            .clip(shape = RoundedCornerShape(4.dp))
+            .clickable {
+                itemClick()
+            }
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(4.dp)

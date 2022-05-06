@@ -36,6 +36,8 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
@@ -46,19 +48,44 @@ import kotlin.math.roundToInt
 @Composable
 fun CategoryDetailScreen(
     categoryName: String,
-    viewModel: CategoryDetailViewModel = hiltViewModel()
+    viewModel: CategoryDetailViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     viewModel.loadItemListForCategory(category = categoryName)
     Column(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        TopMenu(categoryName = categoryName, modifier = Modifier.height(48.dp))
+        //TopMenu(categoryName = categoryName, modifier = Modifier.height(48.dp))
+        TopBar(
+            title = categoryName,
+            buttonIcon = Icons.Filled.ArrowBack,
+            onButtonClicked = { navController.popBackStack() },
+            additionalInfo = { TopBarAddIcon() }
+        )
         ItemsList(categoryName = categoryName)
     }
 }
 
 @Composable
+fun TopBarAddIcon(
+    viewModel: CategoryDetailViewModel = hiltViewModel()
+) {
+    Icon(
+        Icons.Filled.AddCircle,
+        contentDescription = "Add item icon",
+        modifier = Modifier
+            .padding(8.dp)
+            .fillMaxHeight()
+            .aspectRatio(1f)
+            .clickable {
+                viewModel.openChangeDialog.value = true
+            }
+    )
+}
+
+
+/*@Composable
 fun TopMenu(
     categoryName: String,
     modifier: Modifier = Modifier,
@@ -90,7 +117,7 @@ fun TopMenu(
             )
         }
     }
-}
+}*/
 
 @ExperimentalMaterialApi
 @Composable
@@ -434,7 +461,7 @@ fun DialogButton(
                 .height(64.dp),
             horizontalArrangement = Arrangement.Center,
             verticalAlignment = Alignment.CenterVertically,
-            ) {
+        ) {
             Icon(
                 imageVector = icon,
                 contentDescription = "Button",

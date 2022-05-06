@@ -10,7 +10,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
-import com.valerytimofeev.composedstorage.categorylist.TopBar
+import com.valerytimofeev.composedstorage.common.TopBar
 
 @Composable
 fun AddNewTabScreen(
@@ -25,7 +25,7 @@ fun AddNewTabScreen(
                 .fillMaxSize()
         ) {
             TopBar(
-                title = "AppName",
+                title = "Add new tab",
                 buttonIcon = Icons.Filled.ArrowBack,
                 onButtonClicked = { navController.popBackStack() }
             )
