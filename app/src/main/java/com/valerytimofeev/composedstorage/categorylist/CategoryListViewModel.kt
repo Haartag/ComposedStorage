@@ -1,5 +1,6 @@
 package com.valerytimofeev.composedstorage.categorylist
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
@@ -9,6 +10,7 @@ import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.database.CategoryItem
 import com.valerytimofeev.composedstorage.ui.theme.*
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -17,35 +19,37 @@ class CategoryListViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
     val categoryList = mutableStateListOf<CategoryItem>()
-    private val position = mutableStateOf(0)
 
-    init {
-        loadCategoryTypeList()
-    }
+    //for pager infinite loop
+    val startIndex = Int.MAX_VALUE / 2
 
-    val categoryTypeList = mutableStateOf(listOf(""))
+    val jobEnded = mutableStateOf(false)
 
-    private fun loadCategoryTypeList() {
-        viewModelScope.launch {
-            repository.getCategories().forEach {
-                categoryList.add(it)
+    fun loadTabList() {
+        if (categoryList.isEmpty()) {
+            viewModelScope.launch {
+                repository.getCategories().forEach {
+                    categoryList.add(it)
+                }
+                jobEnded.value = true
             }
-            categoryTypeList.value = categoryList.map { it.categoryType }.toSet().toList()
         }
     }
 
-    fun getChosenCategoryTypeName(): String {
-        return categoryTypeList.value[position.value]
+    fun getTabs(): List<String> {
+        return categoryList.map { it.categoryType }.toSet().toList()
     }
 
-    fun getCategoryListSortedByType(): List<String> {
-        return categoryList.filter { it.categoryType == getChosenCategoryTypeName() }
-            .map { it.category }
+    fun getCategoryByTab(tab: Int): List<String> {
+        return categoryList.filter { it.categoryType == getTabs()[tab] }.map { it.category }
     }
 
-    //return count of rows for lazy column
-    fun getCategoryListSize(): Int {
-        val sizeOfSortedCategoryList = getCategoryListSortedByType().size
+    fun getTabSize(tab: Int): Int {
+        return getCategoryByTab(tab).size
+    }
+
+    fun getCategoryRowCount(tab: Int): Int {
+        val sizeOfSortedCategoryList = getTabSize(tab)
         return if (sizeOfSortedCategoryList % 2 == 0) {
             sizeOfSortedCategoryList / 2
         } else {
@@ -53,16 +57,11 @@ class CategoryListViewModel @Inject constructor(
         }
     }
 
-    fun changeCategoryType(change: Int) {
-        position.value = when {
-            position.value + change < 0 -> categoryTypeList.value.lastIndex
-            position.value + change > categoryTypeList.value.lastIndex -> 0
-            else -> position.value + change
-        }
-    }
+    var currentPage = mutableStateOf(0)
 
-    fun getCategoryTypeColor(): Color {
-        return when (position.value) {
+    //TODO rework color theming
+    fun getCategoryTypeColor(page: Int): Color {
+        return when (page) {
             0 -> Theme1Color
             1 -> Theme2Color
             2 -> Theme3Color

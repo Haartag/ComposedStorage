@@ -14,6 +14,7 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -25,15 +26,23 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.rememberPagerState
 import com.valerytimofeev.composedstorage.common.TopBar
+import com.valerytimofeev.composedstorage.utils.floorMod
 
 
+@ExperimentalPagerApi
 @Composable
 fun CategoryListScreen(
     navController: NavController,
     viewModel: CategoryListViewModel = hiltViewModel(),
     openDrawer: () -> Unit
 ) {
+    LaunchedEffect(Unit) {
+        viewModel.loadTabList()
+    }
     Surface(
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize(),
@@ -47,77 +56,116 @@ fun CategoryListScreen(
                 buttonIcon = Icons.Filled.Menu,
                 onButtonClicked = { openDrawer() }
             )
-            CategoryChooser(
-                modifier = Modifier.height(48.dp),
-                color = viewModel.getCategoryTypeColor()
+            TabNameBackground(color = viewModel.getCategoryTypeColor(viewModel.currentPage.value))
+            TabPager(navController = navController)
+        }
+    }
+}
+
+@ExperimentalPagerApi
+@Composable
+fun TabPager(
+    navController: NavController,
+    viewModel: CategoryListViewModel = hiltViewModel(),
+) {
+    val pagerState = rememberPagerState(initialPage = viewModel.startIndex)
+    HorizontalPager(
+        count = Int.MAX_VALUE,
+        state = pagerState,
+        modifier = Modifier
+            .fillMaxWidth()
+            .offset(y = (-50).dp)
+    ) { index ->
+        val page = (index - viewModel.startIndex).floorMod(viewModel.getTabs().size)
+        viewModel.currentPage.value =
+            (pagerState.currentPage - viewModel.startIndex).floorMod(viewModel.getTabs().size)
+        Column() {
+            TabName(page = page)
+            CategoryList(
+                navController = navController,
+                color = viewModel.getCategoryTypeColor(page),
+                page = page
             )
-            CategoryList(navController = navController, color = viewModel.getCategoryTypeColor())
         }
     }
 }
 
 @Composable
-fun CategoryChooser(
+fun TabName(
     modifier: Modifier = Modifier,
     viewModel: CategoryListViewModel = hiltViewModel(),
-    color: Color
+    page: Int
 ) {
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = color)
-            .fillMaxHeight(0.1f)
+            .fillMaxHeight(0.1f),
+        contentAlignment = Alignment.Center
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            Icon(
-                Icons.Outlined.KeyboardArrowLeft,
-                contentDescription = "Left arrow",
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .fillMaxHeight()
-                    .clickable {
-                        viewModel.changeCategoryType(-1)
-                    }
-            )
-
+        if (viewModel.jobEnded.value) {
             Text(
-                text = viewModel.getChosenCategoryTypeName(),
+                text = viewModel.getTabs()[page],
                 fontWeight = FontWeight.Bold,
                 fontSize = 24.sp,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSurface
             )
+        }
+    }
+}
 
-            Icon(
-                Icons.Outlined.KeyboardArrowRight,
-                contentDescription = "Right arrow",
-                modifier = Modifier
-                    .padding(vertical = 8.dp)
-                    .fillMaxHeight()
-                    .clickable {
-                        viewModel.changeCategoryType(1)
-                    }
-            )
+@Composable
+fun TabNameBackground(
+    modifier: Modifier = Modifier,
+    color: Color = Color.LightGray
+) {
+    Column {
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .background(color = color.copy(alpha = 0.5f))
+                .height(50.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Icon(
+                    Icons.Outlined.KeyboardArrowLeft,
+                    contentDescription = "Left arrow",
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxHeight()
+                )
+                Icon(
+                    Icons.Outlined.KeyboardArrowRight,
+                    contentDescription = "Right arrow",
+                    modifier = Modifier
+                        .padding(vertical = 8.dp)
+                        .fillMaxHeight()
+                )
+            }
         }
     }
 }
 
 @Composable
 fun CategoryList(
+    page: Int,
     navController: NavController,
     viewModel: CategoryListViewModel = hiltViewModel(),
     color: Color
 ) {
-    val categoryListSize = viewModel.getCategoryListSize()
-    LazyColumn(contentPadding = PaddingValues(16.dp)) {
+    val categoryListSize = viewModel.getCategoryRowCount(page)
+    LazyColumn(
+        contentPadding = PaddingValues(16.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
         items(count = categoryListSize) {
             CategoryRow(
                 rowIndex = it,
-                categoryNames = viewModel.getCategoryListSortedByType(),
+                categoryNames = viewModel.getCategoryByTab(page),
                 navController = navController,
                 color = color
             )

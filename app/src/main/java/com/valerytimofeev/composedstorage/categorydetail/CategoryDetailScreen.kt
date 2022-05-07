@@ -56,7 +56,6 @@ fun CategoryDetailScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
-        //TopMenu(categoryName = categoryName, modifier = Modifier.height(48.dp))
         TopBar(
             title = categoryName,
             buttonIcon = Icons.Filled.ArrowBack,
@@ -83,41 +82,6 @@ fun TopBarAddIcon(
             }
     )
 }
-
-
-/*@Composable
-fun TopMenu(
-    categoryName: String,
-    modifier: Modifier = Modifier,
-    viewModel: CategoryDetailViewModel = hiltViewModel()
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colors.surface)
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentHeight()
-                .padding(horizontal = 16.dp)
-        ) {
-            Text(text = categoryName, fontSize = 24.sp)
-            Icon(
-                Icons.Filled.AddCircle,
-                contentDescription = "Icon",
-                modifier = Modifier
-                    .padding(8.dp)
-                    .fillMaxHeight()
-                    .aspectRatio(1f)
-                    .clickable {
-                        viewModel.openChangeDialog.value = true
-                    }
-            )
-        }
-    }
-}*/
 
 @ExperimentalMaterialApi
 @Composable

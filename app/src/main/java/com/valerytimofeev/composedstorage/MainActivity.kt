@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.google.accompanist.pager.ExperimentalPagerApi
 import com.valerytimofeev.composedstorage.about.AboutScreen
 import com.valerytimofeev.composedstorage.addnewcategory.AddNewCategoryScreen
 import com.valerytimofeev.composedstorage.addnewtab.AddNewTabScreen
@@ -34,6 +35,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 
 @AndroidEntryPoint
 @ExperimentalMaterialApi
+@ExperimentalPagerApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
