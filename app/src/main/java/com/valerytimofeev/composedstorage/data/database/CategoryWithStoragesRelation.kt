@@ -9,5 +9,5 @@ data class CategoryWithStorages(
         parentColumn = "category",
         entityColumn = "category"
     )
-    val detailedItems: List<StorageItem>
+    val storageItems: List<StorageItem>
 )

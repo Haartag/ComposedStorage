@@ -23,6 +23,16 @@ interface StorageDAO {
     @Delete
     suspend fun delete(item: CategoryItem)
 
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun add(item: TabItem)
+
+    @Update
+    suspend fun update(item: TabItem)
+
+    @Delete
+    suspend fun delete(item: TabItem)
+
+
     //Storage Queries
 
     @Query("SELECT COUNT(*) FROM StorageDB")
@@ -37,10 +47,18 @@ interface StorageDAO {
     @Query("SELECT * FROM StorageDB WHERE category = :category")
     suspend fun getByCategory(category: String): List<StorageItem>
 
+
     //Category Queries
     @Query("SELECT COUNT(*) FROM CategoryDB")
     suspend fun categorySize(): Int
 
-    @Query("SELECT * FROM CategoryDB")
-    suspend fun getAllCategory(): List<CategoryItem>
+    @Query("SELECT category FROM CategoryDB WHERE tabName = :tabName")
+    suspend fun getCategoryByTab(tabName: String): List<String>
+
+    //Tab Queries
+    @Query("SELECT COUNT(*) FROM TabDB")
+    suspend fun tabSize(): Int
+
+    @Query("SELECT * FROM TabDB")
+    suspend fun getAllTabs(): List<TabItem>
 }

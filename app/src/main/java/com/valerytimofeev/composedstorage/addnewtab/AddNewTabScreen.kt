@@ -29,7 +29,15 @@ fun AddNewTabScreen(
                 buttonIcon = Icons.Filled.ArrowBack,
                 onButtonClicked = { navController.popBackStack() }
             )
-            Text(text = "ADD NEW TAB HERE!")
         }
     }
+}
+
+@Composable
+fun TabName() {
+
+}
+
+fun ColorPicker() {
+
 }
