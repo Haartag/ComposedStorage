@@ -8,6 +8,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.database.CategoryItem
+import com.valerytimofeev.composedstorage.data.database.TabItem
+import com.valerytimofeev.composedstorage.data.database.TabWithCategoriesRelation
 import com.valerytimofeev.composedstorage.ui.theme.*
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -18,38 +20,53 @@ import javax.inject.Inject
 class CategoryListViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
-    val categoryList = mutableStateListOf<CategoryItem>()
+
+    val tabsAndCategoriesList = mutableStateListOf<TabWithCategoriesRelation>()
+    val tabList = mutableStateListOf<TabItem>()
+    val tabCount = mutableStateOf(0)
 
     //for pager infinite loop
     val startIndex = Int.MAX_VALUE / 2
 
-    val jobEnded = mutableStateOf(false)
+    val tabListLoadEnded = mutableStateOf(false)
 
-    fun loadTabList() {
-        if (categoryList.isEmpty()) {
-            viewModelScope.launch {
-                repository.getCategories().forEach {
-                    categoryList.add(it)
-                }
-                jobEnded.value = true
+    init {
+        preload()
+    }
+
+    fun getCategoryNamesByTab(page: Int): List<String> {
+        return tabsAndCategoriesList[page].categoryItems.map { it.category }
+    }
+
+    fun preload() {
+        viewModelScope.launch {
+            loadTabCount()
+            loadTabList()
+            loadTabsWithCategories(tabList)
+            tabListLoadEnded.value = true
+        }
+    }
+
+    private suspend fun loadTabCount() {
+        tabCount.value = repository.getTabsCount()
+    }
+
+    private suspend fun loadTabList() {
+        repository.getTabs().forEach {
+            tabList.add(it)
+        }
+    }
+
+    private suspend fun loadTabsWithCategories(tabNames: List<TabItem>) {
+        tabNames.forEach { tab ->
+            repository.getCategoriesOfTab(tab.tabName).forEach {
+                tabsAndCategoriesList.add(it)
             }
         }
     }
 
-    fun getTabs(): List<String> {
-        return categoryList.map { it.categoryType }.toSet().toList()
-    }
-
-    fun getCategoryByTab(tab: Int): List<String> {
-        return categoryList.filter { it.categoryType == getTabs()[tab] }.map { it.category }
-    }
-
-    fun getTabSize(tab: Int): Int {
-        return getCategoryByTab(tab).size
-    }
-
     fun getCategoryRowCount(tab: Int): Int {
-        val sizeOfSortedCategoryList = getTabSize(tab)
+        val sizeOfSortedCategoryList = tabsAndCategoriesList[tab].categoryItems.size
         return if (sizeOfSortedCategoryList % 2 == 0) {
             sizeOfSortedCategoryList / 2
         } else {

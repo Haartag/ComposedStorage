@@ -19,6 +19,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -30,6 +31,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.valerytimofeev.composedstorage.common.TopBar
+import com.valerytimofeev.composedstorage.ui.theme.Mint
 import com.valerytimofeev.composedstorage.utils.floorMod
 
 
@@ -40,26 +42,34 @@ fun CategoryListScreen(
     viewModel: CategoryListViewModel = hiltViewModel(),
     openDrawer: () -> Unit
 ) {
-    LaunchedEffect(Unit) {
-        viewModel.loadTabList()
-    }
     Surface(
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize(),
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            TopBar(
-                title = "AppName",
-                buttonIcon = Icons.Filled.Menu,
-                onButtonClicked = { openDrawer() }
-            )
-            TabNameBackground(color = viewModel.getCategoryTypeColor(viewModel.currentPage.value))
-            TabPager(navController = navController)
+        if (viewModel.tabListLoadEnded.value) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                TopBar(
+                    title = "AppName",
+                    buttonIcon = Icons.Filled.Menu,
+                    onButtonClicked = { openDrawer() }
+                )
+                TabNameBackground(color = viewModel.getCategoryTypeColor(viewModel.currentPage.value))
+                TabPager(navController = navController)
+            }
+        } else {
+            Placeholder()
         }
     }
+}
+
+@Composable
+fun Placeholder() {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(brush = Brush.verticalGradient(listOf(Mint, Color.LightGray))))
 }
 
 @ExperimentalPagerApi
@@ -76,9 +86,9 @@ fun TabPager(
             .fillMaxWidth()
             .offset(y = (-50).dp)
     ) { index ->
-        val page = (index - viewModel.startIndex).floorMod(viewModel.getTabs().size)
+        val page = (index - viewModel.startIndex).floorMod(viewModel.tabCount.value)
         viewModel.currentPage.value =
-            (pagerState.currentPage - viewModel.startIndex).floorMod(viewModel.getTabs().size)
+            (pagerState.currentPage - viewModel.startIndex).floorMod(viewModel.tabCount.value)
         Column() {
             TabName(page = page)
             CategoryList(
@@ -102,16 +112,15 @@ fun TabName(
             .fillMaxHeight(0.1f),
         contentAlignment = Alignment.Center
     ) {
-        if (viewModel.jobEnded.value) {
-            Text(
-                text = viewModel.getTabs()[page],
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
-                textAlign = TextAlign.Center,
-                color = MaterialTheme.colors.onSurface
-            )
-        }
+        Text(
+            text = viewModel.tabList[page].tabName,
+            fontWeight = FontWeight.Bold,
+            fontSize = 24.sp,
+            textAlign = TextAlign.Center,
+            color = MaterialTheme.colors.onSurface
+        )
     }
+
 }
 
 @Composable
@@ -165,7 +174,8 @@ fun CategoryList(
         items(count = categoryListSize) {
             CategoryRow(
                 rowIndex = it,
-                categoryNames = viewModel.getCategoryByTab(page),
+                //categoryNames = viewModel.getCategoryByTab(page),
+                categoryNames = viewModel.getCategoryNamesByTab(page),
                 navController = navController,
                 color = color
             )

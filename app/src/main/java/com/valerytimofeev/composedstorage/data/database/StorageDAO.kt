@@ -38,11 +38,11 @@ interface StorageDAO {
     @Query("SELECT COUNT(*) FROM StorageDB")
     suspend fun storageSize(): Int
 
-    @Query("SELECT * FROM StorageDB")
+/*    @Query("SELECT * FROM StorageDB")
     suspend fun getAllStorage(): List<StorageItem>
 
     @Query("SELECT DISTINCT category FROM StorageDB")
-    suspend fun getCategories(): List<String>
+    suspend fun getCategories(): List<String>*/
 
     @Query("SELECT * FROM StorageDB WHERE category = :category")
     suspend fun getByCategory(category: String): List<StorageItem>
@@ -52,8 +52,8 @@ interface StorageDAO {
     @Query("SELECT COUNT(*) FROM CategoryDB")
     suspend fun categorySize(): Int
 
-    @Query("SELECT category FROM CategoryDB WHERE tabName = :tabName")
-    suspend fun getCategoryByTab(tabName: String): List<String>
+/*    @Query("SELECT category FROM CategoryDB WHERE tabName = :tabName")
+    suspend fun getCategoryByTab(tabName: String): List<String>*/
 
     //Tab Queries
     @Query("SELECT COUNT(*) FROM TabDB")
@@ -61,4 +61,11 @@ interface StorageDAO {
 
     @Query("SELECT * FROM TabDB")
     suspend fun getAllTabs(): List<TabItem>
+
+
+
+
+    @Transaction
+    @Query("SELECT * FROM TabDB WHERE tabName = :tabName")
+    suspend fun getCategoriesOfTab(tabName: String): List<TabWithCategoriesRelation>
 }

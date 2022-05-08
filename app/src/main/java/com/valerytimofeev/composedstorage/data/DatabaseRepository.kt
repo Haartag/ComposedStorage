@@ -1,8 +1,6 @@
 package com.valerytimofeev.composedstorage.data
 
-import com.valerytimofeev.composedstorage.data.database.CategoryItem
-import com.valerytimofeev.composedstorage.data.database.StorageDAO
-import com.valerytimofeev.composedstorage.data.database.StorageItem
+import com.valerytimofeev.composedstorage.data.database.*
 import javax.inject.Inject
 
 class DatabaseRepository @Inject constructor(
@@ -24,12 +22,30 @@ class DatabaseRepository @Inject constructor(
         storageDao.delete(item)
     }
 
-    suspend fun getCategories(): List<CategoryItem> {
-        return storageDao.getAllCategory()
-    }
+/*    suspend fun getCategoryByTabName(tabName: String): List<String> {
+        return storageDao.getCategoryByTab(tabName = tabName)
+    }*/
 
     suspend fun getItemsByCategory(category: String): List<StorageItem> {
         return storageDao.getByCategory(category = category)
+    }
+
+    suspend fun getTabs(): List<TabItem> {
+        return storageDao.getAllTabs()
+    }
+
+    suspend fun getTabsCount(): Int {
+        return storageDao.tabSize()
+    }
+
+    suspend fun getCategoryCount(): Int {
+        return storageDao.categorySize()
+    }
+
+
+
+    suspend fun getCategoriesOfTab(tabName: String): List<TabWithCategoriesRelation> {
+        return storageDao.getCategoriesOfTab(tabName)
     }
 
 }
