@@ -11,6 +11,7 @@ import com.valerytimofeev.composedstorage.data.database.CategoryItem
 import com.valerytimofeev.composedstorage.data.database.TabItem
 import com.valerytimofeev.composedstorage.data.database.TabWithCategoriesRelation
 import com.valerytimofeev.composedstorage.ui.theme.*
+import com.valerytimofeev.composedstorage.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +22,7 @@ class CategoryListViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
 
-    val tabsAndCategoriesList = mutableStateListOf<TabWithCategoriesRelation>()
+    private val tabsAndCategoriesList = mutableStateListOf<TabWithCategoriesRelation>()
     val tabList = mutableStateListOf<TabItem>()
     val tabCount = mutableStateOf(0)
 
@@ -38,7 +39,7 @@ class CategoryListViewModel @Inject constructor(
         return tabsAndCategoriesList[page].categoryItems.map { it.category }
     }
 
-    fun preload() {
+    private fun preload() {
         viewModelScope.launch {
             loadTabCount()
             loadTabList()
@@ -76,15 +77,7 @@ class CategoryListViewModel @Inject constructor(
 
     var currentPage = mutableStateOf(0)
 
-    //TODO rework color theming
     fun getCategoryTypeColor(page: Int): Color {
-        return when (page) {
-            0 -> Theme1Color
-            1 -> Theme2Color
-            2 -> Theme3Color
-            3 -> Theme4Color
-            4 -> Theme5Color
-            else -> Color.LightGray
-        }
+        return Constants.colorsMap.getValue(tabsAndCategoriesList[page].tabItem.colorScheme)
     }
 }

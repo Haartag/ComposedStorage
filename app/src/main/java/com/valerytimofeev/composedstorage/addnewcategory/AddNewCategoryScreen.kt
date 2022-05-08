@@ -33,3 +33,8 @@ fun AddNewCategoryScreen(
         }
     }
 }
+
+@Composable
+fun CategoryName() {
+    
+}
