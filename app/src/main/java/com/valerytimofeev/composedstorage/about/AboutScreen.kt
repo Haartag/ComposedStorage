@@ -1,7 +1,8 @@
 package com.valerytimofeev.composedstorage.about
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
@@ -12,6 +13,15 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.valerytimofeev.composedstorage.common.TopBar
 
@@ -32,7 +42,48 @@ fun AboutScreen(
                 buttonIcon = Icons.Filled.ArrowBack,
                 onButtonClicked = { navController.popBackStack() },
             )
-            Text(text = "About app.")
+
+            Text(
+                modifier = Modifier.padding(16.dp),
+                text = "What's new in this version: \n Nothing."
+            )
+            Spacer(modifier = Modifier.height(20.dp))
+            val gitHubUrl = "https://github.com/Haartag/ComposedStorage"
+            val uriHandler = LocalUriHandler.current
+
+            val urlText = buildAnnotatedString {
+                pushStringAnnotation(tag = "GitHub", annotation = gitHubUrl)
+                withStyle(
+                    style = SpanStyle(
+                        color = Color(0xff64B5F6),
+                        fontSize = 18.sp,
+                        textDecoration = TextDecoration.Underline
+                    )
+                ) {
+                    append("App`s GitHub repository")
+                }
+            }
+
+            ClickableText(
+                modifier = Modifier.padding(16.dp),
+                text = urlText,
+                onClick = {
+                    urlText.getStringAnnotations(tag = "GitHub", start = it, end = it)
+                        .firstOrNull()?.let { url ->
+                            uriHandler.openUri(url.item)
+                        }
+                })
+
+            Spacer(modifier = Modifier.height(20.dp))
+            Text(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
+                text = "Application version: 0.1",
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                color = Color.Gray
+            )
         }
     }
 }
