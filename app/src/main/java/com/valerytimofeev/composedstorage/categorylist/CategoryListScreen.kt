@@ -14,7 +14,6 @@ import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
 import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -40,12 +40,17 @@ import com.valerytimofeev.composedstorage.utils.floorMod
 fun CategoryListScreen(
     navController: NavController,
     viewModel: CategoryListViewModel = hiltViewModel(),
-    openDrawer: () -> Unit
+    openDrawer: () -> Unit,
+    newTabName: String,
+    newColorScheme: Int
 ) {
     Surface(
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize(),
     ) {
+        if (newTabName.isNotEmpty()) {
+            viewModel.addNewTab(newTabName, newColorScheme)
+        }
         if (viewModel.tabListLoadEnded.value) {
             Column(
                 modifier = Modifier
@@ -114,10 +119,14 @@ fun TabName(
     ) {
         Text(
             text = viewModel.tabList[page].tabName,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
-            color = MaterialTheme.colors.onSurface
+            color = MaterialTheme.colors.onSurface,
+            modifier = Modifier.padding(horizontal = 50.dp)
+
         )
     }
 

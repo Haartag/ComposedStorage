@@ -69,12 +69,30 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = "category_list_screen"
+                        startDestination = "category_list_screen/{newTabName}/{newColorScheme}"
                     ) {
-                        composable("category_list_screen") {
+                        composable("category_list_screen/{newTabName}/{newColorScheme}",
+                            arguments = listOf(
+                                navArgument("newTabName") {
+                                    type = NavType.StringType
+                                },
+                                navArgument("newColorScheme") {
+                                    type = NavType.IntType
+                                }
+                            )
+                        ) {
+                            val newTabName = remember {
+                                it.arguments?.getString("newTabName")
+                            }
+                            val newColorScheme = remember {
+                                it.arguments?.getInt("newColorScheme")
+                            }
                             CategoryListScreen(
                                 navController = navController,
-                                openDrawer = { openDrawer() })
+                                openDrawer = { openDrawer() },
+                                newTabName = newTabName ?: "",
+                                newColorScheme = newColorScheme ?: 0
+                            )
                         }
                         composable("category_detail_screen/{categoryName}", arguments = listOf(
                             navArgument("categoryName") {

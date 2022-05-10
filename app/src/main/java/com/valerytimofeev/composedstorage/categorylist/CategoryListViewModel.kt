@@ -1,19 +1,15 @@
 package com.valerytimofeev.composedstorage.categorylist
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
-import com.valerytimofeev.composedstorage.data.database.CategoryItem
 import com.valerytimofeev.composedstorage.data.database.TabItem
 import com.valerytimofeev.composedstorage.data.database.TabWithCategoriesRelation
-import com.valerytimofeev.composedstorage.ui.theme.*
 import com.valerytimofeev.composedstorage.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -79,5 +75,10 @@ class CategoryListViewModel @Inject constructor(
 
     fun getCategoryTypeColor(page: Int): Color {
         return Constants.colorsMap.getValue(tabsAndCategoriesList[page].tabItem.colorScheme)
+    }
+
+    //make tabItem from Navigation
+    fun addNewTab(tabName: String, colorScheme: Int){
+        tabList.add(TabItem(0, tabName, colorScheme))
     }
 }

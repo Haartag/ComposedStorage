@@ -281,12 +281,18 @@ fun ChangeDialog(
                     var nameText by remember {
                         mutableStateOf(viewModel.clickedStorage.name)
                     }
+                    val focusManager = LocalFocusManager.current
                     BasicTextField(
                         value = nameText,
                         onValueChange = {
                             nameText = it
                             viewModel.clickedStorage.name = it
                         },
+                        keyboardOptions = KeyboardOptions(
+                            imeAction = ImeAction.Done
+                        ),
+                        keyboardActions = KeyboardActions(
+                            onDone = { focusManager.clearFocus() }),
                         textStyle = TextStyle(fontSize = 20.sp),
                         modifier = Modifier.focusRequester(focusRequester = focusRequester)
                     )

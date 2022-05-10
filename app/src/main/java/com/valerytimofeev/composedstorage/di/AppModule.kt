@@ -32,7 +32,7 @@ object AppModule {
         )
             .createFromAsset("database/storage.db")
             //for test only
-            .fallbackToDestructiveMigration()
+            //.fallbackToDestructiveMigration()
             .build()
     }
 }

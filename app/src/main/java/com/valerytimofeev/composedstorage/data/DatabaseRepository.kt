@@ -6,6 +6,10 @@ import javax.inject.Inject
 class DatabaseRepository @Inject constructor(
     private val storageDao: StorageDAO
 ) {
+    suspend fun insertNewTab(tabItem: TabItem) {
+        storageDao.add(tabItem)
+    }
+
     suspend fun insertNewCategory(categoryItem: CategoryItem) {
         storageDao.add(categoryItem)
     }
