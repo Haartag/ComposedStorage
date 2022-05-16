@@ -1,16 +1,12 @@
 package com.valerytimofeev.composedstorage.about
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -49,26 +45,43 @@ fun AboutScreen(
             )
             Spacer(modifier = Modifier.height(20.dp))
             val gitHubUrl = "https://github.com/Haartag/ComposedStorage"
+            val pixabayUrl = "https://pixabay.com/"
             val uriHandler = LocalUriHandler.current
 
-            val urlText = buildAnnotatedString {
+            val gitUrlText = buildAnnotatedString {
+                append("The photos in this app are received from ")
+
+                pushStringAnnotation(tag = "pixabay", annotation = pixabayUrl)
+                withStyle(
+                    style = SpanStyle(
+                        color = Color(0xff64B5F6),
+                        fontSize = 16.sp,
+                        textDecoration = TextDecoration.Underline
+                    )
+                ) {
+                    append("Pixabay")
+                }
+
+                append("\n\n\n\n\n")
+
                 pushStringAnnotation(tag = "GitHub", annotation = gitHubUrl)
                 withStyle(
                     style = SpanStyle(
                         color = Color(0xff64B5F6),
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         textDecoration = TextDecoration.Underline
                     )
                 ) {
                     append("App`s GitHub repository")
                 }
+
             }
 
             ClickableText(
                 modifier = Modifier.padding(16.dp),
-                text = urlText,
+                text = gitUrlText,
                 onClick = {
-                    urlText.getStringAnnotations(tag = "GitHub", start = it, end = it)
+                    gitUrlText.getStringAnnotations(tag = "GitHub", start = it, end = it)
                         .firstOrNull()?.let { url ->
                             uriHandler.openUri(url.item)
                         }

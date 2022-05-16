@@ -30,6 +30,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.valerytimofeev.composedstorage.common.CategoryEntry
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 import com.valerytimofeev.composedstorage.utils.floorMod
@@ -72,9 +73,11 @@ fun CategoryListScreen(
 
 @Composable
 fun Placeholder() {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(brush = Brush.verticalGradient(listOf(Mint, Color.LightGray))))
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(brush = Brush.verticalGradient(listOf(Mint, Color.LightGray)))
+    )
 }
 
 @ExperimentalPagerApi
@@ -186,7 +189,8 @@ fun CategoryList(
                 //categoryNames = viewModel.getCategoryByTab(page),
                 categoryNames = viewModel.getCategoryNamesByTab(page),
                 navController = navController,
-                color = color
+                color = color,
+                page = page
             )
         }
     }
@@ -197,23 +201,29 @@ fun CategoryRow(
     rowIndex: Int,
     categoryNames: List<String>,
     color: Color,
-    navController: NavController
+    page: Int,
+    navController: NavController,
+    viewModel: CategoryListViewModel = hiltViewModel(),
 ) {
     Column {
         Row {
             CategoryEntry(
                 categoryName = categoryNames[rowIndex * 2],
-                navController = navController,
-                modifier = Modifier.weight(1f),
-                color = color
+                modifier = Modifier
+                    .weight(1f)
+                    .clickable { navController.navigate("category_detail_screen/${categoryNames[rowIndex * 2]}") },
+                color = color,
+                img = viewModel.getCategoryImg(categoryName = categoryNames[rowIndex * 2], page = page)
             )
             Spacer(modifier = Modifier.width(20.dp))
             if (categoryNames.size >= rowIndex * 2 + 2) {
                 CategoryEntry(
                     categoryName = categoryNames[rowIndex * 2 + 1],
-                    navController = navController,
-                    modifier = Modifier.weight(1f),
-                    color = color
+                    modifier = Modifier
+                        .weight(1f)
+                        .clickable { navController.navigate("category_detail_screen/${categoryNames[rowIndex * 2 + 1]}") },
+                    color = color,
+                    img = viewModel.getCategoryImg(categoryName = categoryNames[rowIndex * 2 + 1], page = page)
                 )
             } else {
                 Spacer(modifier = Modifier.weight(1f))
@@ -223,31 +233,3 @@ fun CategoryRow(
     }
 }
 
-@Composable
-fun CategoryEntry(
-    categoryName: String,
-    navController: NavController,
-    modifier: Modifier = Modifier,
-    color: Color
-) {
-    Box(
-        contentAlignment = Alignment.BottomCenter,
-        modifier = modifier
-            .shadow(elevation = 4.dp, RoundedCornerShape(4.dp))
-            .clip(RoundedCornerShape(4.dp))
-            .aspectRatio(1f)
-            .background(color = color)
-            .clickable {
-                navController.navigate("category_detail_screen/${categoryName}")
-            }
-    ) {
-        Column(
-        ) {
-            Text(text = "Image")
-            Text(
-                text = categoryName,
-                textAlign = TextAlign.Center
-            )
-        }
-    }
-}

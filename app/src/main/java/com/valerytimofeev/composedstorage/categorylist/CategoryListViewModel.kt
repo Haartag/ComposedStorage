@@ -77,8 +77,14 @@ class CategoryListViewModel @Inject constructor(
         return Constants.colorsMap.getValue(tabsAndCategoriesList[page].tabItem.colorScheme)
     }
 
+    fun getCategoryImg(categoryName: String, page: Int): Int {
+        return Constants.imgMap[tabsAndCategoriesList[page].categoryItems
+            .first { it.category == categoryName }.categoryImg] ?: 0
+    }
+
+
     //make tabItem from Navigation
-    fun addNewTab(tabName: String, colorScheme: Int){
+    fun addNewTab(tabName: String, colorScheme: Int) {
         tabList.add(TabItem(0, tabName, colorScheme))
     }
 }

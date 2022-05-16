@@ -1,5 +1,6 @@
 package com.valerytimofeev.composedstorage.utils
 
+import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.ui.theme.*
 
 object Constants {
@@ -17,5 +18,12 @@ object Constants {
         8 to Theme8Color,
         9 to Theme9Color,
         10 to Theme10Color,
+    )
+
+    val imgMap = mapOf(
+        1 to R.drawable.canned50,
+        2 to R.drawable.fish50,
+        3 to R.drawable.meat50,
+        4 to R.drawable.dumplings50
     )
 }

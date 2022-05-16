@@ -9,4 +9,5 @@ data class CategoryItem(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo val category: String,
     @ColumnInfo val tabName: String,
+    @ColumnInfo val categoryImg: Int
 )
