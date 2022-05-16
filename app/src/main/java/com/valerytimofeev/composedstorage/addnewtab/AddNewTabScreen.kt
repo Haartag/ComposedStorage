@@ -32,14 +32,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.valerytimofeev.composedstorage.categorylist.TabNameBackground
+import com.valerytimofeev.composedstorage.common.TabNameBackground
 import com.valerytimofeev.composedstorage.common.TopBar
+import com.valerytimofeev.composedstorage.common.TopBarOkIcon
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 import kotlinx.coroutines.launch
 
 @Composable
 fun AddNewTabScreen(
     navController: NavController,
+    viewModel: AddNewTabViewModel = hiltViewModel(),
 ) {
     Surface(
         color = MaterialTheme.colors.background,
@@ -55,13 +57,22 @@ fun AddNewTabScreen(
                 title = "Add new tab",
                 buttonIcon = Icons.Filled.ArrowBack,
                 onButtonClicked = { navController.popBackStack() },
-                additionalInfo = { TopBarOkIcon(navController = navController) },
+                additionalInfo = {
+                    TopBarOkIcon(onClick = {
+                        if (viewModel.tabNameText.value.isNotEmpty()) {
+                            viewModel.addTab()
+                            navController.navigate("category_list_screen/${viewModel.tabNameText.value}/${viewModel.buttonSelected.value}")
+                        } else {
+                            viewModel.isInputError.value = true
+                            viewModel.focusRequester.requestFocus()
+                        }
+                    })
+                },
             )
             TabNamePreview()
             CategoryPlaceholder()
             Spacer(modifier = Modifier.height(24.dp))
             TabNameTextInput()
-            //Spacer(modifier = Modifier.height(24.dp))
             ColorPicker()
         }
     }
@@ -72,7 +83,6 @@ fun TabNamePreview(
     viewModel: AddNewTabViewModel = hiltViewModel(),
 ) {
     Box(contentAlignment = Alignment.Center) {
-        //From CategoryList
         TabNameBackground(color = viewModel.getColorByIndex(viewModel.buttonSelected.value))
         Text(
             text = viewModel.tabNameText.value,
@@ -86,31 +96,6 @@ fun TabNamePreview(
         )
 
     }
-}
-
-
-@Composable
-fun TopBarOkIcon(
-    navController: NavController,
-    viewModel: AddNewTabViewModel = hiltViewModel(),
-) {
-    Icon(
-        Icons.Filled.Done,
-        contentDescription = "Add item icon",
-        modifier = Modifier
-            .padding(8.dp)
-            .fillMaxHeight()
-            .aspectRatio(1f)
-            .clickable {
-                if (viewModel.tabNameText.value.isNotEmpty()) {
-                    viewModel.addTab()
-                    navController.navigate("category_list_screen/${viewModel.tabNameText.value}/${viewModel.buttonSelected.value}")
-                } else {
-                    viewModel.isInputError.value = true
-                    viewModel.focusRequester.requestFocus()
-                }
-            }
-    )
 }
 
 @Composable

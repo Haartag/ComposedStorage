@@ -20,8 +20,9 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.valerytimofeev.composedstorage.addnewtab.AddNewTabViewModel
-import com.valerytimofeev.composedstorage.categorylist.TabNameBackground
+import com.valerytimofeev.composedstorage.common.TabNameBackground
 import com.valerytimofeev.composedstorage.common.TopBar
+import com.valerytimofeev.composedstorage.common.TopBarOkIcon
 
 @Composable
 fun AddNewCategoryScreen(
@@ -38,11 +39,15 @@ fun AddNewCategoryScreen(
             TopBar(
                 title = "Add new category",
                 buttonIcon = Icons.Filled.ArrowBack,
-                onButtonClicked = { navController.popBackStack() }
+                onButtonClicked = { navController.popBackStack() },
+                additionalInfo = {
+                    TopBarOkIcon(onClick = {/*TODO*/})
+                }
             )
             TabNameChooser()
             CategoryTilePreview()
             CategoryNameInput()
+            ImgPicker()
         }
     }
 }
@@ -52,10 +57,9 @@ fun TabNameChooser(
     viewModel: AddNewCategoryViewModel = hiltViewModel(),
 ) {
     Box(contentAlignment = Alignment.Center) {
-        //From CategoryList
         TabNameBackground(color = viewModel.getColorByIndex(viewModel.colorScheme.value))
-/*        Text(
-            text = viewModel.tabNameText.value,
+        Text(
+            text = "Category",//viewModel.tabNameText.value,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold,
@@ -63,7 +67,7 @@ fun TabNameChooser(
             textAlign = TextAlign.Center,
             color = MaterialTheme.colors.onSurface,
             modifier = Modifier.padding(horizontal = 50.dp)
-        )*/
+        )
     }
 }
 
@@ -75,4 +79,9 @@ fun CategoryTilePreview() {
 @Composable
 fun CategoryNameInput() {
     
+}
+
+@Composable
+fun ImgPicker() {
+
 }

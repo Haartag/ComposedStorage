@@ -25,8 +25,6 @@ class AddNewCategoryViewModel @Inject constructor(
         return Constants.colorsMap[index] ?: Color.LightGray
     }
 
-
-
     fun addCategory() {
         viewModelScope.launch {
             repository.insertNewCategory(CategoryItem(0,"", "", 0))

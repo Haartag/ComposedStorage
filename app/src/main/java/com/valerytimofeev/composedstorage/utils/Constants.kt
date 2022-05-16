@@ -21,6 +21,7 @@ object Constants {
     )
 
     val imgMap = mapOf(
+        0 to R.drawable.placeholder,
         1 to R.drawable.canned50,
         2 to R.drawable.fish50,
         3 to R.drawable.meat50,

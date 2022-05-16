@@ -31,6 +31,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import com.valerytimofeev.composedstorage.common.CategoryEntry
+import com.valerytimofeev.composedstorage.common.TabNameBackground
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 import com.valerytimofeev.composedstorage.utils.floorMod
@@ -133,42 +134,6 @@ fun TabName(
         )
     }
 
-}
-
-@Composable
-fun TabNameBackground(
-    modifier: Modifier = Modifier,
-    color: Color = Color.LightGray
-) {
-    Column {
-        Box(
-            modifier = modifier
-                .fillMaxWidth()
-                .background(color = color.copy(alpha = 0.5f))
-                .height(50.dp)
-        ) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    Icons.Outlined.KeyboardArrowLeft,
-                    contentDescription = "Left arrow",
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxHeight()
-                )
-                Icon(
-                    Icons.Outlined.KeyboardArrowRight,
-                    contentDescription = "Right arrow",
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxHeight()
-                )
-            }
-        }
-    }
 }
 
 @Composable
