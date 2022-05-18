@@ -1,5 +1,6 @@
 package com.valerytimofeev.composedstorage.utils
 
+import androidx.compose.ui.unit.dp
 import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.ui.theme.*
 
@@ -27,4 +28,11 @@ object Constants {
         3 to R.drawable.meat50,
         4 to R.drawable.dumplings50
     )
+
+    val sizeTypes = listOf("кг.", "шт.", "л.")
+
+
+    val pickerText = listOf("Кг", "Шт", "Литр")
+    val horizontalPickerWidth = 175.dp
+    val horizontalPickerSwipeLimiter = 100.dp
 }

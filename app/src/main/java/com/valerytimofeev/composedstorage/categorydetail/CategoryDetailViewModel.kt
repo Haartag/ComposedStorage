@@ -1,6 +1,5 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -8,7 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.utils.Constants
+import com.valerytimofeev.composedstorage.utils.Constants.pickerText
+import com.valerytimofeev.composedstorage.utils.Constants.sizeTypes
+import com.valerytimofeev.composedstorage.utils.MutableStorageItem
+import com.valerytimofeev.composedstorage.utils.makeStorageItemImmutable
+import com.valerytimofeev.composedstorage.utils.makeStorageItemMutable
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -18,47 +23,35 @@ import javax.inject.Inject
 class CategoryDetailViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
-
     //List
-    private val currentCategory = mutableStateOf("")
-    val storageList = mutableStateListOf<StorageItem>()
+    val currentCategory = mutableStateOf("")
 
     //Dialog
-    val openChangeDialog = mutableStateOf(false)
+    val openChangeOrAddNewDialog = mutableStateOf(false)
     val isChangeDialog = mutableStateOf(false)
-    var clickedStorage = StorageItem(0, "", "", "", 0)
-    var clickedIndex = -1
+    var clickedStorage = MutableStorageItem(0, "", "", "", 0)
     val isErrorInSize = mutableStateOf(false)
 
     //Divider for Int / BigDecimal conversion
     private val divider = BigDecimal(100)
 
-    fun getStorageListSize(): Int {
-        return storageList.size
-    }
-
     //Work with dialog
 
     //prepare ClickedStorage for add new item
     fun addToClickedStorage(category: String) {
-        clickedStorage = StorageItem(0, "", category, "кг.", 0)
+        clickedStorage = MutableStorageItem(0, "", category, "кг.", 0)
     }
 
-    fun sizeToDecimalSize(number: Int): String {
-        return (number.toBigDecimal().divide(divider)).toString()
-    }
+    fun sizeToDecimalSize(number: Int): String = (number.toBigDecimal().divide(divider)).toString()
 
-    fun getDecimalSize(): String {
-        return clickedStorage.size.toBigDecimal().divide(divider).toString()
-    }
+    fun getDecimalSize(): String = clickedStorage.size.toBigDecimal().divide(divider).toString()
 
     fun saveIntegerSize(sizeInString: String) {
         clickedStorage.size = sizeInString.toBigDecimal().multiply(divider).toInt()
     }
 
-    fun saveClickedStorage(itemIndex: Int) {
-        clickedStorage = storageList[itemIndex].copy()
-        clickedIndex = itemIndex
+    fun saveClickedItem(item: StorageItem) {
+        clickedStorage = makeStorageItemMutable(item)
         resetPickerIndex()
     }
 
@@ -117,63 +110,35 @@ class CategoryDetailViewModel @Inject constructor(
 
     //Work with database
 
-    fun loadItemListForCategory(category: String) {
-        currentCategory.value = category
-        if (storageList.isEmpty()) {
-            viewModelScope.launch {
-                repository.getItemsByCategory(category = currentCategory.value).forEach {
-                    storageList.add(it)
-                }
-            }
-        }
+    fun getFlow(categoryName: String): Flow<List<StorageItem>> {
+        return repository.getItemsByCategoryFlow(categoryName)
     }
 
     fun addItem() {
         viewModelScope.launch {
-            repository.insertNewItem(storageItem = clickedStorage)
+            repository.insertNewItem(storageItem = makeStorageItemImmutable(clickedStorage))
         }
-        storageList.add(clickedStorage)
     }
 
     fun changeItem() {
         viewModelScope.launch {
-            repository.updateItem(item = clickedStorage)
+            repository.updateItem(item = makeStorageItemImmutable(clickedStorage))
         }
-        storageList[clickedIndex] = clickedStorage
     }
 
     fun deleteItem() {
         viewModelScope.launch {
-            storageList.remove(clickedStorage)
-            repository.deleteItem(item = clickedStorage)
+            repository.deleteItem(item = makeStorageItemImmutable(clickedStorage))
         }
     }
 
+    //Horizontal Picker
 
-    //Horizontal Picker TODO some refactor
+    private val pickerIndex = mutableStateOf(getPickerIndex(clickedStorage.sizeType))
 
-    val width = 175.dp
-    val swipeLimiter = 100.dp
-    val pickerText = listOf("Кг", "Шт", "Литр")
-    val pickerIndex = mutableStateOf(setPickerIndex(clickedStorage.sizeType))
+    private fun getPickerIndex(sizeType: String): Int = sizeTypes.indexOf(sizeType)
+    private fun getSizeType(): String = sizeTypes[pickerIndex.value]
 
-    private fun setPickerIndex(sizeType: String): Int {
-        return when (sizeType) {
-            "кг." -> 0
-            "шт." -> 1
-            "л." -> 2
-            else -> 0
-        }
-    }
-
-    private fun getSizeType(): String {
-        return when (pickerIndex.value) {
-            0 -> "кг."
-            1 -> "шт."
-            2 -> "л."
-            else -> "кг."
-        }
-    }
 
     fun indexIncrease() {
         if (pickerIndex.value < pickerText.lastIndex) pickerIndex.value++ else pickerIndex.value = 0
@@ -198,8 +163,8 @@ class CategoryDetailViewModel @Inject constructor(
     }
 
     private fun resetPickerIndex() {
-        pickerIndex.value = setPickerIndex(clickedStorage.sizeType)
+        pickerIndex.value = getPickerIndex(clickedStorage.sizeType)
     }
-
-
 }
+
+

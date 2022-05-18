@@ -47,6 +47,9 @@ interface StorageDAO {
     @Query("SELECT * FROM StorageDB WHERE category = :category")
     suspend fun getByCategory(category: String): List<StorageItem>
 
+    @Query("SELECT * FROM StorageDB WHERE category = :category")
+    fun getByCategoryFlow(category: String): Flow<List<StorageItem>>
+
 
     //Category Queries
     @Query("SELECT COUNT(*) FROM CategoryDB")

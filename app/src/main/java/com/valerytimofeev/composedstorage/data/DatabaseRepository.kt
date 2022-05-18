@@ -1,6 +1,7 @@
 package com.valerytimofeev.composedstorage.data
 
 import com.valerytimofeev.composedstorage.data.database.*
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class DatabaseRepository @Inject constructor(
@@ -32,6 +33,10 @@ class DatabaseRepository @Inject constructor(
 
     suspend fun getItemsByCategory(category: String): List<StorageItem> {
         return storageDao.getByCategory(category = category)
+    }
+
+    fun getItemsByCategoryFlow(category: String): Flow<List<StorageItem>> {
+        return storageDao.getByCategoryFlow(category = category)
     }
 
     suspend fun getTabs(): List<TabItem> {

@@ -40,6 +40,7 @@ import androidx.navigation.NavController
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.ui.theme.Mint
+import com.valerytimofeev.composedstorage.utils.Constants
 import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -51,7 +52,7 @@ fun CategoryDetailScreen(
     viewModel: CategoryDetailViewModel = hiltViewModel(),
     navController: NavController
 ) {
-    viewModel.loadItemListForCategory(category = categoryName)
+    viewModel.currentCategory.value = categoryName
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -78,7 +79,7 @@ fun TopBarAddIcon(
             .fillMaxHeight()
             .aspectRatio(1f)
             .clickable {
-                viewModel.openChangeDialog.value = true
+                viewModel.openChangeOrAddNewDialog.value = true
             }
     )
 }
@@ -90,7 +91,7 @@ fun ItemsList(
     viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
     //open change dialog
-    if (viewModel.openChangeDialog.value) {
+    if (viewModel.openChangeOrAddNewDialog.value) {
         //Change item ChangeDialog
         if (viewModel.isChangeDialog.value) {
             ChangeDialog(
@@ -105,7 +106,7 @@ fun ItemsList(
                 leftIcon = Icons.Filled.Delete,
                 onLeftClick = {
                     viewModel.deleteItem()
-                    viewModel.openChangeDialog.value = false
+                    viewModel.openChangeOrAddNewDialog.value = false
                     viewModel.isChangeDialog.value = false
                 },
                 rightButtonText = "Edit",
@@ -113,7 +114,7 @@ fun ItemsList(
                 onRightClick = {
                     if (!viewModel.isErrorInSize.value) {
                         viewModel.changeItem()
-                        viewModel.openChangeDialog.value = false
+                        viewModel.openChangeOrAddNewDialog.value = false
                         viewModel.isChangeDialog.value = false
                     }
                 }
@@ -130,26 +131,27 @@ fun ItemsList(
                 leftButtonText = "Cancel",
                 leftIcon = Icons.Filled.Close,
                 onLeftClick = {
-                    viewModel.openChangeDialog.value = false
+                    viewModel.openChangeOrAddNewDialog.value = false
                     viewModel.isChangeDialog.value = false
                 },
                 rightButtonText = "Add",
                 rightIcon = Icons.Filled.Add,
                 onRightClick = {
                     viewModel.addItem()
-                    viewModel.openChangeDialog.value = false
+                    viewModel.openChangeOrAddNewDialog.value = false
                     viewModel.isChangeDialog.value = false
                 }
             )
         }
     }
-
+    val dataFlow = viewModel.getFlow(categoryName).collectAsState(initial = emptyList())
     //Main list
     LazyColumn(contentPadding = PaddingValues(12.dp)) {
-        items(count = viewModel.getStorageListSize()) {
+        //items(count = viewModel.getStorageListSize()) {
+        items(count = dataFlow.value.size) {
             ItemEntry(
                 itemIndex = it,
-                storageList = viewModel.storageList
+                storageList = dataFlow.value
             )
         }
     }
@@ -167,8 +169,8 @@ fun ItemEntry(
         sizeType = storageList[itemIndex].sizeType,
         modifier = Modifier.clickable {
             //save item data to viewmodel for dialog
-            viewModel.saveClickedStorage(itemIndex = itemIndex)
-            viewModel.openChangeDialog.value = true
+            viewModel.saveClickedItem(item = storageList[itemIndex])
+            viewModel.openChangeOrAddNewDialog.value = true
             viewModel.isChangeDialog.value = true
         }
     )
@@ -389,7 +391,7 @@ fun ChangeDialog(
 
         },
         onDismissRequest = {
-            viewModel.openChangeDialog.value = false
+            viewModel.openChangeOrAddNewDialog.value = false
             viewModel.isChangeDialog.value = false
         },
         confirmButton = {
@@ -508,7 +510,7 @@ fun SizeTypePicker(
     //Experimental API
     val swipeableState = rememberSwipeableState(initialValue = HorizontalPickerState.DEFAULT)
     val sizeInPx = with(LocalDensity.current) {
-        (viewModel.width - viewModel.swipeLimiter).toPx()
+        (Constants.horizontalPickerWidth - Constants.horizontalPickerSwipeLimiter).toPx()
     }
     val anchors = mapOf(
         -sizeInPx to HorizontalPickerState.NEGATIVE,
@@ -541,7 +543,7 @@ fun SizeTypePicker(
     Box(
         modifier = Modifier
             .requiredHeight(75.dp)
-            .requiredWidth(width = viewModel.width)
+            .requiredWidth(width = Constants.horizontalPickerWidth)
             //Experimental API
             .swipeable(
                 state = swipeableState,
@@ -569,7 +571,7 @@ fun SwipeableTexts(
     swipeableState: SwipeableState<HorizontalPickerState>,
     viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
-    Text(text = viewModel.pickerText[viewModel.getLeftIndex()],
+    Text(text = Constants.pickerText[viewModel.getLeftIndex()],
         fontSize = 14.sp,
         color = Color.Gray,
         modifier = Modifier
@@ -579,7 +581,7 @@ fun SwipeableTexts(
             }
     )
     Text(
-        text = viewModel.pickerText[viewModel.getMidIndex()],
+        text = Constants.pickerText[viewModel.getMidIndex()],
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
@@ -589,7 +591,7 @@ fun SwipeableTexts(
 
     )
     Text(
-        text = viewModel.pickerText[viewModel.getRightIndex()],
+        text = Constants.pickerText[viewModel.getRightIndex()],
         fontSize = 14.sp,
         color = Color.Gray,
         modifier = Modifier

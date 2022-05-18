@@ -18,16 +18,28 @@ class AddNewCategoryViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
 
-    val colorScheme = mutableStateOf(0)
-    val tabNames = mutableStateListOf<TabItem>()
+    //val colorScheme = mutableStateOf(0)
+    val dropDownExpanded = mutableStateOf(false)
+    val selectedIndex = mutableStateOf(0)
+    val tabNames = mutableListOf<TabItem>()
+    var tabsLoaded = mutableStateOf(false)
 
-    fun getColorByIndex(index: Int): Color {
-        return Constants.colorsMap[index] ?: Color.LightGray
+
+
+    init {
+        viewModelScope.launch {
+            repository.getTabs().forEach { tabNames.add(it) }
+            tabsLoaded.value = true
+        }
+    }
+
+    fun getColorByIndex(): Color {
+        return Constants.colorsMap[tabNames[selectedIndex.value].colorScheme] ?: Color.LightGray
     }
 
     fun addCategory() {
         viewModelScope.launch {
-            repository.insertNewCategory(CategoryItem(0,"", "", 0))
+            repository.insertNewCategory(CategoryItem(0, "", "", 0))
         }
     }
 }

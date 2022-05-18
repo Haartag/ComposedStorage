@@ -1,14 +1,13 @@
 package com.valerytimofeev.composedstorage.addnewcategory
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.outlined.ArrowDropDown
+import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,7 +40,7 @@ fun AddNewCategoryScreen(
                 buttonIcon = Icons.Filled.ArrowBack,
                 onButtonClicked = { navController.popBackStack() },
                 additionalInfo = {
-                    TopBarOkIcon(onClick = {/*TODO*/})
+                    TopBarOkIcon(onClick = {/*TODO*/ })
                 }
             )
             TabNameChooser()
@@ -57,17 +56,64 @@ fun TabNameChooser(
     viewModel: AddNewCategoryViewModel = hiltViewModel(),
 ) {
     Box(contentAlignment = Alignment.Center) {
-        TabNameBackground(color = viewModel.getColorByIndex(viewModel.colorScheme.value))
+        TabNameBackground(color = viewModel.getColorByIndex())
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.padding(horizontal = 50.dp)
+        ) {
+            Box(modifier = Modifier.wrapContentSize(Alignment.TopCenter)) {
+                if (viewModel.tabsLoaded.value) {
+                    DropdownItem(
+                        text = viewModel.tabNames[viewModel.selectedIndex.value].tabName,
+                        icon = {
+                            Icon(
+                                Icons.Filled.ArrowDropDown,
+                                contentDescription = "Drop down",
+                                modifier = Modifier.size(32.dp)
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(horizontal = 50.dp)
+                            .clickable {
+                            viewModel.dropDownExpanded.value = true
+                        })
+                    DropdownMenu(
+                        expanded = viewModel.dropDownExpanded.value,
+                        onDismissRequest = { viewModel.dropDownExpanded.value = false }
+                    ) {
+                        viewModel.tabNames.forEachIndexed { index, item ->
+                            DropdownMenuItem(onClick = {
+                                viewModel.selectedIndex.value = index
+                                viewModel.dropDownExpanded.value = false
+                            }) {
+                                DropdownItem(text = item.tabName)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+    }
+}
+
+@Composable
+fun DropdownItem(
+    modifier: Modifier = Modifier,
+    text: String,
+    icon: @Composable () -> Unit = {}
+) {
+    Row(modifier = modifier) {
         Text(
-            text = "Category",//viewModel.tabNameText.value,
+            text = text,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             fontWeight = FontWeight.Bold,
             fontSize = 24.sp,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colors.onSurface,
-            modifier = Modifier.padding(horizontal = 50.dp)
         )
+        icon()
     }
 }
 
@@ -78,7 +124,7 @@ fun CategoryTilePreview() {
 
 @Composable
 fun CategoryNameInput() {
-    
+
 }
 
 @Composable
