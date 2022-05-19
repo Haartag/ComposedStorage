@@ -27,37 +27,6 @@ class DatabaseRepository @Inject constructor(
         storageDao.delete(item)
     }
 
-/*    suspend fun getCategoryByTabName(tabName: String): List<String> {
-        return storageDao.getCategoryByTab(tabName = tabName)
-    }*/
-
-/*    suspend fun getItemsByCategory(category: String): List<StorageItem> {
-        return storageDao.getByCategory(category = category)
-    }*/
-
-
-
-    fun getCategoriesOfTabFlow(): Flow<List<TabWithCategoriesRelation>> {
-        return storageDao.getCategoriesOfTabFlow()
-    }
-
-
-
-    suspend fun getTabsCount(): Int {
-        return storageDao.tabSize()
-    }
-
-    suspend fun getCategoryCount(): Int {
-        return storageDao.categorySize()
-    }
-
-
-
-    suspend fun getCategoriesOfTab(tabName: String): List<TabWithCategoriesRelation> {
-        return storageDao.getCategoriesOfTab(tabName)
-    }
-
-
     //Flow functions
     fun getTabsFlow(): Flow<List<TabItem>> {
         return storageDao.getAllTabsFlow()

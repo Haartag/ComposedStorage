@@ -1,5 +1,6 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -61,7 +62,7 @@ fun CategoryDetailScreen(
             title = categoryName,
             buttonIcon = Icons.Filled.ArrowBack,
             onButtonClicked = { navController.popBackStack() },
-            additionalInfo = { TopBarAddIcon() }
+            additionalInfo = { TopBarAddIcon(categoryName = categoryName) }
         )
         ItemsList(categoryName = categoryName)
     }
@@ -69,7 +70,8 @@ fun CategoryDetailScreen(
 
 @Composable
 fun TopBarAddIcon(
-    viewModel: CategoryDetailViewModel = hiltViewModel()
+    viewModel: CategoryDetailViewModel = hiltViewModel(),
+    categoryName: String
 ) {
     Icon(
         Icons.Filled.AddCircle,
@@ -79,6 +81,7 @@ fun TopBarAddIcon(
             .fillMaxHeight()
             .aspectRatio(1f)
             .clickable {
+                viewModel.addToClickedStorage(category = categoryName)
                 viewModel.openChangeOrAddNewDialog.value = true
             }
     )
@@ -121,7 +124,6 @@ fun ItemsList(
             )
         } else {
             //Add new item ChangeDialog
-            viewModel.addToClickedStorage(category = categoryName)
             ChangeDialog(
                 header = {
                     AddItemContent(
@@ -588,7 +590,6 @@ fun SwipeableTexts(
             .offset {
                 IntOffset(swipeableState.offset.value.roundToInt(), 0)
             }
-
     )
     Text(
         text = Constants.pickerText[viewModel.getRightIndex()],
@@ -599,6 +600,5 @@ fun SwipeableTexts(
             .offset {
                 IntOffset(swipeableState.offset.value.roundToInt(), 0)
             }
-
     )
 }

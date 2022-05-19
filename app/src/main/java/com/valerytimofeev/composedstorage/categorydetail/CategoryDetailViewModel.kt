@@ -1,5 +1,6 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
@@ -40,6 +41,7 @@ class CategoryDetailViewModel @Inject constructor(
     //prepare ClickedStorage for add new item
     fun addToClickedStorage(category: String) {
         clickedStorage = MutableStorageItem(0, "", category, "кг.", 0)
+        resetPickerIndex()
     }
 
     fun sizeToDecimalSize(number: Int): String = (number.toBigDecimal().divide(divider)).toString()
@@ -136,7 +138,9 @@ class CategoryDetailViewModel @Inject constructor(
 
     private val pickerIndex = mutableStateOf(getPickerIndex(clickedStorage.sizeType))
 
-    private fun getPickerIndex(sizeType: String): Int = sizeTypes.indexOf(sizeType)
+    private fun getPickerIndex(sizeType: String): Int {
+
+     return sizeTypes.indexOf(sizeType)}
     private fun getSizeType(): String = sizeTypes[pickerIndex.value]
 
 

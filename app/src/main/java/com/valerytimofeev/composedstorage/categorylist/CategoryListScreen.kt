@@ -92,7 +92,6 @@ fun TabPager(
             .offset(y = (-50).dp)
     ) { index ->
         val page = (index - viewModel.startIndex).floorMod(tabData.size)
-        Log.d("TAG", "TabPager: $page")
         viewModel.currentPage.value =
                 //(pagerState.currentPage - viewModel.startIndex).floorMod(viewModel.tabCount.value)
             (pagerState.currentPage - viewModel.startIndex).floorMod(tabData.size)
@@ -100,7 +99,6 @@ fun TabPager(
             TabName(page = page)
                 CategoryList(
                     navController = navController,
-                    //color = viewModel.getCategoryTypeColor(page),
                     color = viewModel.getCategoryTypeColor(tabData[page].colorScheme),
                     tabName = tabData[page].tabName
                 )

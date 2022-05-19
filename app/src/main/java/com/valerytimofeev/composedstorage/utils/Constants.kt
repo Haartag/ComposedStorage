@@ -33,6 +33,7 @@ object Constants {
 
 
     val pickerText = listOf("Кг", "Шт", "Литр")
+
     val horizontalPickerWidth = 175.dp
     val horizontalPickerSwipeLimiter = 100.dp
 }
