@@ -55,6 +55,10 @@ interface StorageDAO {
     @Query("SELECT COUNT(*) FROM CategoryDB")
     suspend fun categorySize(): Int
 
+    @Query("SELECT * FROM CategoryDB WHERE tabName = :tabName")
+    fun getByTabFlow(tabName: String): Flow<List<CategoryItem>>
+
+
 /*    @Query("SELECT category FROM CategoryDB WHERE tabName = :tabName")
     suspend fun getCategoryByTab(tabName: String): List<String>*/
 
@@ -63,8 +67,12 @@ interface StorageDAO {
     suspend fun tabSize(): Int
 
     @Query("SELECT * FROM TabDB")
-    suspend fun getAllTabs(): List<TabItem>
+    fun getAllTabsFlow(): Flow<List<TabItem>>
 
+
+    @Transaction
+    @Query("SELECT * FROM TabDB")
+    fun getCategoriesOfTabFlow(): Flow<List<TabWithCategoriesRelation>>
 
 
 

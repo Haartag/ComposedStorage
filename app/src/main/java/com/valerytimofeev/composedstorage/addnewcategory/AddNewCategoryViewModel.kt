@@ -28,7 +28,7 @@ class AddNewCategoryViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            repository.getTabs().forEach { tabNames.add(it) }
+            //repository.getTabs().forEach { tabNames.add(it) }
             tabsLoaded.value = true
         }
     }

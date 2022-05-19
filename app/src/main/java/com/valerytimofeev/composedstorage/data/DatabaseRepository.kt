@@ -31,17 +31,17 @@ class DatabaseRepository @Inject constructor(
         return storageDao.getCategoryByTab(tabName = tabName)
     }*/
 
-    suspend fun getItemsByCategory(category: String): List<StorageItem> {
+/*    suspend fun getItemsByCategory(category: String): List<StorageItem> {
         return storageDao.getByCategory(category = category)
+    }*/
+
+
+
+    fun getCategoriesOfTabFlow(): Flow<List<TabWithCategoriesRelation>> {
+        return storageDao.getCategoriesOfTabFlow()
     }
 
-    fun getItemsByCategoryFlow(category: String): Flow<List<StorageItem>> {
-        return storageDao.getByCategoryFlow(category = category)
-    }
 
-    suspend fun getTabs(): List<TabItem> {
-        return storageDao.getAllTabs()
-    }
 
     suspend fun getTabsCount(): Int {
         return storageDao.tabSize()
@@ -57,4 +57,17 @@ class DatabaseRepository @Inject constructor(
         return storageDao.getCategoriesOfTab(tabName)
     }
 
+
+    //Flow functions
+    fun getTabsFlow(): Flow<List<TabItem>> {
+        return storageDao.getAllTabsFlow()
+    }
+
+    fun getCategoryByTabFlow(Tab: String): Flow<List<CategoryItem>> {
+        return storageDao.getByTabFlow(tabName = Tab)
+    }
+
+    fun getItemsByCategoryFlow(category: String): Flow<List<StorageItem>> {
+        return storageDao.getByCategoryFlow(category = category)
+    }
 }
