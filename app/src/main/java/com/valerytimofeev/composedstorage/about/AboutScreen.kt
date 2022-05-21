@@ -48,7 +48,7 @@ fun AboutScreen(
             val pixabayUrl = "https://pixabay.com/"
             val uriHandler = LocalUriHandler.current
 
-            val gitUrlText = buildAnnotatedString {
+            val aboutMainText = buildAnnotatedString {
                 append("The photos in this app are received from ")
 
                 pushStringAnnotation(tag = "pixabay", annotation = pixabayUrl)
@@ -79,9 +79,13 @@ fun AboutScreen(
 
             ClickableText(
                 modifier = Modifier.padding(16.dp),
-                text = gitUrlText,
+                text = aboutMainText,
                 onClick = {
-                    gitUrlText.getStringAnnotations(tag = "GitHub", start = it, end = it)
+                    aboutMainText.getStringAnnotations(tag = "GitHub", start = it, end = it)
+                        .firstOrNull()?.let { url ->
+                            uriHandler.openUri(url.item)
+                        }
+                    aboutMainText.getStringAnnotations(tag = "pixabay", start = it, end = it)
                         .firstOrNull()?.let { url ->
                             uriHandler.openUri(url.item)
                         }

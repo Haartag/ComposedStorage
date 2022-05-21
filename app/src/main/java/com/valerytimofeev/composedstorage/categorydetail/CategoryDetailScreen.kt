@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,11 +20,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.TextStyle
@@ -261,14 +264,22 @@ fun ChangeDialog(
     rightButtonText: String,
     onRightClick: () -> Unit,
 ) {
+    var focusManager = LocalFocusManager.current
     NoPaddingAlertDialog(
+        focusManager = focusManager,
         title = {
             header()
         },
         text = {
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            focusManager.clearFocus()
+                        })
+                    }
             ) {
                 //focus textfield on both text and icon click
                 val focusRequester = FocusRequester()
@@ -285,7 +296,7 @@ fun ChangeDialog(
                     var nameText by remember {
                         mutableStateOf(viewModel.clickedStorage.name)
                     }
-                    val focusManager = LocalFocusManager.current
+                    focusManager = LocalFocusManager.current
                     BasicTextField(
                         value = nameText,
                         onValueChange = {
@@ -320,7 +331,7 @@ fun ChangeDialog(
                     var sizeText by remember {
                         mutableStateOf(viewModel.getDecimalSize())
                     }
-                    val focusManager = LocalFocusManager.current
+                    //focusManager = LocalFocusManager.current
 
                     Icon(
                         Icons.Filled.KeyboardArrowDown,
@@ -457,11 +468,12 @@ fun NoPaddingAlertDialog(
     shape: Shape = MaterialTheme.shapes.medium,
     backgroundColor: Color = MaterialTheme.colors.surface,
     contentColor: Color = contentColorFor(backgroundColor),
-    properties: DialogProperties = DialogProperties()
+    properties: DialogProperties = DialogProperties(),
+    focusManager: FocusManager
 ) {
     Dialog(
         onDismissRequest = onDismissRequest,
-        properties = properties
+        properties = properties,
     ) {
         Surface(
             modifier = modifier,
@@ -472,6 +484,11 @@ fun NoPaddingAlertDialog(
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .pointerInput(Unit) {
+                        detectTapGestures(onTap = {
+                            focusManager.clearFocus()
+                        })
+                    }
             ) {
                 title?.let {
                     CompositionLocalProvider(LocalContentAlpha provides ContentAlpha.high) {

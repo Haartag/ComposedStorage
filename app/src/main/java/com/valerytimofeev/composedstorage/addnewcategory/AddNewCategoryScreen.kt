@@ -3,6 +3,7 @@ package com.valerytimofeev.composedstorage.addnewcategory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -14,8 +15,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -41,6 +44,7 @@ fun AddNewCategoryScreen(
     viewModel: AddNewCategoryViewModel = hiltViewModel(),
     navController: NavController
 ) {
+    val focusManager = LocalFocusManager.current
     Surface(
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize(),
@@ -49,6 +53,11 @@ fun AddNewCategoryScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                }
         ) {
             TopBar(
                 title = "Add new category",
@@ -68,7 +77,7 @@ fun AddNewCategoryScreen(
             )
             TabNameChooser()
             CategoryTilePreview()
-            CategoryNameInput()
+            CategoryNameInput(focusManager = focusManager)
             ImgPicker()
         }
     }
@@ -172,8 +181,8 @@ fun CategoryTilePreview(
 @Composable
 fun CategoryNameInput(
     viewModel: AddNewCategoryViewModel = hiltViewModel(),
+    focusManager: FocusManager
 ) {
-    val focusManager = LocalFocusManager.current
     Box(
         modifier = Modifier
             .fillMaxWidth()

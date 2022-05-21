@@ -3,6 +3,7 @@ package com.valerytimofeev.composedstorage.addnewtab
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -19,9 +20,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -48,11 +51,18 @@ fun AddNewTabScreen(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        val focusManager = LocalFocusManager.current
         Column(
             modifier = Modifier
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+                .fillMaxSize()
+                .pointerInput(Unit) {
+                    detectTapGestures(onTap = {
+                        focusManager.clearFocus()
+                    })
+                },
+            horizontalAlignment = Alignment.CenterHorizontally,
+
+            ) {
             TopBar(
                 title = "Add new tab",
                 buttonIcon = Icons.Filled.ArrowBack,
@@ -72,7 +82,7 @@ fun AddNewTabScreen(
             TabNamePreview()
             CategoryPlaceholder()
             Spacer(modifier = Modifier.height(24.dp))
-            TabNameTextInput()
+            TabNameTextInput(focusManager = focusManager)
             ColorPicker()
         }
     }
@@ -121,8 +131,10 @@ fun CategoryPlaceholder(
 }
 
 @Composable
-fun TabNameTextInput(viewModel: AddNewTabViewModel = hiltViewModel()) {
-    val focusManager = LocalFocusManager.current
+fun TabNameTextInput(
+    viewModel: AddNewTabViewModel = hiltViewModel(),
+    focusManager: FocusManager
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
