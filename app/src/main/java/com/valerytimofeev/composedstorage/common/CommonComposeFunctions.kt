@@ -101,24 +101,34 @@ fun CategoryEntry(
                 .data(data = img)
                 .build()
         )
-            Image(
-                painter = painter,
-                contentDescription = categoryName,
-                modifier = modifier
-                    .fillMaxSize()
-            )
+        Image(
+            painter = painter,
+            contentDescription = categoryName,
+            modifier = modifier
+                .fillMaxSize()
+        )
         Box(
             contentAlignment = BottomCenter,
-            modifier = modifier
-                .fillMaxHeight(0.6f)
-                .fillMaxWidth()
-                .background(
-                    brush = Brush.verticalGradient(
-                        listOf(Color.Transparent, color)
-                    )
-                )
-
         ) {
+            Column() {
+                Box(modifier = Modifier
+                    .weight(0.4f)
+                    .fillMaxWidth())
+                Box(
+                    modifier = Modifier
+                        .weight(0.55f)
+                        .fillMaxWidth()
+                        .background(
+                            brush = Brush.verticalGradient(
+                                listOf(Color.Transparent, color)
+                            )
+                        )
+                )
+                Box(modifier = Modifier
+                    .weight(0.05f)
+                    .background(color = color)
+                    .fillMaxWidth())
+            }
             Text(text = categoryName, fontWeight = fontWeight, fontSize = fontSize)
         }
     }
