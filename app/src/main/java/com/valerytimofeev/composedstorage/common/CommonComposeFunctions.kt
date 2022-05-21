@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -85,6 +86,8 @@ fun CategoryEntry(
     modifier: Modifier = Modifier,
     color: Color,
     img: Int,
+    fontWeight: FontWeight = FontWeight.SemiBold,
+    fontSize: TextUnit = 18.sp
 ) {
     Box(
         contentAlignment = BottomCenter,
@@ -98,14 +101,12 @@ fun CategoryEntry(
                 .data(data = img)
                 .build()
         )
-        if (img != 0) {
             Image(
                 painter = painter,
                 contentDescription = categoryName,
                 modifier = modifier
                     .fillMaxSize()
             )
-        }
         Box(
             contentAlignment = BottomCenter,
             modifier = modifier
@@ -118,8 +119,7 @@ fun CategoryEntry(
                 )
 
         ) {
-            //TODO change text
-            Text(text = categoryName, fontWeight = FontWeight.SemiBold, fontSize = 18.sp)
+            Text(text = categoryName, fontWeight = fontWeight, fontSize = fontSize)
         }
     }
 }

@@ -61,7 +61,7 @@ fun AddNewTabScreen(
                     TopBarOkIcon(onClick = {
                         if (viewModel.tabNameText.value.isNotEmpty()) {
                             viewModel.addTab()
-                            navController.navigate("category_list_screen/${viewModel.tabNameText.value}/${viewModel.buttonSelected.value}")
+                            navController.navigate("category_list_screen")
                         } else {
                             viewModel.isInputError.value = true
                             viewModel.focusRequester.requestFocus()

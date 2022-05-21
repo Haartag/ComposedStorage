@@ -43,6 +43,6 @@ class CategoryListViewModel @Inject constructor(
     }
 
     fun getCategoryImg(imgIndex: Int): Int {
-        return Constants.imgMap[imgIndex] ?: R.drawable.canned50
+        return Constants.imgMap[imgIndex] ?: R.drawable.placeholder50
     }
 }

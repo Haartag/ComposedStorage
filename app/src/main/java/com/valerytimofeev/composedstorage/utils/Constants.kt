@@ -22,11 +22,15 @@ object Constants {
     )
 
     val imgMap = mapOf(
-        0 to R.drawable.placeholder,
+        0 to R.drawable.placeholder50,
         1 to R.drawable.canned50,
         2 to R.drawable.fish50,
         3 to R.drawable.meat50,
-        4 to R.drawable.dumplings50
+        4 to R.drawable.dumplings50,
+        5 to R.drawable.croissant50,
+        6 to R.drawable.vegetables50,
+        7 to R.drawable.noodles50,
+        8 to R.drawable.wine50,
     )
 
     val sizeTypes = listOf("кг.", "шт.", "л.")
