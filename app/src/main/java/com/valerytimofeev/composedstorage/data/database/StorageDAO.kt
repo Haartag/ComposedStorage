@@ -37,14 +37,24 @@ interface StorageDAO {
     @Query("SELECT * FROM StorageDB WHERE category = :category")
     fun getByCategoryFlow(category: String): Flow<List<StorageItem>>
 
+    @Query("SELECT name FROM StorageDB")
+    fun getNamesFlow(): Flow<List<String>>
+
     //Category Queries
 
     @Query("SELECT * FROM CategoryDB WHERE tabName = :tabName")
     fun getByTabFlow(tabName: String): Flow<List<CategoryItem>>
 
+    //CategoryWithStorage Queries
+
+    @Transaction
+    @Query("SELECT * FROM CategoryDB")
+    fun getCategoriesWithItemsFlow(): Flow<List<CategoryWithStorages>>
+
     //Tab Queries
 
     @Query("SELECT * FROM TabDB")
     fun getAllTabsFlow(): Flow<List<TabItem>>
+
 
 }

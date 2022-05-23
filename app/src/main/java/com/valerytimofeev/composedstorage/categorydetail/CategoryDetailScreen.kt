@@ -41,6 +41,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.common.ItemBox
+import com.valerytimofeev.composedstorage.common.ItemContent
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.ui.theme.Mint
@@ -183,42 +185,6 @@ fun ItemEntry(
 }
 
 @Composable
-fun ItemContent(
-    modifier: Modifier = Modifier,
-    name: String,
-    size: String,
-    sizeType: String
-) {
-    ItemBox(
-        modifier = modifier
-    ) {
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxSize()
-                .wrapContentHeight()
-                .padding(horizontal = 20.dp)
-        ) {
-            Text(
-                text = name,
-                textAlign = TextAlign.Center
-            )
-            Row(horizontalArrangement = Arrangement.End) {
-                Text(
-                    text = size,
-                    textAlign = TextAlign.Center
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text(
-                    text = sizeType,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
-    }
-}
-
-@Composable
 fun AddItemContent(
     name: String
 ) {
@@ -231,24 +197,6 @@ fun AddItemContent(
                 .fillMaxSize()
                 .wrapContentHeight()
         )
-    }
-}
-
-@Composable
-fun ItemBox(
-    modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
-) {
-    Box(
-        modifier = modifier
-            .shadow(elevation = 4.dp, RoundedCornerShape(4.dp))
-            .clip(RoundedCornerShape(4.dp))
-            .background(color = Mint)
-            .fillMaxWidth()
-            .height(60.dp)
-            .padding(4.dp)
-    ) {
-        content()
     }
 }
 

@@ -20,7 +20,7 @@ sealed class DrawerScreens(val title: String, val route: String) {
     object Category : DrawerScreens("Add New Category Screen", "add_new_category_screen")
     object About : DrawerScreens("About", "about_screen")
     object Settings : DrawerScreens("Settings", "")
-    object ShowAll : DrawerScreens("Show all", "")
+    object ShowAll : DrawerScreens("Show all", "show_all")
 }
 
 @Composable
@@ -61,7 +61,7 @@ fun Drawer(
         DrawerItem(
             icon = Icons.Filled.List,
             text = DrawerScreens.ShowAll.title,
-            itemClick = { /*onDestinationClicked(DrawerScreens.ShowAll.route)*/ }
+            itemClick = { onDestinationClicked(DrawerScreens.ShowAll.route) }
         )
 
         Spacer(modifier = Modifier.height(4.dp))

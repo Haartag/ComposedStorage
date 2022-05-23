@@ -3,6 +3,7 @@ package com.valerytimofeev.composedstorage.utils
 import androidx.compose.ui.unit.dp
 import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.ui.theme.*
+import java.math.BigDecimal
 
 object Constants {
 
@@ -40,4 +41,7 @@ object Constants {
 
     val horizontalPickerWidth = 175.dp
     val horizontalPickerSwipeLimiter = 100.dp
+
+    //Divider for Int / BigDecimal conversion
+    val divider = BigDecimal(100)
 }

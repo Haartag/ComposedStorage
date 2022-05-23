@@ -4,13 +4,9 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStore
@@ -23,6 +19,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.valerytimofeev.composedstorage.about.AboutScreen
 import com.valerytimofeev.composedstorage.addnewcategory.AddNewCategoryScreen
 import com.valerytimofeev.composedstorage.addnewtab.AddNewTabScreen
+import com.valerytimofeev.composedstorage.allitemslist.ShowAllScreen
 import com.valerytimofeev.composedstorage.categorydetail.CategoryDetailScreen
 import com.valerytimofeev.composedstorage.categorylist.CategoryListScreen
 import com.valerytimofeev.composedstorage.drawer.Drawer
@@ -104,6 +101,11 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("about_screen") {
                             AboutScreen(
+                                navController = navController
+                            )
+                        }
+                        composable("show_all") {
+                            ShowAllScreen(
                                 navController = navController
                             )
                         }

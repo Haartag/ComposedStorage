@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.utils.Constants
+import com.valerytimofeev.composedstorage.utils.Constants.divider
 import com.valerytimofeev.composedstorage.utils.Constants.pickerText
 import com.valerytimofeev.composedstorage.utils.Constants.sizeTypes
 import com.valerytimofeev.composedstorage.utils.MutableStorageItem
@@ -32,9 +33,6 @@ class CategoryDetailViewModel @Inject constructor(
     val isChangeDialog = mutableStateOf(false)
     var clickedStorage = MutableStorageItem(0, "", "", "", 0)
     val isErrorInSize = mutableStateOf(false)
-
-    //Divider for Int / BigDecimal conversion
-    private val divider = BigDecimal(100)
 
     //Work with dialog
 
