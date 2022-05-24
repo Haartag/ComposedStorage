@@ -1,8 +1,6 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
@@ -15,9 +13,8 @@ import com.valerytimofeev.composedstorage.utils.MutableStorageItem
 import com.valerytimofeev.composedstorage.utils.makeStorageItemImmutable
 import com.valerytimofeev.composedstorage.utils.makeStorageItemMutable
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-import java.math.BigDecimal
 import java.math.RoundingMode
 import javax.inject.Inject
 
@@ -138,7 +135,9 @@ class CategoryDetailViewModel @Inject constructor(
 
     private fun getPickerIndex(sizeType: String): Int {
 
-     return sizeTypes.indexOf(sizeType)}
+        return sizeTypes.indexOf(sizeType)
+    }
+
     private fun getSizeType(): String = sizeTypes[pickerIndex.value]
 
 

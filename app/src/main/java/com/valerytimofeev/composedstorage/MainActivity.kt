@@ -88,6 +88,7 @@ class MainActivity : ComponentActivity() {
                                 categoryName = categoryName ?: ""
                             )
                         }
+
                         //Drawer menu
                         composable("add_new_tab_screen") {
                             AddNewTabScreen(

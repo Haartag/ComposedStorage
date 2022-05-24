@@ -1,6 +1,7 @@
 package com.valerytimofeev.composedstorage.allitemslist
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -51,7 +52,7 @@ fun ShowAllScreen(
             onButtonClicked = { navController.popBackStack() },
         )
         SearchTab(focusManager = focusManager)
-        AllItemsList()
+        AllItemsList(navController = navController)
     }
 }
 
@@ -108,14 +109,16 @@ fun SearchTab(
 
 @Composable
 fun AllItemsList(
-    viewModel: ShowAllViewModel = hiltViewModel()
+    viewModel: ShowAllViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     val dataFlow = viewModel.getSearchFlow().collectAsState(initial = emptyList())
-    LazyColumn(contentPadding = PaddingValues(12.dp)) {
+    LazyColumn(contentPadding = PaddingValues(vertical = 8.dp)) {
         items(count = viewModel.search(dataFlow.value, viewModel.searchText.value).size) {
             ExtendedItem(
                 index = it,
-                list = viewModel.search(dataFlow.value, viewModel.searchText.value)
+                list = viewModel.search(dataFlow.value, viewModel.searchText.value),
+                navController = navController
             )
         }
     }
@@ -125,7 +128,8 @@ fun AllItemsList(
 fun ExtendedItem(
     index: Int,
     list: List<ListForSearch>,
-    viewModel: ShowAllViewModel = hiltViewModel()
+    viewModel: ShowAllViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     Box {
         val item = list[index]
@@ -137,8 +141,17 @@ fun ExtendedItem(
             ItemContent(
                 name = item.itemName,
                 size = viewModel.stringSizeToDecimalSize(item.size),
-                sizeType = item.sizeType
+                sizeType = item.sizeType,
+                modifier = Modifier.clickable {
+                    /**
+                     * ToDo think what to do here:
+                     *  - open categoryDetail and open dialog in it
+                     *  - or open dialog here?
+                     * **/
+                    navController.navigate("category_detail_screen/${item.categoryName}")
+                }
             )
+            Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }

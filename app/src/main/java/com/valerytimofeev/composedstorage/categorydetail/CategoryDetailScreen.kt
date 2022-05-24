@@ -1,6 +1,5 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -18,8 +17,6 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -56,7 +53,7 @@ import kotlin.math.roundToInt
 fun CategoryDetailScreen(
     categoryName: String,
     viewModel: CategoryDetailViewModel = hiltViewModel(),
-    navController: NavController
+    navController: NavController,
 ) {
     viewModel.currentCategory.value = categoryName
     Column(
@@ -154,7 +151,6 @@ fun ItemsList(
     val dataFlow = viewModel.getFlow(categoryName).collectAsState(initial = emptyList())
     //Main list
     LazyColumn(contentPadding = PaddingValues(12.dp)) {
-        //items(count = viewModel.getStorageListSize()) {
         items(count = dataFlow.value.size) {
             ItemEntry(
                 itemIndex = it,
@@ -307,10 +303,12 @@ fun ChangeDialog(
                         ),
                         value = sizeText,
                         onValueChange = {
+
                             /** TODO need some rework:
                              * locale decimal separator support
                              * extra symbols in OnValueChange bug on some android versions
                              **/
+
                             if (viewModel.checkManualInput(it)) {
                                 sizeText = viewModel.manualChangeWeight(it)
                             }
@@ -567,3 +565,4 @@ fun SwipeableTexts(
             }
     )
 }
+
