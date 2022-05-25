@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.material.*
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -23,6 +24,8 @@ import com.valerytimofeev.composedstorage.allitemslist.ShowAllScreen
 import com.valerytimofeev.composedstorage.categorydetail.CategoryDetailScreen
 import com.valerytimofeev.composedstorage.categorylist.CategoryListScreen
 import com.valerytimofeev.composedstorage.drawer.Drawer
+import com.valerytimofeev.composedstorage.settings.SettingsScreen
+import com.valerytimofeev.composedstorage.settings.TabSettingsSubmenu
 import com.valerytimofeev.composedstorage.ui.theme.ComposedStorageTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -33,6 +36,7 @@ private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(na
 @AndroidEntryPoint
 @ExperimentalMaterialApi
 @ExperimentalPagerApi
+@ExperimentalFoundationApi
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -107,6 +111,18 @@ class MainActivity : ComponentActivity() {
                         }
                         composable("show_all") {
                             ShowAllScreen(
+                                navController = navController
+                            )
+                        }
+                        composable("settings") {
+                            SettingsScreen(
+                                navController = navController
+                            )
+                        }
+
+                        //Settings submenus
+                        composable("tab_settings") {
+                            TabSettingsSubmenu(
                                 navController = navController
                             )
                         }

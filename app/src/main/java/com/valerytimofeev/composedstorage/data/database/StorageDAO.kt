@@ -32,6 +32,10 @@ interface StorageDAO {
     @Delete
     suspend fun delete(item: TabItem)
 
+    //Clean TabTable
+    @Query("DELETE FROM TabDB")
+    suspend fun deleteTabTable()
+
     //Storage Queries
 
     @Query("SELECT * FROM StorageDB WHERE category = :category")

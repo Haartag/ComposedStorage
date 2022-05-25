@@ -31,6 +31,10 @@ class DatabaseRepository @Inject constructor(
         storageDao.delete(item)
     }
 
+    suspend fun deleteTabTable() {
+        storageDao.deleteTabTable()
+    }
+
     //Flow functions
     fun getTabsFlow(): Flow<List<TabItem>> {
         return storageDao.getAllTabsFlow()
@@ -67,29 +71,3 @@ class DatabaseRepository @Inject constructor(
     }
 }
 
-
-/*    fun getNamesFlow(): Flow<List<String>> {
-    return storageDao.getNamesFlow()
-}*/
-
-/*    suspend fun getListForSearchFlow()*//*: Flow<List<ListForSearch>>*//* {
-        val inputFlow = storageDao.getCategoriesWithItemsFlow()
-        val result = mutableListOf<ListForSearch>()
-        val myFlow = MutableSharedFlow<ListForSearch>()
-        inputFlow.collect {
-            it.forEach { category ->
-                category.storageItems.forEach { storage ->
-                    //result.add(
-                    myFlow.emit(
-                        ListForSearch(
-                            category.categoryItem.tabName,
-                            category.categoryItem.category,
-                            storage.name,
-                            storage.size.toString(),
-                            storage.sizeType
-                        )
-                    )
-                }
-            }
-        }
-    }*/

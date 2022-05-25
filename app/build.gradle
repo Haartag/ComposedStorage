@@ -69,6 +69,9 @@ dependencies {
     //implementation "com.google.accompanist:accompanist-pager:0.24.7-alpha"
     implementation "com.google.accompanist:accompanist-pager:0.20.3"
 
+    //Foundation (drag-and-drop)
+    implementation "androidx.compose.foundation:foundation:1.2.0-beta02"
+
     //Room
     implementation "androidx.room:room-runtime:2.4.2"
     annotationProcessor "androidx.room:room-compiler:2.4.2"

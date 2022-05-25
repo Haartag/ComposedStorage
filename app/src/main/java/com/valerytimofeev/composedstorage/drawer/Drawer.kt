@@ -19,7 +19,7 @@ sealed class DrawerScreens(val title: String, val route: String) {
     object Tab : DrawerScreens("Add New Tab Title", "add_new_tab_screen")
     object Category : DrawerScreens("Add New Category Screen", "add_new_category_screen")
     object About : DrawerScreens("About", "about_screen")
-    object Settings : DrawerScreens("Settings", "")
+    object Settings : DrawerScreens("Settings", "settings")
     object ShowAll : DrawerScreens("Show all", "show_all")
 }
 
@@ -71,7 +71,7 @@ fun Drawer(
         DrawerItem(
             icon = Icons.Filled.Settings,
             text = DrawerScreens.Settings.title,
-            itemClick = { /*onDestinationClicked(DrawerScreens.Settings.route)*/ }
+            itemClick = { onDestinationClicked(DrawerScreens.Settings.route) }
         )
         DrawerItem(
             icon = Icons.Filled.Info,
