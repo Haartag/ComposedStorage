@@ -35,6 +35,14 @@ class DatabaseRepository @Inject constructor(
         storageDao.deleteTabTable()
     }
 
+    suspend fun deleteTabFromStorages(tabName: String){
+        storageDao.deleteTabFromStorages(tabName = tabName)
+    }
+
+    suspend fun deleteTabFromCategories(tabName: String){
+        storageDao.deleteTabFromCategories(tabName = tabName)
+    }
+
     //Flow functions
     fun getTabsFlow(): Flow<List<TabItem>> {
         return storageDao.getAllTabsFlow()

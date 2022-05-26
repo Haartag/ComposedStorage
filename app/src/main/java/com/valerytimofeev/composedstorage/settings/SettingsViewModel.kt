@@ -23,12 +23,18 @@ class SettingsViewModel @Inject constructor(
 
     var tabDatabaseOrder = listOf<TabItem>()
 
+    var deletedTabs = mutableListOf<String>()
+
     fun getFlow(): Flow<List<TabItem>> {
         return repository.getTabsFlow()
     }
 
     fun saveCurrentOrder(order: List<String>) {
         currentTabOrder.value = order
+    }
+
+    fun saveToDeleted(item: String) {
+        deletedTabs.add(item)
     }
 
     fun saveNewOrderInDatabase(navController: NavController) {
@@ -38,7 +44,17 @@ class SettingsViewModel @Inject constructor(
             newTabList.forEach {
                 repository.insertNewTab(it)
             }
+            deletedTabs.forEach {
+                repository.deleteTabFromStorages(it)
+                repository.deleteTabFromCategories(it)
+            }
             navController.navigate("category_list_screen")
         }
     }
+
+    fun getCardColor() {
+
+    }
+
+
 }

@@ -48,7 +48,6 @@ fun CategoryListScreen(
             modifier = Modifier
                 .fillMaxSize()
         ) {
-
             val tabDataFlow = viewModel.getTabFlow().collectAsState(initial = emptyList())
             if (tabDataFlow.value.isNotEmpty()) {
                 TopBar(
@@ -95,11 +94,11 @@ fun TabPager(
             (pagerState.currentPage - viewModel.startIndex).floorMod(tabData.size)
         Column() {
             TabName(page = page)
-                CategoryList(
-                    navController = navController,
-                    color = viewModel.getCategoryTypeColor(tabData[page].colorScheme),
-                    tabName = tabData[page].tabName
-                )
+            CategoryList(
+                navController = navController,
+                color = viewModel.getCategoryTypeColor(tabData[page].colorScheme),
+                tabName = tabData[page].tabName
+            )
         }
     }
 }

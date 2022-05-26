@@ -1,6 +1,5 @@
 package com.valerytimofeev.composedstorage.settings
 
-import android.util.Log
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.clickable
@@ -12,9 +11,10 @@ import androidx.compose.material.Card
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AddCircle
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -22,9 +22,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.accompanist.pager.ExperimentalPagerApi
-import com.valerytimofeev.composedstorage.categorydetail.CategoryDetailViewModel
-import com.valerytimofeev.composedstorage.categorydetail.TopBarAddIcon
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.common.TopBarOkIcon
 
@@ -85,14 +82,33 @@ fun DragAndDropColumn(
         ) {
             itemsIndexed(list, key = { _, item -> item }) { index, item ->
                 DraggableItem(dragDropState, index) { isDragging ->
-                    val elevation by animateDpAsState(if (isDragging) 4.dp else 1.dp)
+                    val elevation by animateDpAsState(if (isDragging) 12.dp else 1.dp)
                     Card(elevation = elevation) {
-                        Text(
-                            item,
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(20.dp)
-                        )
+                        Box(contentAlignment = Alignment.CenterStart) {
+                            Text(
+                                item,
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(20.dp)
+                            )
+                            if (list.size > 1) {
+                                Icon(Icons.Outlined.Delete,
+                                    contentDescription = "Delete tab icon",
+                                    modifier = Modifier
+                                        .padding(8.dp)
+                                        .align(Alignment.CenterEnd)
+                                        .requiredHeight(24.dp)
+                                        .aspectRatio(1f)
+                                        .clickable {
+                                            viewModel.saveToDeleted(item)
+                                            list = list
+                                                .toMutableList()
+                                                .apply {
+                                                    remove(item)
+                                                }
+                                        })
+                            }
+                        }
                     }
                 }
             }

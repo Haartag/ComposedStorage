@@ -36,7 +36,7 @@ class CategoryListViewModel @Inject constructor(
         }
     }
 
-    var currentPage = mutableStateOf(1)
+    var currentPage = mutableStateOf(0)
 
     fun getCategoryTypeColor(colorScheme: Int): Color {
         return Constants.colorsMap[colorScheme] ?: Color.LightGray

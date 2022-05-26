@@ -32,10 +32,6 @@ interface StorageDAO {
     @Delete
     suspend fun delete(item: TabItem)
 
-    //Clean TabTable
-    @Query("DELETE FROM TabDB")
-    suspend fun deleteTabTable()
-
     //Storage Queries
 
     @Query("SELECT * FROM StorageDB WHERE category = :category")
@@ -60,5 +56,21 @@ interface StorageDAO {
     @Query("SELECT * FROM TabDB")
     fun getAllTabsFlow(): Flow<List<TabItem>>
 
+    //Settings Queries
 
+    @Query("DELETE FROM TabDB")
+    suspend fun deleteTabTable()
+
+    @Transaction
+    @Query("DELETE FROM StorageDB WHERE category in (SELECT category FROM CategoryDB WHERE tabName = :tabName) ")
+    suspend fun deleteTabFromStorages(tabName: String)
+
+    @Query("DELETE FROM CategoryDB WHERE tabName = :tabName")
+    suspend fun deleteTabFromCategories(tabName: String)
+
+
+
+
+/*    @Query("DELETE FROM CategoryDB WHERE tabName = :tabName")
+    suspend fun deleteTabFromCategories(tabName: String)*/
 }
