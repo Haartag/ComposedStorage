@@ -17,6 +17,8 @@ class CategoryListViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
 
+    val isDropdownOpen = mutableStateOf(false)
+
     //for pager infinite loop
     val startIndex = Int.MAX_VALUE / 2
 

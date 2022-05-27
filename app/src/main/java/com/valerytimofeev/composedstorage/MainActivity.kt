@@ -24,13 +24,15 @@ import com.valerytimofeev.composedstorage.allitemslist.ShowAllScreen
 import com.valerytimofeev.composedstorage.categorydetail.CategoryDetailScreen
 import com.valerytimofeev.composedstorage.categorylist.CategoryListScreen
 import com.valerytimofeev.composedstorage.drawer.Drawer
+import com.valerytimofeev.composedstorage.settings.CategorySettingsSubmenu
+import com.valerytimofeev.composedstorage.settings.CategorySettingsTabChooser
 import com.valerytimofeev.composedstorage.settings.SettingsScreen
 import com.valerytimofeev.composedstorage.settings.TabSettingsSubmenu
 import com.valerytimofeev.composedstorage.ui.theme.ComposedStorageTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "categories")
+//private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "categories")
 
 
 @AndroidEntryPoint
@@ -123,6 +125,24 @@ class MainActivity : ComponentActivity() {
                         //Settings submenus
                         composable("tab_settings") {
                             TabSettingsSubmenu(
+                                navController = navController
+                            )
+                        }
+                        composable("category_settings/{tabName}", arguments = listOf(
+                            navArgument("tabName") {
+                                type = NavType.StringType
+                            }
+                        )) {
+                            val tabName = remember {
+                                it.arguments?.getString("tabName")
+                            }
+                            CategorySettingsSubmenu(
+                                tabName = tabName ?: "",
+                                navController = navController
+                            )
+                        }
+                        composable("category_settings_tab_chooser") {
+                            CategorySettingsTabChooser(
                                 navController = navController
                             )
                         }

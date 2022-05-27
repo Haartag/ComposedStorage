@@ -1,9 +1,7 @@
 package com.valerytimofeev.composedstorage.settings
 
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
@@ -29,7 +27,7 @@ fun SettingsScreen(navController: NavController) {
         )
         TabSettings(navController = navController)
         Divider()
-
+        CategorySettings(navController = navController)
         Divider()
 
     }
@@ -37,7 +35,18 @@ fun SettingsScreen(navController: NavController) {
 
 @Composable
 fun TabSettings(navController: NavController) {
-    SettingsBaseItem(mainText = "Tab settings", subText = "remove or reorder", onClick = {navController.navigate("tab_settings")})
+    SettingsBaseItem(
+        mainText = "Tab settings",
+        subText = "remove or reorder",
+        onClick = { navController.navigate("tab_settings") })
+}
+
+@Composable
+fun CategorySettings(navController: NavController) {
+    SettingsBaseItem(
+        mainText = "Category settings",
+        subText = "remove, reorder or rename",
+        onClick = { navController.navigate("category_settings_tab_chooser") })
 }
 
 @Composable
@@ -60,7 +69,9 @@ fun SettingsBaseItem(
                 .padding(horizontal = 12.dp)
                 .padding(top = (additionalPadding + 16.dp)),
             text = mainText,
-            fontSize = 20.sp
+            fontSize = 20.sp,
+            maxLines = 1,
+
         )
         Text(
             modifier = Modifier

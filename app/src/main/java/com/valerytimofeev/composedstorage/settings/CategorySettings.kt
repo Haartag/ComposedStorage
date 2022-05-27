@@ -24,7 +24,8 @@ import com.valerytimofeev.composedstorage.common.TopBarOkIcon
 
 @ExperimentalFoundationApi
 @Composable
-fun TabSettingsSubmenu(
+fun CategorySettingsSubmenu(
+    tabName: String,
     navController: NavController,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
@@ -33,16 +34,17 @@ fun TabSettingsSubmenu(
             .fillMaxSize()
     ) {
         TopBar(
-            title = "Tab settings",
+            title = "Category settings",
             buttonIcon = Icons.Filled.ArrowBack,
             onButtonClicked = { navController.popBackStack() },
             additionalInfo = {
                 TopBarOkIcon {
-                    viewModel.saveNewTabOrderInDatabase(navController = navController)
+                    viewModel.saveNewCategoryOrderInDatabase(navController = navController, tabName = tabName)
                 }
             }
         )
-        TabDragAndDropColumn()
+        Text(text = tabName)
+        CategoryDragAndDropColumn(tabName = tabName)
     }
 }
 
@@ -50,20 +52,21 @@ fun TabSettingsSubmenu(
 
 @ExperimentalFoundationApi
 @Composable
-fun TabDragAndDropColumn(
+fun CategoryDragAndDropColumn(
+    tabName: String,
     viewModel: SettingsViewModel = hiltViewModel()
 ) {
 
-    val dataFlow = viewModel.getTabFlow().collectAsState(initial = emptyList())
+    val dataFlow = viewModel.getCategoryFlow(tabName).collectAsState(initial = emptyList())
     val listState = rememberLazyListState()
 
 
     if (dataFlow.value.isNotEmpty()) {
 
-        var list by remember { mutableStateOf(dataFlow.value.map { it.tabName }) }
+        var list by remember { mutableStateOf(dataFlow.value.map { it.category }) }
 
-        viewModel.tabDatabaseOrder = dataFlow.value
-        viewModel.saveCurrentTabOrder(list)
+        viewModel.categoryDatabaseOrder = dataFlow.value
+        viewModel.saveCurrentCategoryOrder(list)
 
         val dragDropState = rememberDragDropState(listState) { fromIndex, toIndex ->
             list = list.toMutableList().apply {
@@ -88,23 +91,21 @@ fun TabDragAndDropColumn(
                                     .fillMaxWidth()
                                     .padding(20.dp)
                             )
-                            if (list.size > 1) {
-                                Icon(Icons.Outlined.Delete,
-                                    contentDescription = "Delete tab icon",
-                                    modifier = Modifier
-                                        .padding(8.dp)
-                                        .align(Alignment.CenterEnd)
-                                        .requiredHeight(24.dp)
-                                        .aspectRatio(1f)
-                                        .clickable {
-                                            viewModel.saveToDeletedTabs(item)
-                                            list = list
-                                                .toMutableList()
-                                                .apply {
-                                                    remove(item)
-                                                }
-                                        })
-                            }
+                            Icon(Icons.Outlined.Delete,
+                                contentDescription = "Delete category icon",
+                                modifier = Modifier
+                                    .padding(8.dp)
+                                    .align(Alignment.CenterEnd)
+                                    .requiredHeight(24.dp)
+                                    .aspectRatio(1f)
+                                    .clickable {
+                                        viewModel.saveToDeletedCategories(item)
+                                        list = list
+                                            .toMutableList()
+                                            .apply {
+                                                remove(item)
+                                            }
+                                    })
                         }
                     }
                 }
@@ -112,6 +113,11 @@ fun TabDragAndDropColumn(
         }
     }
 }
+
+
+
+
+
 
 
 

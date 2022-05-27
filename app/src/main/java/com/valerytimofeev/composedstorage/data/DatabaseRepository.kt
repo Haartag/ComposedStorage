@@ -35,8 +35,16 @@ class DatabaseRepository @Inject constructor(
         storageDao.deleteTabTable()
     }
 
+    suspend fun deleteCategoryTable(tabName: String) {
+        storageDao.deleteCategoryTable(tabName = tabName  )
+    }
+
     suspend fun deleteTabFromStorages(tabName: String){
         storageDao.deleteTabFromStorages(tabName = tabName)
+    }
+
+    suspend fun deleteCategoryFromStorages(category: String){
+        storageDao.deleteCategoryFromStorages(category = category)
     }
 
     suspend fun deleteTabFromCategories(tabName: String){

@@ -61,6 +61,9 @@ interface StorageDAO {
     @Query("DELETE FROM TabDB")
     suspend fun deleteTabTable()
 
+    @Query("DELETE FROM CategoryDB WHERE tabName = :tabName")
+    suspend fun deleteCategoryTable(tabName: String)
+
     @Transaction
     @Query("DELETE FROM StorageDB WHERE category in (SELECT category FROM CategoryDB WHERE tabName = :tabName) ")
     suspend fun deleteTabFromStorages(tabName: String)
@@ -68,6 +71,8 @@ interface StorageDAO {
     @Query("DELETE FROM CategoryDB WHERE tabName = :tabName")
     suspend fun deleteTabFromCategories(tabName: String)
 
+    @Query("DELETE FROM StorageDB WHERE category = :category")
+    suspend fun deleteCategoryFromStorages(category: String)
 
 
 
