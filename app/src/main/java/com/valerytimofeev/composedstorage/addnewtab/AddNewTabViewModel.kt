@@ -26,6 +26,7 @@ class AddNewTabViewModel @Inject constructor(
 
     val focusRequester = FocusRequester()
 
+    //calculate number of rows
     fun getColorPickerRows(): Int {
         return ceil(Constants.colorsMap.size / 5.0).toInt()
     }

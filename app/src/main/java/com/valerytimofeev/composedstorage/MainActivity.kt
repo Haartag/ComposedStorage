@@ -1,16 +1,16 @@
 package com.valerytimofeev.composedstorage
 
-import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material.*
+import androidx.compose.material.DrawerValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.ModalDrawer
+import androidx.compose.material.rememberDrawerState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.datastore.core.DataStore
-import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStore
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -31,9 +31,7 @@ import com.valerytimofeev.composedstorage.settings.TabSettingsSubmenu
 import com.valerytimofeev.composedstorage.ui.theme.ComposedStorageTheme
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
-
-//private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "categories")
-
+import java.util.*
 
 @AndroidEntryPoint
 @ExperimentalMaterialApi
@@ -46,8 +44,6 @@ class MainActivity : ComponentActivity() {
             ComposedStorageTheme {
                 //Navigation
                 val navController = rememberNavController()
-
-
                 //Drawer
                 val drawerState = rememberDrawerState(DrawerValue.Closed)
                 val scope = rememberCoroutineScope()

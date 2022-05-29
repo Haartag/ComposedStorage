@@ -8,7 +8,7 @@ import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.utils.Constants
 import com.valerytimofeev.composedstorage.utils.Constants.divider
 import com.valerytimofeev.composedstorage.utils.Constants.pickerText
-import com.valerytimofeev.composedstorage.utils.Constants.sizeTypes
+import com.valerytimofeev.composedstorage.utils.Constants.sizeTypeIndices
 import com.valerytimofeev.composedstorage.utils.MutableStorageItem
 import com.valerytimofeev.composedstorage.utils.makeStorageItemImmutable
 import com.valerytimofeev.composedstorage.utils.makeStorageItemMutable
@@ -28,14 +28,14 @@ class CategoryDetailViewModel @Inject constructor(
     //Dialog
     val openChangeOrAddNewDialog = mutableStateOf(false)
     val isChangeDialog = mutableStateOf(false)
-    var clickedStorage = MutableStorageItem(0, "", "", "", 0)
+    var clickedStorage = MutableStorageItem(0, "", "", 0, 0)
     val isErrorInSize = mutableStateOf(false)
 
     //Work with dialog
 
     //prepare ClickedStorage for add new item
     fun addToClickedStorage(category: String) {
-        clickedStorage = MutableStorageItem(0, "", category, "кг.", 0)
+        clickedStorage = MutableStorageItem(0, "", category, 0, 0)
         resetPickerIndex()
     }
 
@@ -133,13 +133,11 @@ class CategoryDetailViewModel @Inject constructor(
 
     private val pickerIndex = mutableStateOf(getPickerIndex(clickedStorage.sizeType))
 
-    private fun getPickerIndex(sizeType: String): Int {
-
-        return sizeTypes.indexOf(sizeType)
+    private fun getPickerIndex(sizeType: Int): Int {
+        return sizeTypeIndices.indexOf(sizeType)
     }
 
-    private fun getSizeType(): String = sizeTypes[pickerIndex.value]
-
+    private fun getSizeType(): Int = sizeTypeIndices[pickerIndex.value]
 
     fun indexIncrease() {
         if (pickerIndex.value < pickerText.lastIndex) pickerIndex.value++ else pickerIndex.value = 0

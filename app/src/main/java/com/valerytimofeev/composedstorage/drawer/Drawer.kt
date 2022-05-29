@@ -13,14 +13,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.valerytimofeev.composedstorage.R
 
-sealed class DrawerScreens(val title: String, val route: String) {
-    object Tab : DrawerScreens("Add New Tab Title", "add_new_tab_screen")
-    object Category : DrawerScreens("Add New Category Screen", "add_new_category_screen")
-    object About : DrawerScreens("About", "about_screen")
-    object Settings : DrawerScreens("Settings", "settings")
-    object ShowAll : DrawerScreens("Show all", "show_all")
+sealed class DrawerScreens(val title: Int, val route: String) {
+    object Tab : DrawerScreens(R.string.add_new_tab_title, "add_new_tab_screen")
+    object Category : DrawerScreens(R.string.add_category_title, "add_new_category_screen")
+    object About : DrawerScreens(R.string.about_title, "about_screen")
+    object Settings : DrawerScreens(R.string.settings_title, "settings")
+    object ShowAll : DrawerScreens(R.string.show_all_title, "show_all")
 }
 
 @Composable
@@ -45,12 +47,12 @@ fun Drawer(
 
         DrawerItem(
             icon = Icons.Filled.AddCircle,
-            text = DrawerScreens.Tab.title,
+            text = stringResource(id = DrawerScreens.Tab.title),
             itemClick = { onDestinationClicked(DrawerScreens.Tab.route) }
         )
         DrawerItem(
             icon = Icons.Filled.Add,
-            text = DrawerScreens.Category.title,
+            text = stringResource(id = DrawerScreens.Category.title),
             itemClick = { onDestinationClicked(DrawerScreens.Category.route) }
         )
 
@@ -60,7 +62,7 @@ fun Drawer(
 
         DrawerItem(
             icon = Icons.Filled.List,
-            text = DrawerScreens.ShowAll.title,
+            text = stringResource(id = DrawerScreens.ShowAll.title),
             itemClick = { onDestinationClicked(DrawerScreens.ShowAll.route) }
         )
 
@@ -70,12 +72,12 @@ fun Drawer(
 
         DrawerItem(
             icon = Icons.Filled.Settings,
-            text = DrawerScreens.Settings.title,
+            text = stringResource(id = DrawerScreens.Settings.title),
             itemClick = { onDestinationClicked(DrawerScreens.Settings.route) }
         )
         DrawerItem(
             icon = Icons.Filled.Info,
-            text = DrawerScreens.About.title,
+            text = stringResource(id = DrawerScreens.About.title),
             itemClick = { onDestinationClicked(DrawerScreens.About.route) }
         )
     }

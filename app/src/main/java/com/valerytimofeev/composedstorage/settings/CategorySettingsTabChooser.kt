@@ -8,8 +8,10 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.common.TopBarOkIcon
 
@@ -23,10 +25,9 @@ fun CategorySettingsTabChooser(
             .fillMaxSize()
     ) {
         TopBar(
-            title = "Category settings",
+            title = stringResource(R.string.category_settings),
             buttonIcon = Icons.Filled.ArrowBack,
             onButtonClicked = { navController.popBackStack() },
-
             )
 
         val tabFlow = viewModel.getTabFlow().collectAsState(initial = emptyList())

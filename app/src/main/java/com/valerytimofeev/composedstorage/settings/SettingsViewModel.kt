@@ -1,6 +1,5 @@
 package com.valerytimofeev.composedstorage.settings
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,8 +21,8 @@ class SettingsViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    val currentTabOrder = mutableStateOf(listOf(""))
-    val currentCategoryOrder = mutableStateOf(listOf(""))
+    private val currentTabOrder = mutableStateOf(listOf(""))
+    private val currentCategoryOrder = mutableStateOf(listOf(""))
 
     var tabDatabaseOrder = listOf<TabItem>()
     var categoryDatabaseOrder = listOf<CategoryItem>()
@@ -82,10 +81,4 @@ class SettingsViewModel @Inject constructor(
             navController.navigate("category_list_screen")
         }
     }
-
-    fun getCardColor() {
-
-    }
-
-
 }

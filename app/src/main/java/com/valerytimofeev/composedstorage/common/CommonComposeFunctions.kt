@@ -32,7 +32,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 
-
+//TopBar of each page. Additional button can be in additionalInfo.
 @Composable
 fun TopBar(
     title: String = "",
@@ -58,6 +58,7 @@ fun TopBar(
     )
 }
 
+//Ok icon for TopBar
 @Composable
 fun TopBarOkIcon(
     onClick: () -> Unit
@@ -75,6 +76,7 @@ fun TopBarOkIcon(
     )
 }
 
+//Empty tile for CategoryDetail and dialog
 @Composable
 fun ItemBox(
     modifier: Modifier = Modifier,
@@ -129,7 +131,7 @@ fun ItemContent(
     }
 }
 
-
+//Empty tile for CategoryList and previews
 @Composable
 fun CategoryEntry(
     categoryName: String,

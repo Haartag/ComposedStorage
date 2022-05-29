@@ -9,9 +9,11 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.TopBar
 
 @Composable
@@ -21,7 +23,7 @@ fun SettingsScreen(navController: NavController) {
             .fillMaxSize()
     ) {
         TopBar(
-            title = "Settings",
+            title = stringResource(R.string.settings_title),
             buttonIcon = Icons.Filled.ArrowBack,
             onButtonClicked = { navController.popBackStack() },
         )
@@ -36,16 +38,16 @@ fun SettingsScreen(navController: NavController) {
 @Composable
 fun TabSettings(navController: NavController) {
     SettingsBaseItem(
-        mainText = "Tab settings",
-        subText = "remove or reorder",
+        mainText = stringResource(R.string.tab_settings),
+        subText = stringResource(R.string.tab_settings_hint),
         onClick = { navController.navigate("tab_settings") })
 }
 
 @Composable
 fun CategorySettings(navController: NavController) {
     SettingsBaseItem(
-        mainText = "Category settings",
-        subText = "remove, reorder or rename",
+        mainText = stringResource(R.string.category_settings),
+        subText = stringResource(R.string.category_settings_hint),
         onClick = { navController.navigate("category_settings_tab_chooser") })
 }
 
@@ -60,7 +62,6 @@ fun SettingsBaseItem(
             .fillMaxWidth()
             .requiredHeight(80.dp)
             .clickable { onClick() }
-        //.border(width = 1.dp, shape = RoundedCornerShape(2.dp), color = Color.LightGray)
     ) {
         val haveSubText = subText.isNotEmpty()
         val additionalPadding = if (haveSubText) 0.dp else 12.dp

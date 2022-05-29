@@ -7,7 +7,7 @@ import java.math.BigDecimal
 
 object Constants {
 
-    val weightTypeToWeightChange = mapOf("кг." to 5, "шт." to 25, "л." to 10)
+    val weightTypeToWeightChange = mapOf(0 to 5, 1 to 25, 2 to 10)
 
     val colorsMap = mapOf(
         1 to Theme1Color,
@@ -34,11 +34,15 @@ object Constants {
         8 to R.drawable.wine50,
     )
 
-    val sizeTypes = listOf("кг.", "шт.", "л.")
+    val sizeTypeMap = mapOf(
+        0 to R.string.size_1,
+        1 to R.string.size_2,
+        2 to R.string.size_3,
+    )
+    val sizeTypeIndices = sizeTypeMap.map { it.key }
+    val pickerText = sizeTypeMap.map { it.value }
 
-
-    val pickerText = listOf("Кг", "Шт", "Литр")
-
+    //HorizontalPicker constants
     val horizontalPickerWidth = 175.dp
     val horizontalPickerSwipeLimiter = 100.dp
 

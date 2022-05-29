@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
@@ -19,6 +20,7 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.TopBar
 
 @Composable
@@ -34,7 +36,7 @@ fun AboutScreen(
                 .fillMaxSize()
         ) {
             TopBar(
-                title = "About",
+                title = stringResource(R.string.about_title),
                 buttonIcon = Icons.Filled.ArrowBack,
                 onButtonClicked = { navController.popBackStack() },
             )
@@ -43,7 +45,9 @@ fun AboutScreen(
                 modifier = Modifier.padding(16.dp),
                 text = "What's new in this version: \n Nothing."
             )
+            
             Spacer(modifier = Modifier.height(20.dp))
+
             val gitHubUrl = "https://github.com/Haartag/ComposedStorage"
             val pixabayUrl = "https://pixabay.com/"
             val uriHandler = LocalUriHandler.current
@@ -74,24 +78,23 @@ fun AboutScreen(
                 ) {
                     append("App`s GitHub repository")
                 }
-
             }
-
             ClickableText(
                 modifier = Modifier.padding(16.dp),
                 text = aboutMainText,
                 onClick = {
-                    aboutMainText.getStringAnnotations(tag = "GitHub", start = it, end = it)
-                        .firstOrNull()?.let { url ->
-                            uriHandler.openUri(url.item)
-                        }
                     aboutMainText.getStringAnnotations(tag = "pixabay", start = it, end = it)
                         .firstOrNull()?.let { url ->
                             uriHandler.openUri(url.item)
                         }
+                    aboutMainText.getStringAnnotations(tag = "GitHub", start = it, end = it)
+                        .firstOrNull()?.let { url ->
+                            uriHandler.openUri(url.item)
+                        }
                 })
-
+            
             Spacer(modifier = Modifier.height(20.dp))
+            
             Text(
                 modifier = Modifier
                     .padding(16.dp)

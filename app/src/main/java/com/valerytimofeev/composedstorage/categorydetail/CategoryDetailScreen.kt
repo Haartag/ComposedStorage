@@ -24,8 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -38,12 +40,14 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.ItemBox
 import com.valerytimofeev.composedstorage.common.ItemContent
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.data.database.StorageItem
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 import com.valerytimofeev.composedstorage.utils.Constants
+import com.valerytimofeev.composedstorage.utils.Constants.sizeTypeMap
 import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -104,17 +108,17 @@ fun ItemsList(
                     ItemContent(
                         name = viewModel.clickedStorage.name,
                         size = viewModel.getDecimalSize(),
-                        sizeType = viewModel.clickedStorage.sizeType
+                        sizeType = stringResource(id = sizeTypeMap[viewModel.clickedStorage.sizeType] ?: R.string.placeholder)
                     )
                 },
-                leftButtonText = "Delete",
+                leftButtonText = stringResource(R.string.button_delete),
                 leftIcon = Icons.Filled.Delete,
                 onLeftClick = {
                     viewModel.deleteItem()
                     viewModel.openChangeOrAddNewDialog.value = false
                     viewModel.isChangeDialog.value = false
                 },
-                rightButtonText = "Edit",
+                rightButtonText = stringResource(R.string.button_edit),
                 rightIcon = Icons.Filled.Add,
                 onRightClick = {
                     if (!viewModel.isErrorInSize.value) {
@@ -132,13 +136,13 @@ fun ItemsList(
                         name = categoryName
                     )
                 },
-                leftButtonText = "Cancel",
+                leftButtonText = stringResource(R.string.button_cancel),
                 leftIcon = Icons.Filled.Close,
                 onLeftClick = {
                     viewModel.openChangeOrAddNewDialog.value = false
                     viewModel.isChangeDialog.value = false
                 },
-                rightButtonText = "Add",
+                rightButtonText = stringResource(R.string.button_add),
                 rightIcon = Icons.Filled.Add,
                 onRightClick = {
                     viewModel.addItem()
@@ -169,7 +173,7 @@ fun ItemEntry(
     ItemContent(
         name = storageList[itemIndex].name,
         size = viewModel.sizeToDecimalSize(storageList[itemIndex].size),
-        sizeType = storageList[itemIndex].sizeType,
+        sizeType = stringResource(id = sizeTypeMap[storageList[itemIndex].sizeType] ?: R.string.placeholder),
         modifier = Modifier.clickable {
             //save item data to viewmodel for dialog
             viewModel.saveClickedItem(item = storageList[itemIndex])
@@ -522,8 +526,6 @@ fun SizeTypePicker(
             modifier = Modifier
                 .height(55.dp)
                 .width(75.dp)
-                //.clip(shape = RoundedCornerShape(12.dp))
-                //.background(color = Mint)
                 .border(width = 1.dp, color = Color.Gray, shape = RoundedCornerShape(4.dp))
         )
         SwipeableTexts(swipeableState = swipeableState)
@@ -536,7 +538,7 @@ fun SwipeableTexts(
     swipeableState: SwipeableState<HorizontalPickerState>,
     viewModel: CategoryDetailViewModel = hiltViewModel()
 ) {
-    Text(text = Constants.pickerText[viewModel.getLeftIndex()],
+    Text(text = stringResource(id = Constants.pickerText[viewModel.getLeftIndex()]),
         fontSize = 14.sp,
         color = Color.Gray,
         modifier = Modifier
@@ -546,7 +548,7 @@ fun SwipeableTexts(
             }
     )
     Text(
-        text = Constants.pickerText[viewModel.getMidIndex()],
+        text = stringResource(id = Constants.pickerText[viewModel.getMidIndex()]),
         fontSize = 20.sp,
         fontWeight = FontWeight.Bold,
         modifier = Modifier
@@ -555,7 +557,7 @@ fun SwipeableTexts(
             }
     )
     Text(
-        text = Constants.pickerText[viewModel.getRightIndex()],
+        text = stringResource(id = Constants.pickerText[viewModel.getRightIndex()]),
         fontSize = 14.sp,
         color = Color.Gray,
         modifier = Modifier

@@ -6,7 +6,7 @@ data class MutableStorageItem(
     var id: Int,
     var name: String,
     var category: String,
-    var sizeType: String,
+    var sizeType: Int,
     var size: Int
 )
 

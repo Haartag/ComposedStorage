@@ -1,12 +1,12 @@
 package com.valerytimofeev.composedstorage.categorylist
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
+import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.runtime.Composable
@@ -15,6 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -25,6 +26,7 @@ import androidx.navigation.NavController
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
+import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.CategoryEntry
 import com.valerytimofeev.composedstorage.common.TabNameBackground
 import com.valerytimofeev.composedstorage.common.TopBar
@@ -51,7 +53,7 @@ fun CategoryListScreen(
             val tabDataFlow = viewModel.getTabFlow().collectAsState(initial = emptyList())
             if (tabDataFlow.value.isNotEmpty()) {
                 TopBar(
-                    title = "AppName",
+                    title = stringResource(R.string.app_name),
                     buttonIcon = Icons.Filled.Menu,
                     onButtonClicked = { openDrawer() }
                 )
@@ -90,7 +92,6 @@ fun TabPager(
     ) { index ->
         val page = (index - viewModel.startIndex).floorMod(tabData.size)
         viewModel.currentPage.value =
-                //(pagerState.currentPage - viewModel.startIndex).floorMod(viewModel.tabCount.value)
             (pagerState.currentPage - viewModel.startIndex).floorMod(tabData.size)
         Column() {
             TabName(page = page)

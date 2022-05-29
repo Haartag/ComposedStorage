@@ -9,6 +9,6 @@ data class StorageItem(
     @PrimaryKey(autoGenerate = true) val id: Int,
     @ColumnInfo val name: String,
     @ColumnInfo val category: String,
-    @ColumnInfo val sizeType: String,
+    @ColumnInfo val sizeType: Int,
     @ColumnInfo val size: Int
 )

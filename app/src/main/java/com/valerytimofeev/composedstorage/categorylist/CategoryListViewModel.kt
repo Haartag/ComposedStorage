@@ -17,8 +17,6 @@ class CategoryListViewModel @Inject constructor(
     private val repository: DatabaseRepository
 ) : ViewModel() {
 
-    val isDropdownOpen = mutableStateOf(false)
-
     //for pager infinite loop
     val startIndex = Int.MAX_VALUE / 2
 
@@ -30,6 +28,7 @@ class CategoryListViewModel @Inject constructor(
         return repository.getCategoryByTabFlow(tab)
     }
 
+    //rows of 2 item entry
     fun getCategoryRowCount(tabSize: Int): Int {
         return if (tabSize % 2 == 0) {
             tabSize / 2
@@ -40,6 +39,7 @@ class CategoryListViewModel @Inject constructor(
 
     var currentPage = mutableStateOf(0)
 
+    //color of Tab
     fun getCategoryTypeColor(colorScheme: Int): Color {
         return Constants.colorsMap[colorScheme] ?: Color.LightGray
     }

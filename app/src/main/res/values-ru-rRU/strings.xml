@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">3akroma</string>
+
+    <string name="placeholder"> </string>
+
+    <string name="about_title">О приложении</string>
+    <string name="settings_title">Настройки</string>
+    <string name="add_category_title">Добавить категорию</string>
+    <string name="add_new_tab_title">Добавить вкладку</string>
+    <string name="show_all_title">Показать всё</string>
+
+    <string name="search_hint">Поиск…</string>
+
+    <string name="button_delete">Удалить</string>
+    <string name="button_edit">Изменить</string>
+    <string name="button_cancel">Отмена</string>
+    <string name="button_add">Добавить</string>
+
+    <string name="tab_settings">Настройки вкладок</string>
+    <string name="tab_settings_hint">удалить или изменить порядок</string>
+    <string name="category_settings">Настройки категорий</string>
+    <string name="category_settings_hint">удалить или изменить порядок</string>
+
+    <string name="size_1">Кг</string>
+    <string name="size_2">Шт</string>
+    <string name="size_3">Литр</string>
+
+</resources>

@@ -78,9 +78,6 @@ dependencies {
     kapt "androidx.room:room-compiler:2.4.2"
     implementation 'androidx.room:room-ktx:2.4.2'
 
-    //Datastore
-    implementation "androidx.datastore:datastore-preferences:1.0.0"
-
     // Coroutines
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.0'

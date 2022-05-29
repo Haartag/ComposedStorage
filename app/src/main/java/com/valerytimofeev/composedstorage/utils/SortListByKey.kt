@@ -1,6 +1,5 @@
 package com.valerytimofeev.composedstorage.utils
 
-import android.util.Log
 import com.valerytimofeev.composedstorage.data.database.CategoryItem
 import com.valerytimofeev.composedstorage.data.database.TabItem
 

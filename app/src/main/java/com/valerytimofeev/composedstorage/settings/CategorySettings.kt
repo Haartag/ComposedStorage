@@ -16,9 +16,11 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.common.TopBarOkIcon
 
@@ -34,7 +36,7 @@ fun CategorySettingsSubmenu(
             .fillMaxSize()
     ) {
         TopBar(
-            title = "Category settings",
+            title = stringResource(R.string.category_settings),
             buttonIcon = Icons.Filled.ArrowBack,
             onButtonClicked = { navController.popBackStack() },
             additionalInfo = {

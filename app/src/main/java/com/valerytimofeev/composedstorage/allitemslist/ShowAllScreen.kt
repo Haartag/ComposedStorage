@@ -22,6 +22,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -29,9 +30,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.ItemContent
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.ui.theme.Mint
+import com.valerytimofeev.composedstorage.utils.Constants.sizeTypeMap
 import com.valerytimofeev.composedstorage.utils.ListForSearch
 
 @Composable
@@ -47,7 +50,7 @@ fun ShowAllScreen(
         }
     ) {
         TopBar(
-            title = "Show all",
+            title = stringResource(R.string.show_all_title),
             buttonIcon = Icons.Filled.ArrowBack,
             onButtonClicked = { navController.popBackStack() },
         )
@@ -95,7 +98,7 @@ fun SearchTab(
         )
         if (viewModel.isHintDisplayed.value) {
             Text(
-                text = "Search...",
+                text = stringResource(R.string.search_hint),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 28.dp, vertical = 12.dp),
@@ -141,7 +144,7 @@ fun ExtendedItem(
             ItemContent(
                 name = item.itemName,
                 size = viewModel.stringSizeToDecimalSize(item.size),
-                sizeType = item.sizeType,
+                sizeType = stringResource(id = sizeTypeMap[item.sizeType] ?: R.string.placeholder),
                 modifier = Modifier.clickable {
                     /**
                      * ToDo think what to do here:

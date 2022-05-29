@@ -1,6 +1,5 @@
 package com.valerytimofeev.composedstorage.addnewcategory
 
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
@@ -13,7 +12,6 @@ import com.valerytimofeev.composedstorage.data.database.TabItem
 import com.valerytimofeev.composedstorage.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.ceil
@@ -39,6 +37,7 @@ class AddNewCategoryViewModel @Inject constructor(
         return repository.getTabsFlow()
     }
 
+    //calculate number of rows
     fun getImgPickerRows(): Int {
         return ceil(Constants.imgMap.size / 4.0).toInt()
     }

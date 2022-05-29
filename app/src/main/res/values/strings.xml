@@ -1,3 +1,28 @@
 <resources>
-    <string name="app_name">ComposedStorage</string>
+    <string name="app_name">3akroma</string>
+
+    <string name="placeholder"> </string>
+
+    <string name="about_title">About</string>
+    <string name="settings_title">Settings</string>
+    <string name="add_category_title">Add new category</string>
+    <string name="add_new_tab_title">Add new tab</string>
+    <string name="show_all_title">Show all</string>
+
+    <string name="search_hint">Search…</string>
+
+    <string name="button_delete">Delete</string>
+    <string name="button_edit">Edit</string>
+    <string name="button_cancel">Cancel</string>
+    <string name="button_add">Add</string>
+
+    <string name="tab_settings">Tab settings</string>
+    <string name="tab_settings_hint">remove or reorder</string>
+    <string name="category_settings">Category settings</string>
+    <string name="category_settings_hint">remove or reorder</string>
+
+    <string name="size_1">kg.</string>
+    <string name="size_2">pc.</string>
+    <string name="size_3">Liter</string>
+
 </resources>

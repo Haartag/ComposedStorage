@@ -5,5 +5,5 @@ data class ListForSearch(
     val categoryName: String,
     val itemName: String,
     val size: String,
-    val sizeType: String
+    val sizeType: Int
 )
