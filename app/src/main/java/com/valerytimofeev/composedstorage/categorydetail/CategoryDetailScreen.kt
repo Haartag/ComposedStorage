@@ -256,7 +256,7 @@ fun ChangeDialog(
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = { focusManager.clearFocus() }),
-                        textStyle = TextStyle(fontSize = 20.sp),
+                        textStyle = MaterialTheme.typography.subtitle1.merge(TextStyle(fontSize = 18.sp)),
                         modifier = Modifier.focusRequester(focusRequester = focusRequester)
                     )
                     Icon(
@@ -326,11 +326,9 @@ fun ChangeDialog(
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = { focusManager.clearFocus() }),
-                        textStyle = TextStyle(
+                        textStyle = MaterialTheme.typography.h6.merge(TextStyle(
                             textAlign = TextAlign.Center,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold
-                        )
+                        ))
                     )
                     Icon(
                         Icons.Filled.KeyboardArrowUp,
@@ -550,7 +548,7 @@ fun SwipeableTexts(
     Text(
         text = stringResource(id = Constants.pickerText[viewModel.getMidIndex()]),
         fontSize = 20.sp,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.SemiBold,
         modifier = Modifier
             .offset {
                 IntOffset(swipeableState.offset.value.roundToInt(), 0)

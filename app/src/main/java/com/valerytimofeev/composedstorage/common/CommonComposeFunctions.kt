@@ -24,6 +24,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -35,6 +36,7 @@ import com.valerytimofeev.composedstorage.ui.theme.Mint
 @Composable
 fun TopBar(
     title: String = "",
+    titleIcon: @Composable () -> Unit = {},
     buttonIcon: ImageVector,
     onButtonClicked: () -> Unit,
     textStyle: TextStyle = MaterialTheme.typography.h6,
@@ -42,10 +44,13 @@ fun TopBar(
 ) {
     TopAppBar(
         title = {
-            Text(
-                text = title,
-                style = textStyle
-            )
+            Row {
+                titleIcon()
+                Text(
+                    text = title,
+                    style = textStyle,
+                )
+            }
         },
         navigationIcon = {
             IconButton(onClick = { onButtonClicked() }) {
@@ -115,17 +120,20 @@ fun ItemContent(
         ) {
             Text(
                 text = name,
-                textAlign = TextAlign.Center
+                textAlign = TextAlign.Center,
+                style = MaterialTheme.typography.body1
             )
             Row(horizontalArrangement = Arrangement.End) {
                 Text(
                     text = size,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body1
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = sizeType,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    style = MaterialTheme.typography.body1
                 )
             }
         }
@@ -139,8 +147,7 @@ fun CategoryEntry(
     modifier: Modifier = Modifier,
     color: Color,
     img: Int,
-    fontWeight: FontWeight = FontWeight.SemiBold,
-    fontSize: TextUnit = 18.sp
+    textStyle: TextStyle = MaterialTheme.typography.subtitle1
 ) {
     Box(
         contentAlignment = BottomCenter,
@@ -165,9 +172,11 @@ fun CategoryEntry(
             contentAlignment = BottomCenter,
         ) {
             Column() {
-                Box(modifier = Modifier
-                    .weight(0.4f)
-                    .fillMaxWidth())
+                Box(
+                    modifier = Modifier
+                        .weight(0.4f)
+                        .fillMaxWidth()
+                )
                 Box(
                     modifier = Modifier
                         .weight(0.55f)
@@ -178,12 +187,14 @@ fun CategoryEntry(
                             )
                         )
                 )
-                Box(modifier = Modifier
-                    .weight(0.05f)
-                    .background(color = color)
-                    .fillMaxWidth())
+                Box(
+                    modifier = Modifier
+                        .weight(0.05f)
+                        .background(color = color)
+                        .fillMaxWidth()
+                )
             }
-            Text(text = categoryName, fontWeight = fontWeight, fontSize = fontSize)
+            Text(text = categoryName, style = textStyle)
         }
     }
 }
@@ -191,13 +202,14 @@ fun CategoryEntry(
 @Composable
 fun TabNameBackground(
     modifier: Modifier = Modifier,
-    color: Color = Color.LightGray
+    color: Color = Color.LightGray,
+    sideIcons: Boolean = true
 ) {
     Column {
         Box(
             modifier = modifier
                 .fillMaxWidth()
-                .background(color = color.copy(alpha = 0.5f))
+                .background(color = color.copy(alpha = 0.6f))
                 .height(50.dp)
         ) {
             Row(
@@ -205,20 +217,22 @@ fun TabNameBackground(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Icon(
-                    Icons.Outlined.KeyboardArrowLeft,
-                    contentDescription = "Left arrow",
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxHeight()
-                )
-                Icon(
-                    Icons.Outlined.KeyboardArrowRight,
-                    contentDescription = "Right arrow",
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .fillMaxHeight()
-                )
+                if (sideIcons) {
+                    Icon(
+                        Icons.Outlined.KeyboardArrowLeft,
+                        contentDescription = "Left arrow",
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .fillMaxHeight()
+                    )
+                    Icon(
+                        Icons.Outlined.KeyboardArrowRight,
+                        contentDescription = "Right arrow",
+                        modifier = Modifier
+                            .padding(vertical = 8.dp)
+                            .fillMaxHeight()
+                    )
+                }
             }
         }
     }

@@ -1,6 +1,5 @@
 package com.valerytimofeev.composedstorage.addnewcategory
 
-import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -12,15 +11,10 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
-import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowForward
-import androidx.compose.material.icons.outlined.KeyboardArrowLeft
-import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
@@ -31,6 +25,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -43,13 +38,11 @@ import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Scale
 import com.valerytimofeev.composedstorage.R
-import com.valerytimofeev.composedstorage.addnewtab.ColorBox
 import com.valerytimofeev.composedstorage.common.CategoryEntry
 import com.valerytimofeev.composedstorage.common.TabNameBackground
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.common.TopBarOkIcon
 import com.valerytimofeev.composedstorage.ui.theme.Mint
-import com.valerytimofeev.composedstorage.utils.Constants
 
 @Composable
 fun AddNewCategoryScreen(
@@ -61,7 +54,6 @@ fun AddNewCategoryScreen(
         color = MaterialTheme.colors.background,
         modifier = Modifier.fillMaxSize(),
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -104,7 +96,10 @@ fun TabNameChooser(
     Box(contentAlignment = Alignment.Center) {
         if (tabDataFlow.value.isNotEmpty()) {
             viewModel.selectedTabName = tabDataFlow.value[0].tabName
-            TabNameBackground(color = viewModel.getCategoryTypeColor(tabDataFlow.value[viewModel.selectedTabIndex.value].colorScheme))
+            TabNameBackground(
+                color = viewModel.getCategoryTypeColor(tabDataFlow.value[viewModel.selectedTabIndex.value].colorScheme),
+                sideIcons = false
+            )
         }
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -159,9 +154,8 @@ fun DropdownItem(
             text = text,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold,
-            fontSize = 24.sp,
             textAlign = TextAlign.Center,
+            style = MaterialTheme.typography.h5,
             color = MaterialTheme.colors.onSurface,
         )
         icon()
@@ -184,8 +178,7 @@ fun CategoryTilePreview(
             color = viewModel.getCategoryTypeColor(viewModel.colorScheme.value),
             img = viewModel.getCategoryImg(viewModel.buttonSelected.value),
             modifier = Modifier.weight(1f),
-            fontWeight = FontWeight.Normal,
-            fontSize = 14.sp
+            textStyle = MaterialTheme.typography.subtitle2
         )
         Spacer(modifier = Modifier.weight(0.9f))
     }
@@ -218,6 +211,7 @@ fun CategoryNameInput(
                     Color.Gray
                 }
             ),
+            textStyle = MaterialTheme.typography.subtitle1.merge(TextStyle(fontSize = 18.sp)),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             ),

@@ -36,7 +36,7 @@ fun CategorySettingsSubmenu(
             .fillMaxSize()
     ) {
         TopBar(
-            title = stringResource(R.string.category_settings),
+            title = tabName,
             buttonIcon = Icons.Filled.ArrowBack,
             onButtonClicked = { navController.popBackStack() },
             additionalInfo = {
@@ -45,7 +45,6 @@ fun CategorySettingsSubmenu(
                 }
             }
         )
-        Text(text = tabName)
         CategoryDragAndDropColumn(tabName = tabName)
     }
 }

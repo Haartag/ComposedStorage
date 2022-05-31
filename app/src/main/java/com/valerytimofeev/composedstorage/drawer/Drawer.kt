@@ -1,10 +1,12 @@
 package com.valerytimofeev.composedstorage.drawer
 
+import android.util.Log.d
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Icon
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
@@ -12,9 +14,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.valerytimofeev.composedstorage.R
 
 sealed class DrawerScreens(val title: Int, val route: String) {
@@ -36,10 +42,15 @@ fun Drawer(
             .padding(horizontal = 24.dp)
             .padding(top = 48.dp)
     ) {
-        Icon(
-            imageVector = Icons.Filled.Warning,
-            contentDescription = "App icon"
-        )
+        Row {
+            Icon(
+                modifier = Modifier.size(width = 64.dp, height = 108.dp),
+                painter = painterResource(id = R.drawable.ic__3),
+                contentDescription = "App icon",
+                tint = Color.Red,
+            )
+            Text(modifier = Modifier.offset(x = (-12).dp), text = "akroma", style = MaterialTheme.typography.h4, fontWeight = FontWeight.Light)
+        }
 
         Spacer(modifier = Modifier.height(4.dp))
         Divider()
@@ -105,7 +116,7 @@ fun DrawerItem(
         ) {
             Icon(imageVector = icon, contentDescription = text)
             Spacer(modifier = Modifier.width(16.dp))
-            Text(text = text)
+            Text(text = text, style = MaterialTheme.typography.subtitle1)
         }
     }
 }

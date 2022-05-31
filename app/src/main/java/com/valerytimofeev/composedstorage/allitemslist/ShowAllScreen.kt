@@ -139,7 +139,7 @@ fun ExtendedItem(
         Column {
             Text(
                 modifier = Modifier.padding(8.dp),
-                text = "${item.tabName} -> ${item.categoryName}"
+                text = "${item.tabName} — ${item.categoryName}"
             )
             ItemContent(
                 name = item.itemName,

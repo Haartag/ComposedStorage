@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
@@ -87,13 +88,12 @@ fun TabNamePreview(
     viewModel: AddNewTabViewModel = hiltViewModel(),
 ) {
     Box(contentAlignment = Alignment.Center) {
-        TabNameBackground(color = viewModel.getColorByIndex(viewModel.buttonSelected.value))
+        TabNameBackground(color = viewModel.getColorByIndex(viewModel.buttonSelected.value), sideIcons = false)
         Text(
             text = viewModel.tabNameText.value,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            fontWeight = FontWeight.Bold,
-            fontSize = 24.sp,
+            style = MaterialTheme.typography.h5,
             textAlign = TextAlign.Center,
             color = MaterialTheme.colors.onSurface,
             modifier = Modifier.padding(horizontal = 50.dp)
@@ -150,6 +150,7 @@ fun TabNameTextInput(
                     Color.Gray
                 }
             ),
+            textStyle = MaterialTheme.typography.subtitle1.merge(TextStyle(fontSize = 18.sp)),
             keyboardOptions = KeyboardOptions(
                 imeAction = ImeAction.Done
             ),

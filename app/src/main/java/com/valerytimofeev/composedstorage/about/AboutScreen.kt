@@ -2,23 +2,24 @@ package com.valerytimofeev.composedstorage.about
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.TopBar
@@ -33,77 +34,107 @@ fun AboutScreen(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize(),
         ) {
             TopBar(
                 title = stringResource(R.string.about_title),
                 buttonIcon = Icons.Filled.ArrowBack,
                 onButtonClicked = { navController.popBackStack() },
             )
-
-            Text(
-                modifier = Modifier.padding(16.dp),
-                text = "What's new in this version: \n Nothing."
-            )
-            
-            Spacer(modifier = Modifier.height(20.dp))
-
-            val gitHubUrl = "https://github.com/Haartag/ComposedStorage"
-            val pixabayUrl = "https://pixabay.com/"
-            val uriHandler = LocalUriHandler.current
-
-            val aboutMainText = buildAnnotatedString {
-                append("The photos in this app are received from ")
-
-                pushStringAnnotation(tag = "pixabay", annotation = pixabayUrl)
-                withStyle(
-                    style = SpanStyle(
-                        color = Color(0xff64B5F6),
-                        fontSize = 16.sp,
-                        textDecoration = TextDecoration.Underline
+            Spacer(modifier = Modifier.height(24.dp))
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Icon(
+                    modifier = Modifier.size(width = 64.dp, height = 108.dp),
+                    painter = painterResource(id = R.drawable.ic__3),
+                    contentDescription = "App icon",
+                    tint = Color.Red,
+                )
+                Text(
+                    modifier = Modifier.offset(x = (-12).dp),
+                    text = "akroma",
+                    style = MaterialTheme.typography.h4,
+                    fontWeight = FontWeight.Light
+                )
+            }
+            Column(
+                modifier = Modifier.fillMaxSize(),
+                verticalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.body1,
+                        text = "What's new in this version:"
                     )
-                ) {
-                    append("Pixabay")
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        modifier = Modifier.padding(16.dp),
+                        style = MaterialTheme.typography.body2,
+                        text = "Nothing."
+                    )
                 }
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    val gitHubUrl = "https://github.com/Haartag/ComposedStorage"
+                    val pixabayUrl = "https://pixabay.com/"
+                    val uriHandler = LocalUriHandler.current
 
-                append("\n\n\n\n\n")
+                    val pixabayText = buildAnnotatedString {
+                        append("The photos in this app are received from ")
 
-                pushStringAnnotation(tag = "GitHub", annotation = gitHubUrl)
-                withStyle(
-                    style = SpanStyle(
-                        color = Color(0xff64B5F6),
-                        fontSize = 16.sp,
-                        textDecoration = TextDecoration.Underline
+                        pushStringAnnotation(tag = "pixabay", annotation = pixabayUrl)
+                        withStyle(
+                            style = SpanStyle(
+                                color = Color(0xff64B5F6),
+                                //fontSize = 16.sp,
+                                textDecoration = TextDecoration.Underline
+                            )
+                        ) {
+                            append("Pixabay")
+                        }
+                    }
+                    ClickableText(
+                        modifier = Modifier.padding(16.dp),
+                        text = pixabayText,
+                        style = MaterialTheme.typography.body2,
+                        onClick = {
+                            pixabayText.getStringAnnotations(
+                                tag = "pixabay",
+                                start = it,
+                                end = it
+                            )
+                                .firstOrNull()?.let { url ->
+                                    uriHandler.openUri(url.item)
+                                }
+                        })
+                    Spacer(modifier = Modifier.height(8.dp))
+                    ClickableText(
+                        text = AnnotatedString("App`s GitHub repository"),
+                        style = MaterialTheme.typography.body2.merge(
+                            TextStyle(
+                                //textAlign = TextAlign.Center,
+                                color = Color(0xff64B5F6),
+                                textDecoration = TextDecoration.Underline
+                            )
+                        ),
+                        onClick = {
+                            uriHandler.openUri(gitHubUrl)
+                        })
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                        text = "Application version: 0.1",
+                        style = MaterialTheme.typography.caption,
+                        textAlign = TextAlign.Center,
+                        color = Color.Gray
                     )
-                ) {
-                    append("App`s GitHub repository")
+                    Spacer(modifier = Modifier.height(4.dp))
                 }
             }
-            ClickableText(
-                modifier = Modifier.padding(16.dp),
-                text = aboutMainText,
-                onClick = {
-                    aboutMainText.getStringAnnotations(tag = "pixabay", start = it, end = it)
-                        .firstOrNull()?.let { url ->
-                            uriHandler.openUri(url.item)
-                        }
-                    aboutMainText.getStringAnnotations(tag = "GitHub", start = it, end = it)
-                        .firstOrNull()?.let { url ->
-                            uriHandler.openUri(url.item)
-                        }
-                })
-            
-            Spacer(modifier = Modifier.height(20.dp))
-            
-            Text(
-                modifier = Modifier
-                    .padding(16.dp)
-                    .fillMaxWidth(),
-                text = "Application version: 0.1",
-                fontSize = 14.sp,
-                textAlign = TextAlign.Center,
-                color = Color.Gray
-            )
         }
     }
 }

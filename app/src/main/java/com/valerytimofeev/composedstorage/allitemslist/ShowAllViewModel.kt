@@ -24,12 +24,14 @@ class ShowAllViewModel @Inject constructor(
     fun search(listForFilter: List<ListForSearch>, query: String): List<ListForSearch> {
         return if (query.length > 1) {
             listForFilter.filter { it.itemName.contains(query.trim(), ignoreCase = true) }
+                .sortedBy { it.itemName }
         } else {
-            listForFilter
+            listForFilter.sortedBy { it.itemName }
         }
     }
 
-    fun stringSizeToDecimalSize(number: String): String = (number.toBigDecimal().divide(divider)).toString()
+    fun stringSizeToDecimalSize(number: String): String =
+        (number.toBigDecimal().divide(divider)).toString()
 }
 
 

@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -15,6 +16,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -53,9 +55,17 @@ fun CategoryListScreen(
             val tabDataFlow = viewModel.getTabFlow().collectAsState(initial = emptyList())
             if (tabDataFlow.value.isNotEmpty()) {
                 TopBar(
-                    title = stringResource(R.string.app_name),
+                    title = stringResource(R.string.app_name_for_icon),
                     buttonIcon = Icons.Filled.Menu,
                     textStyle = MaterialTheme.typography.h4,
+                    titleIcon = {
+                        Icon(
+                            modifier = Modifier.size(48.dp).offset(x = 12.dp),
+                            painter = painterResource(id = R.drawable.ic__1),
+                            contentDescription = "App icon",
+                            tint = Color.Red
+                        )
+                    },
                     onButtonClicked = { openDrawer() }
                 )
                 TabNameBackground(color = viewModel.getCategoryTypeColor(tabDataFlow.value[viewModel.currentPage.value].colorScheme))
@@ -123,8 +133,7 @@ fun TabName(
                 text = tabDataFlow.value.map { it.tabName }[page],
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Bold,
-                fontSize = 24.sp,
+                style = MaterialTheme.typography.h5,
                 textAlign = TextAlign.Center,
                 color = MaterialTheme.colors.onSurface,
                 modifier = Modifier.padding(horizontal = 50.dp)
