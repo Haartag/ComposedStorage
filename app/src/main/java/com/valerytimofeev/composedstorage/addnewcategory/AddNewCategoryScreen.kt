@@ -26,7 +26,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -94,13 +93,16 @@ fun TabNameChooser(
     val tabDataFlow = viewModel.getTabFlow().collectAsState(initial = emptyList())
 
     Box(contentAlignment = Alignment.Center) {
-        if (tabDataFlow.value.isNotEmpty()) {
-            viewModel.selectedTabName = tabDataFlow.value[0].tabName
-            TabNameBackground(
-                color = viewModel.getCategoryTypeColor(tabDataFlow.value[viewModel.selectedTabIndex.value].colorScheme),
-                sideIcons = false
-            )
-        }
+        //if (tabDataFlow.value.isNotEmpty()) {
+        TabNameBackground(
+            color = viewModel.getCategoryTypeColor(
+                tabDataFlow.value.getOrElse(
+                    viewModel.selectedTabIndex.value,
+                    defaultValue = { viewModel.tabItemPlaceholder }).colorScheme
+            ),
+            sideIcons = false
+        )
+        // }
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(horizontal = 50.dp)

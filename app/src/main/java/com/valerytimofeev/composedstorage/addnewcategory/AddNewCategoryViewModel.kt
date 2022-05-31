@@ -1,8 +1,6 @@
 package com.valerytimofeev.composedstorage.addnewcategory
 
-import androidx.compose.foundation.clickable
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -14,6 +12,9 @@ import com.valerytimofeev.composedstorage.data.database.TabItem
 import com.valerytimofeev.composedstorage.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.ceil
@@ -27,6 +28,8 @@ class AddNewCategoryViewModel @Inject constructor(
     val dropDownExpanded = mutableStateOf(false)
     val selectedTabIndex = mutableStateOf(0)
     var selectedTabName = ""
+
+    val tabItemPlaceholder = TabItem(0, "", 2)
 
     val categoryName = mutableStateOf("")
 
@@ -43,6 +46,12 @@ class AddNewCategoryViewModel @Inject constructor(
 
     fun getTabFlow(): Flow<List<TabItem>> {
         return repository.getTabsFlow()
+    }
+
+    init {
+        viewModelScope.launch {
+            getTabFlow().collect { selectedTabName = it[0].tabName }
+        }
     }
 
     //calculate number of rows
