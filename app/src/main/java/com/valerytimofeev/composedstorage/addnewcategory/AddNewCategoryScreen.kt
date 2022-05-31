@@ -1,5 +1,6 @@
 package com.valerytimofeev.composedstorage.addnewcategory
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,14 +12,22 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Done
+import androidx.compose.material.icons.outlined.ArrowBack
+import androidx.compose.material.icons.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.KeyboardArrowLeft
+import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -32,6 +41,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
+import coil.size.Scale
 import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.addnewtab.ColorBox
 import com.valerytimofeev.composedstorage.common.CategoryEntry
@@ -74,7 +84,7 @@ fun AddNewCategoryScreen(
                             viewModel.isInputError.value = true
                             viewModel.focusRequester.requestFocus()
                         }
-                     })
+                    })
                 }
             )
             TabNameChooser()
@@ -93,6 +103,7 @@ fun TabNameChooser(
 
     Box(contentAlignment = Alignment.Center) {
         if (tabDataFlow.value.isNotEmpty()) {
+            viewModel.selectedTabName = tabDataFlow.value[0].tabName
             TabNameBackground(color = viewModel.getCategoryTypeColor(tabDataFlow.value[viewModel.selectedTabIndex.value].colorScheme))
         }
         Row(
@@ -229,21 +240,51 @@ fun ImgPicker(
         modifier = Modifier
             .background(Mint.copy(alpha = 0.3f))
             .fillMaxWidth()
-            .padding(vertical = 9.dp)
-            .padding(bottom = 9.dp),
+            .padding(vertical = 4.dp)
+            .padding(bottom = 4.dp),
         contentAlignment = Alignment.Center
     ) {
-        Column(
-        ) {
-            repeat(viewModel.getImgPickerRows()) { row ->
-                Spacer(modifier = Modifier.height(1.dp))
-                Row() {
-                    viewModel.getOneImgRow(row).forEach {
-                        Spacer(modifier = Modifier.width(1.dp))
-                        ImgBox(index = viewModel.getIndexByImg(it))
+        Row() {
+            Icon(
+                Icons.Outlined.ArrowBack,
+                contentDescription = "Scroll left",
+                modifier = if (viewModel.leftButtonClickable.value) Modifier.clickable {
+                    viewModel.setSelected.value--
+                    viewModel.setButtons()
+                } else {
+                    Modifier
+                }
+                    .height(185.dp)
+                    .padding(horizontal = 8.dp),
+                tint = if (viewModel.leftButtonClickable.value) Color.Black else Color.LightGray
+            )
+            Column(
+            ) {
+                repeat(3) { row ->
+                    Spacer(modifier = Modifier.height(1.dp))
+                    Row() {
+                        val spacerSize = ((4 - viewModel.getOneImgRow(row).size) * 61).dp
+                        viewModel.getOneImgRow(row).forEach {
+                            Spacer(modifier = Modifier.width(1.dp))
+                            ImgBox(index = viewModel.getIndexByImg(it))
+                        }
+                        Spacer(modifier = Modifier.width(spacerSize))
                     }
                 }
             }
+            Icon(
+                Icons.Outlined.ArrowForward,
+                contentDescription = "Scroll right",
+                modifier = if (viewModel.rightButtonClickable.value) Modifier.clickable {
+                    viewModel.setSelected.value++
+                    viewModel.setButtons()
+                } else {
+                    Modifier
+                }
+                    .height(185.dp)
+                    .padding(horizontal = 8.dp),
+                tint = if (viewModel.rightButtonClickable.value) Color.Black else Color.LightGray
+            )
         }
     }
 }
@@ -269,11 +310,13 @@ fun ImgBox(
             val painter = rememberAsyncImagePainter(
                 ImageRequest.Builder(LocalContext.current)
                     .data(data = viewModel.getCategoryImg(img = index))
+                    .scale(scale = Scale.FILL)
                     .build()
             )
             Image(
                 painter = painter,
                 contentDescription = "Category image",
+                contentScale = ContentScale.Crop
             )
         }
     }

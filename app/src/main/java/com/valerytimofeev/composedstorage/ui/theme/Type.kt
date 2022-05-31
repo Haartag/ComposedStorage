@@ -5,6 +5,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.em
 import androidx.compose.ui.unit.sp
 import com.valerytimofeev.composedstorage.R
 
@@ -32,7 +33,19 @@ val Typography = Typography(
     h6 = TextStyle(
         fontFamily = Rubik,
         fontWeight = FontWeight.Medium,
-        fontSize = 20.sp
+        fontSize = 20.sp,
+        //letterSpacing = 0.15.em
+    ),
+    h5 = TextStyle(
+        fontFamily = Rubik,
+        fontWeight = FontWeight.Normal,
+        fontSize = 24.sp
+    ),
+    h4 = TextStyle(
+        fontFamily = Rubik,
+        fontWeight = FontWeight.Normal,
+        fontSize = 34.sp,
+        //letterSpacing = 0.25.em
     )
     /* Other default text styles to override
     button = TextStyle(

@@ -55,6 +55,7 @@ fun CategoryListScreen(
                 TopBar(
                     title = stringResource(R.string.app_name),
                     buttonIcon = Icons.Filled.Menu,
+                    textStyle = MaterialTheme.typography.h4,
                     onButtonClicked = { openDrawer() }
                 )
                 TabNameBackground(color = viewModel.getCategoryTypeColor(tabDataFlow.value[viewModel.currentPage.value].colorScheme))

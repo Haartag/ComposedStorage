@@ -1,6 +1,8 @@
 package com.valerytimofeev.composedstorage.addnewcategory
 
+import androidx.compose.foundation.clickable
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
@@ -32,6 +34,12 @@ class AddNewCategoryViewModel @Inject constructor(
     val isInputError = mutableStateOf(false)
 
     val buttonSelected = mutableStateOf(0)
+    val setSelected = mutableStateOf(0)
+
+
+    val leftButtonClickable = mutableStateOf(false)
+    val rightButtonClickable = mutableStateOf(true)
+
 
     fun getTabFlow(): Flow<List<TabItem>> {
         return repository.getTabsFlow()
@@ -43,7 +51,7 @@ class AddNewCategoryViewModel @Inject constructor(
     }
 
     fun getOneImgRow(rowIndex: Int): List<Int> {
-        return Constants.imgMap.values.drop(rowIndex * 4).take(4)
+        return Constants.imgMap.values.drop((setSelected.value * 3 + rowIndex) * 4).take(4)
     }
 
     fun imgPickerOutline(index: Int): Color {
@@ -55,11 +63,16 @@ class AddNewCategoryViewModel @Inject constructor(
     }
 
     fun getCategoryImg(img: Int): Int {
-        return Constants.imgMap[img] ?: R.drawable.placeholder50
+        return Constants.imgMap[img] ?: R.drawable.placeholder_white
     }
 
     fun getIndexByImg(img: Int): Int {
         return Constants.imgMap.filterValues { it == img }.keys.elementAt(0)
+    }
+
+    fun setButtons() {
+        leftButtonClickable.value = setSelected.value > 0
+        rightButtonClickable.value = setSelected.value < getImgPickerRows() / 3
     }
 
     fun addCategory() {

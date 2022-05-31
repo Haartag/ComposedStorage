@@ -5,10 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Icon
-import androidx.compose.material.IconButton
-import androidx.compose.material.Text
-import androidx.compose.material.TopAppBar
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Done
 import androidx.compose.material.icons.outlined.KeyboardArrowLeft
@@ -22,7 +19,9 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
@@ -38,12 +37,14 @@ fun TopBar(
     title: String = "",
     buttonIcon: ImageVector,
     onButtonClicked: () -> Unit,
+    textStyle: TextStyle = MaterialTheme.typography.h6,
     additionalInfo: @Composable () -> Unit = {}
 ) {
     TopAppBar(
         title = {
             Text(
-                text = title
+                text = title,
+                style = textStyle
             )
         },
         navigationIcon = {
@@ -157,7 +158,8 @@ fun CategoryEntry(
             painter = painter,
             contentDescription = categoryName,
             modifier = modifier
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentScale = ContentScale.Crop
         )
         Box(
             contentAlignment = BottomCenter,
