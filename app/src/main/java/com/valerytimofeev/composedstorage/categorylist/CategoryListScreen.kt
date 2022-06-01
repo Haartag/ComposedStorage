@@ -60,12 +60,13 @@ fun CategoryListScreen(
                     textStyle = MaterialTheme.typography.h4,
                     titleIcon = {
                         Icon(
-                            modifier = Modifier.size(48.dp).offset(x = 12.dp),
+                            modifier = Modifier.size(48.dp).offset(x = 8.dp),
                             painter = painterResource(id = R.drawable.ic__1),
                             contentDescription = "App icon",
                             tint = Color.Red
                         )
                     },
+                    titleOffset = 12.dp,
                     onButtonClicked = { openDrawer() }
                 )
                 TabNameBackground(color = viewModel.getCategoryTypeColor(tabDataFlow.value[viewModel.currentPage.value].colorScheme))

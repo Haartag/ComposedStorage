@@ -40,12 +40,16 @@ fun TopBar(
     titleIcon: @Composable () -> Unit = {},
     buttonIcon: ImageVector,
     onButtonClicked: () -> Unit,
+    titleOffset: Dp = 0.dp,
     textStyle: TextStyle = MaterialTheme.typography.h6,
     additionalInfo: @Composable () -> Unit = {}
 ) {
     TopAppBar(
         title = {
-            Row {
+            Row(
+                modifier = Modifier.offset(x = titleOffset),
+                horizontalArrangement = Arrangement.Center
+            ) {
                 titleIcon()
                 Text(
                     text = title,
