@@ -34,9 +34,13 @@ class AddNewCategoryViewModel @Inject constructor(
     val categoryName = mutableStateOf("")
 
     val focusRequester = FocusRequester()
+
+    //if wrong data in textField
     val isInputError = mutableStateOf(false)
 
     val buttonSelected = mutableStateOf(0)
+
+    //current set of img tiles
     val setSelected = mutableStateOf(0)
 
 

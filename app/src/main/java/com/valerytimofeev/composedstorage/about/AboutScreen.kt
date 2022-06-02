@@ -42,6 +42,8 @@ fun AboutScreen(
                 onButtonClicked = { navController.popBackStack() },
             )
             Spacer(modifier = Modifier.height(24.dp))
+
+            //app logo
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.Center
@@ -63,6 +65,8 @@ fun AboutScreen(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.SpaceBetween
             ) {
+
+                //What`s new
                 Column {
                     Text(
                         modifier = Modifier.padding(16.dp),
@@ -76,6 +80,8 @@ fun AboutScreen(
                         text = "Nothing."
                     )
                 }
+
+                //links in bottom
                 Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     val gitHubUrl = "https://github.com/Haartag/ComposedStorage"
                     val pixabayUrl = "https://pixabay.com/"
@@ -127,7 +133,7 @@ fun AboutScreen(
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxWidth(),
-                        text = "Application version: 0.1",
+                        text = "Application version: 1.0",
                         style = MaterialTheme.typography.caption,
                         textAlign = TextAlign.Center,
                         color = Color.Gray

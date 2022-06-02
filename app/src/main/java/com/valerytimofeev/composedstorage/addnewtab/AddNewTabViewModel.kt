@@ -22,6 +22,7 @@ class AddNewTabViewModel @Inject constructor(
     val tabNameText = mutableStateOf("")
     val buttonSelected = mutableStateOf(1)
 
+    //if wrong data in textField
     val isInputError = mutableStateOf(false)
 
     val focusRequester = FocusRequester()

@@ -21,6 +21,7 @@ class ShowAllViewModel @Inject constructor(
         return repository.getList()
     }
 
+    //items sorted by name by default.
     fun search(listForFilter: List<ListForSearch>, query: String): List<ListForSearch> {
         return if (query.length > 1) {
             listForFilter.filter { it.itemName.contains(query.trim(), ignoreCase = true) }

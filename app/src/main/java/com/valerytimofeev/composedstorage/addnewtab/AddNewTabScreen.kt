@@ -196,6 +196,7 @@ fun ColorPicker(
     }
 }
 
+//1 color tile for ColorPicker
 @Composable
 fun ColorBox(
     index: Int,
