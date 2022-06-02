@@ -59,18 +59,23 @@ fun CategoryDetailScreen(
     viewModel: CategoryDetailViewModel = hiltViewModel(),
     navController: NavController,
 ) {
-    viewModel.currentCategory.value = categoryName
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
+    Surface(
+        color = MaterialTheme.colors.background,
+        modifier = Modifier.fillMaxSize(),
     ) {
-        TopBar(
-            title = categoryName,
-            buttonIcon = Icons.Filled.ArrowBack,
-            onButtonClicked = { navController.popBackStack() },
-            additionalInfo = { TopBarAddIcon(categoryName = categoryName) }
-        )
-        ItemsList(categoryName = categoryName)
+        viewModel.currentCategory.value = categoryName
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            TopBar(
+                title = categoryName,
+                buttonIcon = Icons.Filled.ArrowBack,
+                onButtonClicked = { navController.popBackStack() },
+                additionalInfo = { TopBarAddIcon(categoryName = categoryName) }
+            )
+            ItemsList(categoryName = categoryName)
+        }
     }
 }
 
@@ -383,7 +388,7 @@ fun DialogButton(
 ) {
     Box(
         modifier = modifier
-            .background(color = Mint)
+            .background(color = MaterialTheme.colors.primary)
             .clickable {
                 onClick()
             }

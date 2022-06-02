@@ -1,6 +1,5 @@
 package com.valerytimofeev.composedstorage.drawer
 
-import android.util.Log.d
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -20,7 +19,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import com.valerytimofeev.composedstorage.R
 
 sealed class DrawerScreens(val title: Int, val route: String) {

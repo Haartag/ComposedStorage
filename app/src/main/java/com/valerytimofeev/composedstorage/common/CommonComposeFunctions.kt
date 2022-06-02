@@ -13,6 +13,7 @@ import androidx.compose.material.icons.outlined.KeyboardArrowRight
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.BottomCenter
+import androidx.compose.ui.Alignment.Companion.Center
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
@@ -32,6 +33,8 @@ import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import com.valerytimofeev.composedstorage.ui.theme.Mint
+import com.valerytimofeev.composedstorage.ui.theme.MintTest
+import com.valerytimofeev.composedstorage.ui.theme.TopBarBlue
 
 //TopBar of each page. Additional button can be in additionalInfo.
 @Composable
@@ -65,7 +68,7 @@ fun TopBar(
         actions = {
             additionalInfo()
         },
-        backgroundColor = Mint
+        backgroundColor = MaterialTheme.colors.primary
     )
 }
 
@@ -97,10 +100,11 @@ fun ItemBox(
         modifier = modifier
             .shadow(elevation = 4.dp, RoundedCornerShape(4.dp))
             .clip(RoundedCornerShape(4.dp))
-            .background(color = Mint)
+            .background(color = MaterialTheme.colors.primary)
             .fillMaxWidth()
             .height(60.dp)
-            .padding(4.dp)
+            .padding(4.dp),
+        contentAlignment = Center
     ) {
         content()
     }
@@ -125,20 +129,17 @@ fun ItemContent(
         ) {
             Text(
                 text = name,
-                textAlign = TextAlign.Center,
-                style = MaterialTheme.typography.body1
+                style = MaterialTheme.typography.body1.merge(TextStyle(fontSize = 18.sp))
             )
             Row(horizontalArrangement = Arrangement.End) {
                 Text(
                     text = size,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1.merge(TextStyle(fontSize = 18.sp))
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Text(
                     text = sizeType,
-                    textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.body1
+                    style = MaterialTheme.typography.body1.merge(TextStyle(fontSize = 18.sp))
                 )
             }
         }

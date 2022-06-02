@@ -131,13 +131,14 @@ fun TabNameTextInput(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Mint.copy(alpha = 0.3f))
+            .background(MaterialTheme.colors.primary.copy(alpha = 0.25f))
             .padding(vertical = 9.dp)
             .padding(top = 9.dp),
         contentAlignment = Alignment.Center
     ) {
         OutlinedTextField(
             modifier = Modifier
+                .clip(shape = RoundedCornerShape(4.dp))
                 .background(Color.White)
                 .height(54.dp)
                 .width(280.dp)
@@ -171,7 +172,7 @@ fun ColorPicker(
 ) {
     Box(
         modifier = Modifier
-            .background(Mint.copy(alpha = 0.3f))
+            .background(MaterialTheme.colors.primary.copy(alpha = 0.25f))
             .fillMaxWidth()
             .padding(vertical = 9.dp)
             .padding(bottom = 9.dp),

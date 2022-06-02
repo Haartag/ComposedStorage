@@ -9,6 +9,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -41,21 +43,26 @@ import com.valerytimofeev.composedstorage.utils.ListForSearch
 fun ShowAllScreen(
     navController: NavController,
 ) {
-    val focusManager = LocalFocusManager.current
-    Column(modifier = Modifier
-        .pointerInput(Unit) {
-            detectTapGestures(onTap = {
-                focusManager.clearFocus()
-            })
-        }
+    Surface(
+        color = MaterialTheme.colors.background,
+        modifier = Modifier.fillMaxSize(),
     ) {
-        TopBar(
-            title = stringResource(R.string.show_all_title),
-            buttonIcon = Icons.Filled.ArrowBack,
-            onButtonClicked = { navController.popBackStack() },
-        )
-        SearchTab(focusManager = focusManager)
-        AllItemsList(navController = navController)
+        val focusManager = LocalFocusManager.current
+        Column(modifier = Modifier
+            .pointerInput(Unit) {
+                detectTapGestures(onTap = {
+                    focusManager.clearFocus()
+                })
+            }
+        ) {
+            TopBar(
+                title = stringResource(R.string.show_all_title),
+                buttonIcon = Icons.Filled.ArrowBack,
+                onButtonClicked = { navController.popBackStack() },
+            )
+            SearchTab(focusManager = focusManager)
+            AllItemsList(navController = navController)
+        }
     }
 }
 

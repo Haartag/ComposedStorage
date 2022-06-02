@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -33,6 +34,7 @@ import com.valerytimofeev.composedstorage.common.CategoryEntry
 import com.valerytimofeev.composedstorage.common.TabNameBackground
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.data.database.TabItem
+import com.valerytimofeev.composedstorage.ui.theme.LogoRed
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 import com.valerytimofeev.composedstorage.utils.floorMod
 
@@ -63,7 +65,7 @@ fun CategoryListScreen(
                             modifier = Modifier.size(48.dp).offset(x = 8.dp),
                             painter = painterResource(id = R.drawable.ic__1),
                             contentDescription = "App icon",
-                            tint = Color.Red
+                            tint = LogoRed
                         )
                     },
                     titleOffset = 12.dp,

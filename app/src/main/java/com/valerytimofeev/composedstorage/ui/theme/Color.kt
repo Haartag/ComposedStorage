@@ -8,6 +8,13 @@ val Blue = Color(0xFF473198)
 val Violet = Color(0xFF4A0D67)
 val Mint = Color(0xFFADFC92)
 
+val TopBarBlue = Color(0xFF6AA8C2)
+val altBlue = Color(0xFF81BFDA)
+
+val LogoRed = Color(0xFFBD3036)
+val MintTest = Color(0xFF95D3EE)
+val Background = Color(0xFFEDFFFF)
+
 val Theme1Color = Color(0xFFF1B0B0)
 val Theme2Color = Color(0xFFF1D7B0)
 val Theme3Color = Color(0xFFF1EEB0)

@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -17,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
@@ -194,13 +196,14 @@ fun CategoryNameInput(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Mint.copy(alpha = 0.3f))
+            .background(MaterialTheme.colors.primary.copy(alpha = 0.25f))
             .padding(vertical = 9.dp)
             .padding(top = 9.dp),
         contentAlignment = Alignment.Center
     ) {
         OutlinedTextField(
             modifier = Modifier
+                .clip(shape = RoundedCornerShape(4.dp))
                 .background(Color.White)
                 .height(54.dp)
                 .width(280.dp)
@@ -234,10 +237,10 @@ fun ImgPicker(
 ) {
     Box(
         modifier = Modifier
-            .background(Mint.copy(alpha = 0.3f))
+            .background(MaterialTheme.colors.primary.copy(alpha = 0.25f))
             .fillMaxWidth()
-            .padding(vertical = 4.dp)
-            .padding(bottom = 4.dp),
+            .padding(vertical = 9.dp)
+            .padding(bottom = 9.dp),
         contentAlignment = Alignment.Center
     ) {
         Row() {
