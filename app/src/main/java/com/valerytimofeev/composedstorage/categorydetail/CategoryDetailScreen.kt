@@ -1,5 +1,9 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
+import android.app.Activity
+import android.content.Context
+import android.view.KeyEvent
+import android.view.inputmethod.BaseInputConnection
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -51,6 +55,7 @@ import com.valerytimofeev.composedstorage.utils.Constants
 import com.valerytimofeev.composedstorage.utils.Constants.sizeTypeMap
 import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import kotlin.math.roundToInt
 
 @ExperimentalMaterialApi
@@ -114,7 +119,10 @@ fun ItemsList(
                     ItemContent(
                         name = viewModel.clickedStorage.name,
                         size = viewModel.getDecimalSize(),
-                        sizeType = stringResource(id = sizeTypeMap[viewModel.clickedStorage.sizeType] ?: R.string.placeholder)
+                        sizeType = stringResource(
+                            id = sizeTypeMap[viewModel.clickedStorage.sizeType]
+                                ?: R.string.placeholder
+                        )
                     )
                 },
                 leftButtonText = stringResource(R.string.button_delete),
@@ -179,7 +187,9 @@ fun ItemEntry(
     ItemContent(
         name = storageList[itemIndex].name,
         size = viewModel.sizeToDecimalSize(storageList[itemIndex].size),
-        sizeType = stringResource(id = sizeTypeMap[storageList[itemIndex].sizeType] ?: R.string.placeholder),
+        sizeType = stringResource(
+            id = sizeTypeMap[storageList[itemIndex].sizeType] ?: R.string.placeholder
+        ),
         modifier = Modifier.clickable {
             //save item data to viewmodel for dialog
             viewModel.saveClickedItem(item = storageList[itemIndex])
@@ -219,6 +229,7 @@ fun ChangeDialog(
     onRightClick: () -> Unit,
 ) {
     var focusManager = LocalFocusManager.current
+
     NoPaddingAlertDialog(
         focusManager = focusManager,
         title = {
@@ -235,28 +246,21 @@ fun ChangeDialog(
                         })
                     }
             ) {
-                //focus textfield on both text and icon click
-                val focusRequester = FocusRequester()
-
                 Spacer(modifier = Modifier.height(24.dp))
-
                 Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .clickable {
-                            focusRequester.requestFocus()
-                        }
+                    verticalAlignment = Alignment.CenterVertically
                 ) {
                     var nameText by remember {
                         mutableStateOf(viewModel.clickedStorage.name)
                     }
                     focusManager = LocalFocusManager.current
-                    BasicTextField(
+                    OutlinedTextField(
                         value = nameText,
                         onValueChange = {
-                            nameText = it
-                            viewModel.clickedStorage.name = it
+                                nameText = it
+                                viewModel.clickedStorage.name = it
                         },
+                        singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             imeAction = ImeAction.Done,
                             capitalization = KeyboardCapitalization.Sentences
@@ -264,14 +268,8 @@ fun ChangeDialog(
                         keyboardActions = KeyboardActions(
                             onDone = { focusManager.clearFocus() }),
                         textStyle = MaterialTheme.typography.subtitle1.merge(TextStyle(fontSize = 18.sp)),
-                        modifier = Modifier.focusRequester(focusRequester = focusRequester)
-                    )
-                    Icon(
-                        Icons.Filled.Edit,
-                        contentDescription = "Decrease icon",
                         modifier = Modifier
-                            .size(35.dp)
-                            .padding(vertical = 8.dp)
+                            .padding(horizontal = 24.dp)
                     )
                 }
 
@@ -319,23 +317,25 @@ fun ChangeDialog(
                              * locale decimal separator support
                              * extra symbols in OnValueChange bug on some android versions
                              **/
-
-                            if (viewModel.checkManualInput(it)) {
-                                sizeText = viewModel.manualChangeWeight(it)
-                            }
-                            if (!viewModel.isErrorInSize.value) {
-                                viewModel.saveIntegerSize(it)
-                            }
+                                if (viewModel.checkManualInput(it)) {
+                                    sizeText = viewModel.manualChangeWeight(it)
+                                }
+                                if (!viewModel.isErrorInSize.value) {
+                                    viewModel.saveIntegerSize(it)
+                                }
                         },
+                        singleLine = true,
                         keyboardOptions = KeyboardOptions(
                             keyboardType = KeyboardType.Number,
                             imeAction = ImeAction.Done
                         ),
                         keyboardActions = KeyboardActions(
                             onDone = { focusManager.clearFocus() }),
-                        textStyle = MaterialTheme.typography.h6.merge(TextStyle(
-                            textAlign = TextAlign.Center,
-                        ))
+                        textStyle = MaterialTheme.typography.h6.merge(
+                            TextStyle(
+                                textAlign = TextAlign.Center,
+                            )
+                        )
                     )
                     Icon(
                         Icons.Filled.KeyboardArrowUp,

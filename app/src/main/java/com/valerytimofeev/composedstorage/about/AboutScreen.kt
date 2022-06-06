@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.BuildConfig
 import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.TopBar
 
@@ -77,7 +78,9 @@ fun AboutScreen(
                     Text(
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.body2,
-                        text = "Nothing."
+                        text = "– fixed text input problems; \n " +
+                                //"– fixed tab color`s bug; \n" +
+                                "– some UI improvement."
                     )
                 }
 
@@ -133,7 +136,7 @@ fun AboutScreen(
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxWidth(),
-                        text = "Application version: 1.0",
+                        text = "Application version: ${BuildConfig.VERSION_NAME}",
                         style = MaterialTheme.typography.caption,
                         textAlign = TextAlign.Center,
                         color = Color.Gray
