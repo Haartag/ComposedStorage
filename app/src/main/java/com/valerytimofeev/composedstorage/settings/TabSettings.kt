@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -25,6 +26,7 @@ import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.common.TopBarOkIcon
 
 @ExperimentalFoundationApi
+@ExperimentalComposeUiApi
 @Composable
 fun TabSettingsSubmenu(
     navController: NavController,
@@ -51,6 +53,7 @@ fun TabSettingsSubmenu(
 // Based on Foundation LazyColumnDragAndDropDemo
 
 @ExperimentalFoundationApi
+@ExperimentalComposeUiApi
 @Composable
 fun TabDragAndDropColumn(
     viewModel: SettingsViewModel = hiltViewModel()

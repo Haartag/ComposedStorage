@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.ArrowForward
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -44,6 +45,7 @@ import com.valerytimofeev.composedstorage.common.CategoryEntry
 import com.valerytimofeev.composedstorage.common.TabNameBackground
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.common.TopBarOkIcon
+import com.valerytimofeev.composedstorage.data.database.TabItem
 import com.valerytimofeev.composedstorage.ui.theme.Mint
 
 @Composable
@@ -51,6 +53,7 @@ fun AddNewCategoryScreen(
     viewModel: AddNewCategoryViewModel = hiltViewModel(),
     navController: NavController
 ) {
+    val tabDataFlow = viewModel.getTabFlow().collectAsState(initial = emptyList())
     val focusManager = LocalFocusManager.current
     Surface(
         color = MaterialTheme.colors.background,
@@ -81,8 +84,8 @@ fun AddNewCategoryScreen(
                     })
                 }
             )
-            TabNameChooser()
-            CategoryTilePreview()
+            TabNameChooser(tabDataFlow = tabDataFlow)
+            CategoryTilePreview(tabDataFlow = tabDataFlow)
             CategoryNameInput(focusManager = focusManager)
             ImgPicker()
         }
@@ -92,9 +95,8 @@ fun AddNewCategoryScreen(
 @Composable
 fun TabNameChooser(
     viewModel: AddNewCategoryViewModel = hiltViewModel(),
+    tabDataFlow: State<List<TabItem>>
 ) {
-    val tabDataFlow = viewModel.getTabFlow().collectAsState(initial = emptyList())
-
     Box(contentAlignment = Alignment.Center) {
         //if (tabDataFlow.value.isNotEmpty()) {
         TabNameBackground(
@@ -171,6 +173,7 @@ fun DropdownItem(
 @Composable
 fun CategoryTilePreview(
     viewModel: AddNewCategoryViewModel = hiltViewModel(),
+    tabDataFlow: State<List<TabItem>>
 ) {
     Row(
         modifier = Modifier
@@ -180,7 +183,11 @@ fun CategoryTilePreview(
         Spacer(modifier = Modifier.weight(0.9f))
         CategoryEntry(
             categoryName = viewModel.categoryName.value,
-            color = viewModel.getCategoryTypeColor(viewModel.colorScheme.value),
+            color = viewModel.getCategoryTypeColor(
+                tabDataFlow.value.getOrElse(
+                    viewModel.selectedTabIndex.value,
+                    defaultValue = { viewModel.tabItemPlaceholder }).colorScheme
+            ),
             img = viewModel.getCategoryImg(viewModel.buttonSelected.value),
             modifier = Modifier.weight(1f),
             textStyle = MaterialTheme.typography.subtitle2
