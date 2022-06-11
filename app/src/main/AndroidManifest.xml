@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.valerytimofeev.composedstorage">
 
+    <uses-feature android:name="android.hardware.telephony" android:required="true" />
+
     <application
         android:name=".ComposeStorageApplication"
         android:allowBackup="true"
