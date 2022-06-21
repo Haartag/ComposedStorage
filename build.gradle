@@ -6,6 +6,7 @@ buildscript {
 buildscript {
     dependencies {
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40.1'
+        classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:10.3.0"
     }
 }
 plugins {

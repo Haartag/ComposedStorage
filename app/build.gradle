@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
+    id 'com.mikepenz.aboutlibraries.plugin'
 
 }
 
@@ -13,8 +14,8 @@ android {
         applicationId "com.valerytimofeev.composedstorage"
         minSdk 28
         targetSdk 32
-        versionCode 5
-        versionName "1.05"
+        versionCode 6
+        versionName "1.07"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -97,6 +98,10 @@ dependencies {
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03"
     kapt "androidx.hilt:hilt-compiler:1.0.0"
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
+
+    //AboutLibraries
+    implementation "com.mikepenz:aboutlibraries-core:10.3.0"
+    implementation "com.mikepenz:aboutlibraries-compose:10.3.0"
 
 
 }

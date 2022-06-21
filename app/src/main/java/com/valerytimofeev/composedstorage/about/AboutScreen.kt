@@ -78,10 +78,10 @@ fun AboutScreen(
                     Text(
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.body2,
-                        text = "– fixed text input problems; \n " +
+                        text = "– fixed text input problems; \n" +
                                 "– fixed tab color`s bug; \n" +
                                 "– some UI improvement; \n" +
-                                "– Reduce app size."
+                                "– reduce app size."
                     )
                 }
 
@@ -124,7 +124,6 @@ fun AboutScreen(
                         text = AnnotatedString("App`s GitHub repository"),
                         style = MaterialTheme.typography.body2.merge(
                             TextStyle(
-                                //textAlign = TextAlign.Center,
                                 color = Color(0xff64B5F6),
                                 textDecoration = TextDecoration.Underline
                             )
@@ -132,7 +131,19 @@ fun AboutScreen(
                         onClick = {
                             uriHandler.openUri(gitHubUrl)
                         })
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+                    ClickableText(
+                        text = AnnotatedString("Open source libraries used in this app."),
+                        style = MaterialTheme.typography.caption.merge(
+                            TextStyle(
+                                textAlign = TextAlign.Center,
+                                textDecoration = TextDecoration.Underline,
+                                color = Color.DarkGray
+                            )
+                        ),
+                        onClick = {
+                            navController.navigate("about_licenses")
+                        })
                     Text(
                         modifier = Modifier
                             .padding(16.dp)

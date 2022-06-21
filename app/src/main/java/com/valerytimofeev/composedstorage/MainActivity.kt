@@ -18,6 +18,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.valerytimofeev.composedstorage.about.AboutLicensesScreen
 import com.valerytimofeev.composedstorage.about.AboutScreen
 import com.valerytimofeev.composedstorage.addnewcategory.AddNewCategoryScreen
 import com.valerytimofeev.composedstorage.addnewtab.AddNewTabScreen
@@ -144,10 +145,13 @@ class MainActivity : ComponentActivity() {
                                 navController = navController
                             )
                         }
+                        composable("about_licenses") {
+                            AboutLicensesScreen(
+                                navController = navController
+                            )
+                        }
                     }
                 }
-
-
             }
         }
     }
