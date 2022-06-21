@@ -14,8 +14,8 @@ android {
         applicationId "com.valerytimofeev.composedstorage"
         minSdk 28
         targetSdk 32
-        versionCode 6
-        versionName "1.07"
+        versionCode 7
+        versionName "1.08"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -100,8 +100,7 @@ dependencies {
     implementation 'androidx.hilt:hilt-navigation-compose:1.0.0'
 
     //AboutLibraries
-    implementation "com.mikepenz:aboutlibraries-core:10.3.0"
-    implementation "com.mikepenz:aboutlibraries-compose:10.3.0"
+    implementation "com.mikepenz:aboutlibraries-compose:10.0.0"
 
 
 }
