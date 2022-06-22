@@ -21,6 +21,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.valerytimofeev.composedstorage.BuildConfig
 import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.TopBar
 
@@ -77,7 +78,10 @@ fun AboutScreen(
                     Text(
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.body2,
-                        text = "Nothing."
+                        text = "– fixed text input problems; \n" +
+                                "– fixed tab color`s bug; \n" +
+                                "– some UI improvement; \n" +
+                                "– reduce app size."
                     )
                 }
 
@@ -120,7 +124,6 @@ fun AboutScreen(
                         text = AnnotatedString("App`s GitHub repository"),
                         style = MaterialTheme.typography.body2.merge(
                             TextStyle(
-                                //textAlign = TextAlign.Center,
                                 color = Color(0xff64B5F6),
                                 textDecoration = TextDecoration.Underline
                             )
@@ -128,12 +131,24 @@ fun AboutScreen(
                         onClick = {
                             uriHandler.openUri(gitHubUrl)
                         })
-                    Spacer(modifier = Modifier.height(4.dp))
+                    Spacer(modifier = Modifier.height(20.dp))
+                    ClickableText(
+                        text = AnnotatedString("Open source libraries used in this app."),
+                        style = MaterialTheme.typography.caption.merge(
+                            TextStyle(
+                                textAlign = TextAlign.Center,
+                                textDecoration = TextDecoration.Underline,
+                                color = Color.DarkGray
+                            )
+                        ),
+                        onClick = {
+                            navController.navigate("about_licenses")
+                        })
                     Text(
                         modifier = Modifier
                             .padding(16.dp)
                             .fillMaxWidth(),
-                        text = "Application version: 1.0",
+                        text = "Application version: ${BuildConfig.VERSION_NAME}",
                         style = MaterialTheme.typography.caption,
                         textAlign = TextAlign.Center,
                         color = Color.Gray
