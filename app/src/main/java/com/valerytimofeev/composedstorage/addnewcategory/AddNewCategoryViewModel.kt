@@ -6,9 +6,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.R
-import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.local.CategoryItem
 import com.valerytimofeev.composedstorage.data.local.TabItem
+import com.valerytimofeev.composedstorage.repositories.DefaultStorageRepository
 import com.valerytimofeev.composedstorage.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -18,7 +18,7 @@ import kotlin.math.ceil
 
 @HiltViewModel
 class AddNewCategoryViewModel @Inject constructor(
-    private val repository: DatabaseRepository
+    private val repository: DefaultStorageRepository
 ) : ViewModel() {
 
     val colorScheme = mutableStateOf(1)

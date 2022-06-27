@@ -1,4 +1,4 @@
-package com.valerytimofeev.composedstorage.data
+package com.valerytimofeev.composedstorage.repositories
 
 import com.valerytimofeev.composedstorage.data.local.CategoryItem
 import com.valerytimofeev.composedstorage.data.local.StorageDAO
@@ -9,64 +9,62 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-class DatabaseRepository @Inject constructor(
+class DefaultStorageRepository @Inject constructor(
     private val storageDao: StorageDAO
-) {
-    suspend fun insertNewTab(tabItem: TabItem) {
+): StorageRepository {
+    override suspend fun insertNewTab(tabItem: TabItem) {
         storageDao.add(tabItem)
     }
 
-    suspend fun insertNewCategory(categoryItem: CategoryItem) {
+    override suspend fun insertNewCategory(categoryItem: CategoryItem) {
         storageDao.add(categoryItem)
     }
 
-    suspend fun insertNewItem(storageItem: StorageItem) {
+    override suspend fun insertNewItem(storageItem: StorageItem) {
         storageDao.add(storageItem)
     }
 
-    suspend fun updateItem(item: StorageItem) {
+    override suspend fun updateItem(item: StorageItem) {
         storageDao.update(item)
     }
 
-    suspend fun deleteItem(item: StorageItem) {
+    override suspend fun deleteItem(item: StorageItem) {
         storageDao.delete(item)
     }
 
-    suspend fun deleteTabTable() {
+    override suspend fun deleteTabTable() {
         storageDao.deleteTabTable()
     }
 
-    suspend fun deleteCategoryTable(tabName: String) {
+    override suspend fun deleteCategoryTable(tabName: String) {
         storageDao.deleteCategoryTable(tabName = tabName  )
     }
 
-    suspend fun deleteTabFromStorages(tabName: String){
+    override suspend fun deleteTabFromStorages(tabName: String) {
         storageDao.deleteTabFromStorages(tabName = tabName)
     }
 
-    suspend fun deleteCategoryFromStorages(category: String){
+    override suspend fun deleteCategoryFromStorages(category: String) {
         storageDao.deleteCategoryFromStorages(category = category)
     }
 
-    suspend fun deleteTabFromCategories(tabName: String){
+    override suspend fun deleteTabFromCategories(tabName: String) {
         storageDao.deleteTabFromCategories(tabName = tabName)
     }
 
-    //Flow functions
-    fun getTabsFlow(): Flow<List<TabItem>> {
+    override fun getTabsFlow(): Flow<List<TabItem>> {
         return storageDao.getAllTabsFlow()
     }
 
-    fun getCategoryByTabFlow(Tab: String): Flow<List<CategoryItem>> {
+    override fun getCategoryByTabFlow(Tab: String): Flow<List<CategoryItem>> {
         return storageDao.getByTabFlow(tabName = Tab)
     }
 
-    fun getItemsByCategoryFlow(category: String): Flow<List<StorageItem>> {
+    override fun getItemsByCategoryFlow(category: String): Flow<List<StorageItem>> {
         return storageDao.getByCategoryFlow(category = category)
     }
 
-
-    fun getList() = flow<List<ListForSearch>> {
+    override fun getList() = flow<List<ListForSearch>> {
         val inputFlow = storageDao.getCategoriesWithItemsFlow()
         val result = mutableListOf<ListForSearch>()
         inputFlow.collect {
@@ -87,4 +85,3 @@ class DatabaseRepository @Inject constructor(
         }
     }
 }
-

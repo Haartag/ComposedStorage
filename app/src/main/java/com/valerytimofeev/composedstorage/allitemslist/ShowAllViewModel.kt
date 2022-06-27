@@ -2,7 +2,7 @@ package com.valerytimofeev.composedstorage.allitemslist
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
-import com.valerytimofeev.composedstorage.data.DatabaseRepository
+import com.valerytimofeev.composedstorage.repositories.DefaultStorageRepository
 import com.valerytimofeev.composedstorage.utils.Constants.divider
 import com.valerytimofeev.composedstorage.utils.ListForSearch
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -11,7 +11,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ShowAllViewModel @Inject constructor(
-    private val repository: DatabaseRepository
+    private val repository: DefaultStorageRepository
 ) : ViewModel() {
 
     val searchText = mutableStateOf("")

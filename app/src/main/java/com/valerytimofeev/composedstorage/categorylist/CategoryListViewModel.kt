@@ -4,9 +4,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.valerytimofeev.composedstorage.R
-import com.valerytimofeev.composedstorage.data.DatabaseRepository
 import com.valerytimofeev.composedstorage.data.local.CategoryItem
 import com.valerytimofeev.composedstorage.data.local.TabItem
+import com.valerytimofeev.composedstorage.repositories.DefaultStorageRepository
 import com.valerytimofeev.composedstorage.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +14,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CategoryListViewModel @Inject constructor(
-    private val repository: DatabaseRepository
+    private val repository: DefaultStorageRepository
 ) : ViewModel() {
 
     //for pager infinite loop

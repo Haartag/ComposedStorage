@@ -78,10 +78,10 @@ fun AboutScreen(
                     Text(
                         modifier = Modifier.padding(16.dp),
                         style = MaterialTheme.typography.body2,
-                        text = "– fixed text input problems; \n" +
-                                "– fixed tab color`s bug; \n" +
-                                "– some UI improvement; \n" +
-                                "– reduce app size."
+                        text = "– \n"
+                                //"– fixed tab color`s bug; \n" +
+                                //"– some UI improvement; \n" +
+                                //"– reduce app size."
                     )
                 }
 
