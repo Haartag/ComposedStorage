@@ -7,14 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
-import com.valerytimofeev.composedstorage.data.database.CategoryItem
-import com.valerytimofeev.composedstorage.data.database.TabItem
+import com.valerytimofeev.composedstorage.data.local.CategoryItem
+import com.valerytimofeev.composedstorage.data.local.TabItem
 import com.valerytimofeev.composedstorage.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.ceil

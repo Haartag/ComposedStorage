@@ -4,7 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
-import com.valerytimofeev.composedstorage.data.database.StorageItem
+import com.valerytimofeev.composedstorage.data.local.StorageItem
 import com.valerytimofeev.composedstorage.utils.Constants
 import com.valerytimofeev.composedstorage.utils.Constants.divider
 import com.valerytimofeev.composedstorage.utils.Constants.pickerText

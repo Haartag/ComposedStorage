@@ -2,8 +2,8 @@ package com.valerytimofeev.composedstorage.di
 
 import android.content.Context
 import androidx.room.Room
-import com.valerytimofeev.composedstorage.data.database.StorageDAO
-import com.valerytimofeev.composedstorage.data.database.StorageDatabase
+import com.valerytimofeev.composedstorage.data.local.StorageDAO
+import com.valerytimofeev.composedstorage.data.local.StorageDatabase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

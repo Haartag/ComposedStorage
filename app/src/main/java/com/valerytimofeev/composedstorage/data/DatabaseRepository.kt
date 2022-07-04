@@ -1,9 +1,9 @@
 package com.valerytimofeev.composedstorage.data
 
-import com.valerytimofeev.composedstorage.data.database.CategoryItem
-import com.valerytimofeev.composedstorage.data.database.StorageDAO
-import com.valerytimofeev.composedstorage.data.database.StorageItem
-import com.valerytimofeev.composedstorage.data.database.TabItem
+import com.valerytimofeev.composedstorage.data.local.CategoryItem
+import com.valerytimofeev.composedstorage.data.local.StorageDAO
+import com.valerytimofeev.composedstorage.data.local.StorageItem
+import com.valerytimofeev.composedstorage.data.local.TabItem
 import com.valerytimofeev.composedstorage.utils.ListForSearch
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

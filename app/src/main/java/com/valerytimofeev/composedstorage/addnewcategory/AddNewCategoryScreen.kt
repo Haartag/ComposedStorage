@@ -45,8 +45,7 @@ import com.valerytimofeev.composedstorage.common.CategoryEntry
 import com.valerytimofeev.composedstorage.common.TabNameBackground
 import com.valerytimofeev.composedstorage.common.TopBar
 import com.valerytimofeev.composedstorage.common.TopBarOkIcon
-import com.valerytimofeev.composedstorage.data.database.TabItem
-import com.valerytimofeev.composedstorage.ui.theme.Mint
+import com.valerytimofeev.composedstorage.data.local.TabItem
 
 @Composable
 fun AddNewCategoryScreen(

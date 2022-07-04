@@ -5,8 +5,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.ViewModel
 import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
-import com.valerytimofeev.composedstorage.data.database.CategoryItem
-import com.valerytimofeev.composedstorage.data.database.TabItem
+import com.valerytimofeev.composedstorage.data.local.CategoryItem
+import com.valerytimofeev.composedstorage.data.local.TabItem
 import com.valerytimofeev.composedstorage.utils.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow

@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import com.valerytimofeev.composedstorage.data.DatabaseRepository
-import com.valerytimofeev.composedstorage.data.database.CategoryItem
-import com.valerytimofeev.composedstorage.data.database.TabItem
+import com.valerytimofeev.composedstorage.data.local.CategoryItem
+import com.valerytimofeev.composedstorage.data.local.TabItem
 import com.valerytimofeev.composedstorage.utils.sortCategoryListByKey
 import com.valerytimofeev.composedstorage.utils.sortTabListByKey
 import dagger.hilt.android.lifecycle.HiltViewModel

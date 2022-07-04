@@ -1,6 +1,6 @@
 package com.valerytimofeev.composedstorage.utils
 
-import com.valerytimofeev.composedstorage.data.database.StorageItem
+import com.valerytimofeev.composedstorage.data.local.StorageItem
 
 data class MutableStorageItem(
     var id: Int,

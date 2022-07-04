@@ -1,7 +1,7 @@
 package com.valerytimofeev.composedstorage.utils
 
-import com.valerytimofeev.composedstorage.data.database.CategoryItem
-import com.valerytimofeev.composedstorage.data.database.TabItem
+import com.valerytimofeev.composedstorage.data.local.CategoryItem
+import com.valerytimofeev.composedstorage.data.local.TabItem
 
 fun List<TabItem>.sortTabListByKey(key: List<String>): List<TabItem> {
     val result = mutableListOf<TabItem>()

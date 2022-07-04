@@ -1,9 +1,5 @@
 package com.valerytimofeev.composedstorage.categorydetail
 
-import android.app.Activity
-import android.content.Context
-import android.view.KeyEvent
-import android.view.inputmethod.BaseInputConnection
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -12,7 +8,6 @@ import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -22,13 +17,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
-import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
@@ -49,13 +41,11 @@ import com.valerytimofeev.composedstorage.R
 import com.valerytimofeev.composedstorage.common.ItemBox
 import com.valerytimofeev.composedstorage.common.ItemContent
 import com.valerytimofeev.composedstorage.common.TopBar
-import com.valerytimofeev.composedstorage.data.database.StorageItem
-import com.valerytimofeev.composedstorage.ui.theme.Mint
+import com.valerytimofeev.composedstorage.data.local.StorageItem
 import com.valerytimofeev.composedstorage.utils.Constants
 import com.valerytimofeev.composedstorage.utils.Constants.sizeTypeMap
 import com.valerytimofeev.composedstorage.utils.HorizontalPickerState
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import kotlin.math.roundToInt
 
 @ExperimentalMaterialApi
