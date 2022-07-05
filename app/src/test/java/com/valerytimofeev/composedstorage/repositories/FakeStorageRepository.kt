@@ -5,10 +5,26 @@ import com.valerytimofeev.composedstorage.data.local.StorageItem
 import com.valerytimofeev.composedstorage.data.local.TabItem
 import com.valerytimofeev.composedstorage.utils.ListForSearch
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 
-class FakeStorageRepository: StorageRepository {
+class FakeStorageRepository : StorageRepository {
+
+    private val storageItems = mutableListOf<StorageItem>()
+    private val categoryItems = mutableListOf<CategoryItem>()
+    private val tabItems = mutableListOf<TabItem>()
+
+    private val observableStorageItem = emitStorageItems()
+
+    private fun emitStorageItems() = flow {
+        emit(storageItems)
+    }
+
+    private fun emitCategoryItems() = flow {
+        emit(categoryItems)
+    }
+
     override suspend fun insertNewTab(tabItem: TabItem) {
-        TODO("Not yet implemented")
+        tabItems.add(tabItem)
     }
 
     override suspend fun insertNewCategory(categoryItem: CategoryItem) {
@@ -16,15 +32,16 @@ class FakeStorageRepository: StorageRepository {
     }
 
     override suspend fun insertNewItem(storageItem: StorageItem) {
-        TODO("Not yet implemented")
+        storageItems.add(storageItem)
     }
 
     override suspend fun updateItem(item: StorageItem) {
-        TODO("Not yet implemented")
+        val index = storageItems.indexOfFirst { it.id == item.id }
+        storageItems[index] = item
     }
 
     override suspend fun deleteItem(item: StorageItem) {
-        TODO("Not yet implemented")
+        storageItems.remove(item)
     }
 
     override suspend fun deleteTabTable() {
@@ -52,11 +69,11 @@ class FakeStorageRepository: StorageRepository {
     }
 
     override fun getCategoryByTabFlow(Tab: String): Flow<List<CategoryItem>> {
-        TODO("Not yet implemented")
+        return emitCategoryItems()
     }
 
     override fun getItemsByCategoryFlow(category: String): Flow<List<StorageItem>> {
-        TODO("Not yet implemented")
+        return emitStorageItems()
     }
 
     override fun getList(): Flow<List<ListForSearch>> {

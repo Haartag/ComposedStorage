@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.valerytimofeev.composedstorage.data.local.StorageDAO
 import com.valerytimofeev.composedstorage.data.local.StorageDatabase
+import com.valerytimofeev.composedstorage.repositories.DefaultStorageRepository
+import com.valerytimofeev.composedstorage.repositories.StorageRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,4 +37,10 @@ object AppModule {
             //.fallbackToDestructiveMigration()
             .build()
     }
+
+    @Singleton
+    @Provides
+    fun provideDefaultStorageRepository(
+        dao: StorageDAO
+    ) = DefaultStorageRepository(dao) as StorageRepository
 }
